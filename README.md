@@ -68,11 +68,9 @@ Contenu du fichier .env à créer sur /Backend/.env :
 
         # Base de données MongoDB
         MONGO_URI=mongodb://localhost:27017/ecommerce
-        # Ou pour MongoDB Atlas :
-        # MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/ecommerce
 
         # JWT Secret
-        JWT_SECRET=votre_jwt_secret_tres_securise
+        JWT_SECRET=kanope
 
         # CORS (Frontend)
         CORS_ORIGIN=http://localhost:8080
