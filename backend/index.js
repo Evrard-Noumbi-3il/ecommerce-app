@@ -10,8 +10,8 @@ app.use(express.json());
 app.use(cors({ origin: process.env.CORS_ORIGIN }));
 
 // Connexion MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log("✅ MongoDB connecté"))
+mongoose.connect(process.env.MONGODB_URI) 
+  .then(() => console.log("✅ MongoDB connecté")) 
   .catch(err => console.error("❌ Erreur MongoDB :", err));
 
 // Route test
@@ -21,5 +21,5 @@ app.get("/api", (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Backend démarré sur http://localhost:${PORT}`);
+  console.log(`Backend démarré sur http://localhost:${PORT}`); 
 });
