@@ -16,9 +16,10 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ Connecté à MongoDB Atlas"))
   .catch(err => console.error("❌ Erreur MongoDB :", err));
 
-// Route test
+
 app.use('/api/auth', authRoutes)
 
+// Route test
 app.get("/api", (req, res) => {
   res.json({ message: "Backend fonctionne 🚀" });
 });
