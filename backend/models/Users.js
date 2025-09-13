@@ -2,6 +2,20 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    name: {
+      type: String, 
+      required: true
+    },
+    firstname: {
+      type: String, 
+      required: true
+    },
+    phonenumber: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
     email: {
       type: String,
       required: true,
@@ -13,7 +27,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 6,
-    }
+    },
   },
   { timestamps: true }
 );

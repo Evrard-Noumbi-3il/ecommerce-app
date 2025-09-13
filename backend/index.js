@@ -4,7 +4,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from './routes/authRoutes.js'
 
-
 dotenv.config();
 
 const app = express();
@@ -13,17 +12,18 @@ app.use(cors({ origin: process.env.CORS_ORIGIN }));
 
 // Connexion MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log("✅ Connecté à MongoDB Atlas"))
+  .then(() => console.log("✅ MongoDB connecté"))
   .catch(err => console.error("❌ Erreur MongoDB :", err));
 
-// Route test
+
 app.use('/api/auth', authRoutes)
 
+// Route test
 app.get("/api", (req, res) => {
   res.json({ message: "Backend fonctionne 🚀" });
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Backend démarré sur http://localhost:${PORT}`); 
+  console.log(`Backend démarré sur http://localhost:${PORT}`);
 });
