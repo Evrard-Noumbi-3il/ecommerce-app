@@ -67,7 +67,7 @@ Contenu du fichier .env à créer sur /Backend/.env :
         PORT=3000
 
         # Base de données MongoDB
-        MONGO_URI=mongodb+srv://Kanope:groupe3kanope@kanope.kdcz8na.mongodb.net/?retryWrites=true&w=majority&appName=Kanope
+        MONGODB_URI=mongodb+srv://nom:motdepass@kanope.kdcz8na.mongodb.net/ecommerce
 
         # JWT Secret
         JWT_SECRET=kanope
@@ -98,11 +98,14 @@ Créer un cluster sur MongoDB Atlas
 
 Récupérer l’URI de connexion
 
-Remplacer MONGO_URI dans .env
+Remplacer MONGODB_URI dans .env
+
+4. télécharger le package supplémentaire
+# cryptage des mots de pass
+npm install bcryptjs jsonwebtoken
 
 
-
-4. Démarrer le serveur backend
+5. Démarrer le serveur backend
 # Mode développement (avec nodemon)
 npm run dev
 
