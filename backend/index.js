@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 
+
 dotenv.config();
 
 const app = express();
@@ -11,7 +12,7 @@ app.use(cors({ origin: process.env.CORS_ORIGIN }));
 
 // Connexion MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log("✅ MongoDB connecté"))
+  .then(() => console.log("✅ Connecté à MongoDB Atlas"))
   .catch(err => console.error("❌ Erreur MongoDB :", err));
 
 // Route test

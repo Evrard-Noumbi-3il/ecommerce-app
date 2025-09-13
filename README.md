@@ -67,7 +67,7 @@ Contenu du fichier .env à créer sur /Backend/.env :
         PORT=3000
 
         # Base de données MongoDB
-        MONGO_URI=mongodb://localhost:27017/ecommerce
+        MONGODB_URI=mongodb+srv://Kanope:groupe3kanope@kanope.kdcz8na.mongodb.net/?retryWrites=true&w=majority&appName=Kanope
 
         # JWT Secret
         JWT_SECRET=kanope
