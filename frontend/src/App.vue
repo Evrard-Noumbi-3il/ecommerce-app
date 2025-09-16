@@ -1,30 +1,21 @@
 <template>
   <div id="app">
-    <!-- Barre de navigation -->
-    <nav class="p-4 bg-gray-800 text-white flex justify-between">
-      
-    </nav>
-
-    <!-- Contenu de la page -->
+    <NavBar v-if="showNavBar" />
     <router-view />
   </div>
 </template>
 
 <script>
+import NavBar from "./components/NavBar.vue";
+import { useRoute } from "vue-router";
+
 export default {
-  name: "App",
+  components: { NavBar },
+  setup() {
+    const route = useRoute();
+    const excludedRoutes = ["/login", "/register"];
+    const showNavBar = !excludedRoutes.includes(route.path);
+    return { showNavBar };
+  },
 };
 </script>
-
-<style>
-body {
-  margin: 0;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-}
-router-link {
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
-  margin-left: 20px;
-}
-</style>
