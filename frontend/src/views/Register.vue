@@ -48,12 +48,15 @@ export default {
   methods: {
     async registerUser() {
       try {
-        await axios.post(
+        const res = await axios.post(
           `${process.env.VUE_APP_API_URL}/auth/register`,
           { email: this.email, password: this.password }
         );
         alert("Inscription réussie ");
-        this.$router.push("/login");
+        
+        localStorage.setItem("token", res.data.token);
+        this.$router.push("/");
+        setTimeout(() => window.location.reload(), 500)
       } catch (err) {
         alert(err.response?.data?.message || "Erreur d'inscription ❌");
       }

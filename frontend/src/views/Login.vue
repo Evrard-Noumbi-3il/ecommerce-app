@@ -55,6 +55,7 @@ export default {
         alert("Connexion réussie ");
         localStorage.setItem("token", res.data.token);
         this.$router.push("/");
+        setTimeout(() => window.location.reload(), 500)
       } catch (err) {
         alert(err.response?.data?.message || "Erreur de connexion ❌");
       }

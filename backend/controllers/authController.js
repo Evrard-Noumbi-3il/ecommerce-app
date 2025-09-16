@@ -55,7 +55,9 @@ export const registerUser = async (req, res) => {
     const newUser = new User({ email, password: hashedPassword });
     await newUser.save();
 
-    return res.status(201).json({ message: "Utilisateur créé avec succès 🚀" });
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    return res.status(201).json({ message: "Utilisateur créé avec succès 🚀",token });
   } catch (error) {
     return res.status(500).json({ message: "Erreur serveur ❌", error: error.message });
   }
