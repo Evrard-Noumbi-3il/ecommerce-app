@@ -1,9 +1,9 @@
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-gray-100">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-      <h2 class="text-2xl font-bold mb-4 text-center">Connexion</h2>
+  <div class="container">
+    <div class="card-register">
+      <h1>Connexion</h1>
 
-      <form @submit.prevent="loginUser">
+      <form @submit.prevent="loginUser" class="form-grid">
         <input
           type="email"
           v-model="email"
@@ -20,7 +20,7 @@
         />
         <button
           type="submit"
-          class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+          class="btn"
         >
           Se connecter
         </button>
