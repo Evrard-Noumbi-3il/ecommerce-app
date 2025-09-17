@@ -4,46 +4,55 @@
       <h3>INSCRIVEZ VOUS ICI</h3>
 
       <form @submit.prevent="registerUser" class="form-grid">
-       <div style="display: grid; grid-template-columns: 1fr 1fr; width:100%; gap: 50px ">
-          <input
-            type="text"
-            v-model="name"
-            placeholder="Nom*"
-            required
-          />
-          <input
-            type="text"
-            v-model="firstname"
-            placeholder="Prenom*"
-            required
-          />
-        </div>
+
+        <input
+          type="text"
+          v-model="name"
+          placeholder="Nom*"
+          required
+        />
+        <input
+          type="text"
+          @focus="showEmailAndNum= true"
+          v-model="firstname"
+          placeholder="Prenom*"
+          required
+        />
+
         <div style="display: grid; grid-template-columns: 1fr 1fr; width:100%; gap: 50px">
 
           <input
-            type="email"
-            v-model="email"
-            placeholder="Email*"
-            required
-          />
-
-          <input
             type="tel"
+            v-if="showEmailAndNum"
             pattern="[0-9]{10}"
             maxlength="10"
             v-model="phonenumber"
             placeholder="Telephone"
           />
+
+          <input
+            type="email"
+            v-if="showEmailAndNum"
+            @focus="showPassword= true"
+            v-model="email"
+            placeholder="Email*"
+            required
+          />
+
+
         </div>
 
         <input
           type="password"
+          v-if="showPassword"
+          @focus="showConfirmPassword= true"
           v-model="password"
           placeholder="Mot de passe*"
           required
         />
         <input
-          type="confirmpassword"
+          type="password"
+          v-if="showConfirmPassword"
           v-model="confirmpassword"
           placeholder="Confirmer le mot de passe*"
           class="w-full px-3 py-2 border rounded-lg mb-3"
@@ -79,9 +88,14 @@
 </template>
 
 <script>
+import { ref} from "vue";
 import axios from "axios";
-
+const showfirstname = ref(false);
+const showEmailAndNum = ref(false);
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
 export default {
+
   name: "RegisterPage",
   data() {
     return {

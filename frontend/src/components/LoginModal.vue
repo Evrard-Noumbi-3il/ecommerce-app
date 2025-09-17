@@ -6,6 +6,7 @@
       <form @submit.prevent="loginUser" class="form-grid" >
         <input
           type="email"
+          @focus="showPassword= true"
           v-model="email"
           placeholder="Email"
           class="w-full px-3 py-2 border rounded-lg mb-3"
@@ -13,6 +14,7 @@
         />
         <input
           type="password"
+          v-if="showPassword"
           v-model="password"
           placeholder="Mot de passe"
           class="w-full px-3 py-2 border rounded-lg mb-3"
@@ -35,8 +37,10 @@
 </template>
 
 <script>
+import { ref} from "vue";
 import axios from "axios";
 
+const showPassword = ref(false);
 export default {
   name: "LoginPage",
   data() {
