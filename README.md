@@ -210,7 +210,7 @@ git commit -m "feat: ajout de la fonctionnalité X"
 # 3. Pousser la branche
 git push origin feature/nom-fonctionnalite
 
-# 4. Créer une Pull Request
+# 4. Créer une Pull Request sur git hub
 
 Convention de commits
 
@@ -228,6 +228,7 @@ test: ajout/modif de tests
 
 chore: maintenance
 
+# 5. merger la pull request
 
 
 

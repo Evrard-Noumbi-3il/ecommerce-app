@@ -72,7 +72,7 @@ onMounted(async () => {
   padding: 20px;
 }
 h2 {
-  margin: 20px 0 10px;
+  margin: 40px 0 20px 50px;
   color: #222;
 }
 </style>

@@ -4,6 +4,7 @@
       v-for="categorie in categories"
       :key="categorie._id"
       class="card"
+      @click="goToSearch(categorie.nom)"
     >
       <img :src="categorie.image" alt="categorie" />
       <p>{{ categorie.nom }}</p>
@@ -12,12 +13,37 @@
 </template>
 
 <script setup>
+import { useRouter } from "vue-router";
+
 defineProps({
   categories: {
     type: Array,
     required: true,
   },
 });
+
+const router = useRouter();
+const LS_KEY = "searchContext";
+
+const goToSearch = (itemName) => {
+  // Enregistre le contexte dans localStorage
+  const ctx = {
+    group: "Catégories",
+    item: itemName,
+    ts: Date.now(),
+  };
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(ctx));
+  } catch (e) {
+    console.warn("localStorage non disponible", e);
+  }
+
+  // Redirection avec paramètre de recherche
+  router.push({
+    name: "search",
+    query: { category: itemName },
+  });
+};
 </script>
 
 <style scoped>
@@ -26,6 +52,8 @@ defineProps({
   gap: 15px;
   overflow-x: auto;
   padding: 10px;
+  max-width: 1200px;
+  margin: auto;
 }
 
 .card {

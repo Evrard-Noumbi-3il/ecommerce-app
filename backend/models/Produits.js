@@ -1,14 +1,19 @@
 import mongoose from "mongoose";
 
 const produitSchema = new mongoose.Schema({
-  nom: String,
-  description: String,
-  prix: Number,
-  localisation: String,
-  etat: String,
-  images: [String], 
-  id_categorie: { type: mongoose.Schema.Types.ObjectId, ref: "Categorie" },
-  createdAt: { type: Date, default: Date.now }
-});
+   titre: { type: String, required: true },
+    description: { type: String },
+    prix: { type: Number, required: true },
+    id_categorie: { type: mongoose.Schema.Types.ObjectId, ref: "Categorie" },
+    theme: { type: String },
+    location: { type: String },
+    state: { type: String, enum: ["neuf", "occasion"], default: "occasion" },
+    sellerType: { type: String, enum: ["particulier", "professionnel"], default: "particulier" },
+    images: [{ type: String }],
+    vues: { type: Number, default: 0 },
+    date: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
 
 export default mongoose.model("Produit", produitSchema);

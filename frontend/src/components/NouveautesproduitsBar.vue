@@ -27,6 +27,8 @@ defineProps({
   gap: 15px;
   overflow-x: auto;
   padding: 10px;
+  max-width: 1200px;
+  margin:auto;
 }
 .card {
   min-width: 150px;

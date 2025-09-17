@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from './routes/authRoutes.js'
 import homeRoutes from "./routes/homeRoutes.js"
+import filterRoutes from "./routes/filterRoutes.js"
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 app.use('/api/auth', authRoutes)
 app.use("/api/home", homeRoutes)
+app.use("/api/products", filterRoutes)
 
 
 const PORT = process.env.PORT || 3000;

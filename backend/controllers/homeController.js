@@ -44,6 +44,7 @@ export const getNouveauxProduits = async (req, res) => {
       .populate("id_categorie");
     res.json(produits);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
