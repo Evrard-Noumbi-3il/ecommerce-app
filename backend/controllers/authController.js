@@ -36,7 +36,7 @@ export const login = async (req, res) => {
 
 export const registerUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { name, firstname, phonenumber, email, password, confirmpassword } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ message: "Email et mot de passe requis" });
@@ -48,16 +48,20 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Cet email est déjà utilisé" });
     }
 
+    if (password !== confirmpassword) {
+      return res.status(400).json({ message: "les mots de passe ne coïncides pas" });
+    }
+
     // Hasher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Créer l’utilisateur
-    const newUser = new User({ email, password: hashedPassword });
+    const newUser = new User({ name, firstname, phonenumber, email, password: hashedPassword });
     await newUser.save();
 
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-    return res.status(201).json({ message: "Utilisateur créé avec succès 🚀",token });
+    return res.status(201).json({ message: "Utilisateur créé avec succès 🚀", token });
   } catch (error) {
     return res.status(500).json({ message: "Erreur serveur ❌", error: error.message });
   }

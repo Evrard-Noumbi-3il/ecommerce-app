@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar">
     <div class="navbar-container">
-      
+
         <!-- Logo -->
       <div class="logo">
         <RouterLink to="/">Kanope</RouterLink>
@@ -22,8 +22,7 @@
         <li>
           <RouterLink v-if="isLoggedIn" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
         </li>
-        <li ><RouterLink v-if="!isLoggedIn" to="/login">Se connecter</RouterLink></li>
-        <li ><RouterLink v-if="!isLoggedIn" to="/register">S'inscrire</RouterLink></li>
+        <li ><button v-if="!isLoggedIn" @click="$emit('open-Register')" style="border: none; background-color: #0d1b2a; color: white; padding: 0px; font-weight: 500; font-size: 15px; cursor: pointer;">Se connecter/S'inscrire</button></li>
         <li> <RouterLink v-if="isLoggedIn" to="/" @click="logout" class="btn-deconnexion">Déconnexion</RouterLink> </li>
       </ul>
 
@@ -35,11 +34,14 @@
       </div>
     </div>
   </nav>
+
+
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
+
 
 const isMenuOpen = ref(false);
 const isLoggedIn = ref(false);
@@ -62,8 +64,19 @@ function logout() {
 
 <style scoped>
 
+li{
+
+  font-weight: 500;
+  font-size: 15px;
+  font-family: arial;
+}
+
+li:hover{
+  font-weight: 800;
+}
+
 .navbar {
-  background-color: #0d1b2a; 
+  background-color: #0d1b2a;
   color: white;
   padding: 10px 20px;
   border-bottom: 2px solid #e5e5e5;
@@ -98,7 +111,7 @@ function logout() {
 }
 
 .search-bar button {
-  background-color: #1b263b; 
+  background-color: #1b263b;
   border: none;
   color: white;
   padding: 8px 12px;
@@ -124,7 +137,7 @@ function logout() {
 }
 
 .btn-poster {
-  background-color: #fca311; 
+  background-color: #fca311;
   color: black !important;
   padding: 6px 12px;
   border-radius: 6px;
@@ -137,7 +150,7 @@ function logout() {
 }
 
 .btn-deconnexion {
-  background-color: #ef1f42; 
+  background-color: #ef1f42;
   color: black !important;
   padding: 6px 12px;
   border-radius: 6px;
@@ -164,7 +177,7 @@ function logout() {
 
 
 @media (max-width: 768px) {
-  
+
   .nav-links {
     display: none;
     flex-direction: column;

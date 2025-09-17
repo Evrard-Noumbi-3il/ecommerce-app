@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div class="container" @click.self="$emit('close-Login')">
     <div class="card-login">
-      <h1>Connexion</h1>
+      <h3>CONNEXION</h3>
 
-      <form @submit.prevent="loginUser" class="form-grid">
+      <form @submit.prevent="loginUser" class="form-grid" >
         <input
           type="email"
           v-model="email"
@@ -28,7 +28,7 @@
 
       <p class="mt-4 text-sm text-gray-600 text-center">
         Pas encore inscrit ?
-        <router-link to="/register" class="text-blue-600">Créer un compte</router-link>
+        <span @click="$emit('open-Register'); $emit('close-Login')" class="link">Créer un compte</span>
       </p>
     </div>
   </div>
@@ -80,17 +80,16 @@ export default {
 
   /* Style de la carte */
   .card-login {
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    padding: 50px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 30px 50px 50px 50px;
     background-color: white;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    width: 30%;
-    text-align: center;
+    width: 25%;
   }
 
   .form-grid {
-    padding-top: 50px;
+    padding-top: 10px;
     display: grid;
     gap: 30px 5px;
     width: 100%;
@@ -98,8 +97,8 @@ export default {
   }
 
   input{
-    border-radius: 5px;
-    border: 2px solid #0d1b2a;
+    border-radius: 15px;
+    border: 2px solid gray;
     width: 100%;
     max-width: 100%;
     padding: 15px;
@@ -113,8 +112,9 @@ export default {
     justify-content: center;
     padding: 8px 20px;
     border: 1px solid #444;
-    border-radius: 5px;
+    border-radius: 10px;
     background: #0d1b2a;
+    color: white;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -127,7 +127,11 @@ export default {
 
 }
 
-h1{
-
+h3{
+  font-weight: 100;
 }
-</style>**/
+
+.link{
+  cursor: pointer;
+}
+</style>
