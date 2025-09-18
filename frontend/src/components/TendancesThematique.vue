@@ -53,30 +53,32 @@ const goToSearch = (itemName) => {
   overflow-x: auto;
   padding: 10px;
   max-width: 1200px;
-  margin: auto;
+ 
 }
 
 .card {
   min-width: 150px;
+  height: 200px;
   background: white;
   border: 1px solid #ddd;
   border-radius: 10px;
   text-align: center;
-  padding: 10px;
+  margin-right: 10px;
   flex-shrink: 0;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card img {
-  max-width: 100%;
-  height: 80px;
+  width: 100%;
+  height: 150px;
   object-fit: cover;
-  border-radius: 5px;
+  border-radius: 10px 10px 0 0;
+
 }
 </style>
