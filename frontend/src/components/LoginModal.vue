@@ -32,6 +32,15 @@
         Pas encore inscrit ?
         <span @click="$emit('open-Register'); $emit('close-Login')" class="link">Créer un compte</span>
       </p>
+
+      <button type="button" class="google-button">
+        <img
+          src="https://aimg.kwcdn.com/upload_aimg/login/8e2e59cd-5090-4feb-ae78-691e9971ed89.png.slim.png?imageView2/2/w/72/q/80/format/webp"
+          alt="Logo Google"
+          class="google-icon"
+        >
+        <span>Continuer avec Google</span>
+      </button>
     </div>
   </div>
 </template>
