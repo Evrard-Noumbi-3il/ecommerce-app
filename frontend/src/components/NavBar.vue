@@ -18,7 +18,7 @@
         <li><RouterLink to="/">Accueil</RouterLink></li>
         <li><RouterLink to="/categories">Catégories</RouterLink></li>
         <li><RouterLink to="/favorites" v-if="isLoggedIn">Favoris</RouterLink></li>
-        <li><RouterLink v-if="isLoggedIn" to="/profile">Mon compte</RouterLink></li>
+        <li><RouterLink  to="/profile">Mon compte</RouterLink></li>
         <li>
           <RouterLink v-if="isLoggedIn" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
         </li>
