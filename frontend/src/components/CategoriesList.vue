@@ -4,7 +4,7 @@
       v-for="categorie in categories"
       :key="categorie._id"
       class="card"
-      @click="goToSearch(categorie.nom)"
+      @click="goToSearch(categorie)"
     >
       <img :src="categorie.image" alt="categorie" />
       <p>{{ categorie.nom }}</p>
@@ -25,11 +25,11 @@ defineProps({
 const router = useRouter();
 const LS_KEY = "searchContext";
 
-const goToSearch = (itemName) => {
-  // Enregistre le contexte dans localStorage
+const goToSearch = (categorie) => {
+  // Enregistre aussi le nom pour l’affichage
   const ctx = {
     group: "Catégories",
-    item: itemName,
+    item: categorie.nom,
     ts: Date.now(),
   };
   try {
@@ -38,13 +38,14 @@ const goToSearch = (itemName) => {
     console.warn("localStorage non disponible", e);
   }
 
-  // Redirection avec paramètre de recherche
+  // Redirection avec l'ID en query (backend-friendly)
   router.push({
     name: "search",
-    query: { category: itemName },
+    query: { category: categorie._id, categoryName: categorie.nom },
   });
 };
 </script>
+
 
 <style scoped>
 .categories {
@@ -57,26 +58,27 @@ const goToSearch = (itemName) => {
 }
 
 .card {
-  min-width: 150px;
+  min-width: 170px;
+  height: 200px;
   border: 1px solid #ddd;
   border-radius: 10px;
-  padding: 10px;
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   background: #fff;
+  margin-right: 10px;
   cursor: pointer;
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card img {
-  max-width: 100%;
-  height: 80px;
+  width: 100%;
+  height: 150px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 10px 10px 0 0;
 }
 
 .card p {
