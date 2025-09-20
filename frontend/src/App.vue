@@ -26,3 +26,8 @@
   const excludedRoutes = ["/login", "/register"];
   const showNavBar = computed(() => !excludedRoutes.includes(route.path));
 </script>
+<style>
+#app {
+  padding-top: 10px;
+}
+</style>

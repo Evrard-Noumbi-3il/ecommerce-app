@@ -212,16 +212,50 @@ const produits = await Produit.insertMany([
 
     console.log("✅ Produits insérés");
 
-    // Insérer publicités
-    await Publicite.insertMany([
-      { titre: "Promo Été", information: "Réductions sur l'électroménager", image: "/images/publicites/pub1.jpg" },
-      { titre: "Nouveautés auto", information: "Découvrez les derniers modèles", image: "/images/publicites/pub2.jpg" },
-      { titre: "Offres Immo", information: "Appartements à prix réduits", image: "/images/publicites/pub3.jpg" },
-      { titre: "Tech Deals", information: "Gadgets à ne pas manquer", image: "/images/publicites/pub4.jpg" },
-      { titre: "Mobilier Design", information: "Meubles modernes en promo", image: "/images/publicites/pub5.jpg" },
-    ]);
-
-    console.log("✅ Publicités insérées");
+   // Insérer publicités
+await Publicite.insertMany([
+  { 
+    titre: "Promo Été",
+    information: "Réductions jusqu'à -50% sur l'électroménager",
+    image: "/images/publicites/pub1.jpg"
+  },
+  { 
+    titre: "Nouveautés Auto",
+    information: "Découvrez les derniers modèles hybrides et électriques",
+    image: "/images/publicites/pub2.jpg"
+  },
+  { 
+    titre: "Offres Immo",
+    information: "Appartements et maisons à prix réduits partout en France",
+    image: "/images/publicites/pub3.jpg"
+  },
+  { 
+    titre: "Tech Deals",
+    information: "Smartphones, PC et gadgets à prix cassés cette semaine",
+    image: "/images/publicites/pub4.jpg"
+  },
+  { 
+    titre: "Mobilier Design",
+    information: "Meubles modernes en promo - livraison gratuite",
+    image: "/images/publicites/pub5.jpg"
+  },
+  { 
+    titre: "Mode & Accessoires",
+    information: "Nouvelles collections printemps-été",
+    image: "/images/publicites/pub6.jpg"
+  },
+  { 
+    titre: "Sport & Loisirs",
+    information: "Équipements sportifs à prix mini",
+    image: "/images/publicites/pub7.jpg"
+  },
+  { 
+    titre: "Voyages",
+    information: "Séjours et billets d’avion à prix réduit",
+    image: "/images/publicites/pub8.jpg"
+  },
+]);
+console.log("✅ Publicités insérées");
 
     console.log("🎉 Base de données initialisée avec succès !");
     process.exit();

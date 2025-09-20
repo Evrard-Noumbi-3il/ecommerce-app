@@ -76,10 +76,16 @@ li:hover{
 }
 
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 96%;
+  z-index: 1000;
   background-color: #0d1b2a;
   color: white;
-  padding: 10px 20px;
+  padding: 20px 30px;
   border-bottom: 2px solid #e5e5e5;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-container {
