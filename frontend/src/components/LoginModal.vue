@@ -110,7 +110,7 @@ export default {
   }
 
   input{
-    border-radius: 15px;
+    border-radius: 6px;
     border: 2px solid gray;
     width: 100%;
     max-width: 100%;
