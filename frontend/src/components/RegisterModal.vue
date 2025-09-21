@@ -124,9 +124,6 @@ export default {
 
 
 <style>
-
-
-
   .container {
     padding-bottom: 50px;
     position: fixed;
@@ -140,7 +137,7 @@ export default {
     text-align: center;
     font-family: Arial;
     z-index: 9999;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(214, 173, 173, 0.5);
   }
 
 
