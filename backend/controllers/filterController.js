@@ -1,9 +1,11 @@
 import Product from "../models/Produits.js";
+import Category from "../models/Categorie.js";
+import Thematique from "../models/Thematique.js";
 
 export const getProducts = async (req, res) => {
   try {
     const {
-      category,   // id catégorie ou nom
+      category,   
       theme,
       priceMin,
       priceMax,
@@ -21,11 +23,14 @@ export const getProducts = async (req, res) => {
 
     // 🔹 Catégorie
     if (category) {
-      query.id_categorie = category; // passe directement l’_id de la catégorie
+      query.id_categorie = category; 
     }
 
     // 🔹 Thématique
-    if (theme) query.theme = theme;
+    if (theme) {
+      const categories = await Category.find({ id_thematique: theme }).select("_id");
+      query.id_categorie = { $in: categories.map((c) => c._id) };
+    }
 
     // 🔹 État (neuf/occasion)
     if (state) query.state = state;
@@ -80,6 +85,25 @@ export const getProducts = async (req, res) => {
       totalPages: Math.ceil(total / limit),
       results: products,
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+};
+
+export const getCategories = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.json(categories);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+};
+export const getThematiques = async (req, res) => {
+  try {
+    const thematiques = await Thematique.find();
+    res.json(thematiques);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Erreur serveur" });

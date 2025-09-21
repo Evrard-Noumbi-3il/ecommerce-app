@@ -1,12 +1,18 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-
+import bcrypt from "bcryptjs";
+import User from "../models/Users.js";
 import Publicite from "../models/Publicite.js";
 import Thematique from "../models/Thematique.js";
 import Categorie from "../models/Categorie.js";
 import Produit from "../models/Produits.js";
 
 dotenv.config();
+
+const hashPassword = async (plainPassword) => {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(plainPassword, salt);
+};
 
 const seedDatabase = async () => {
   try {
@@ -18,6 +24,7 @@ const seedDatabase = async () => {
     await Thematique.deleteMany();
     await Categorie.deleteMany();
     await Produit.deleteMany();
+    await User.deleteMany();
 
     console.log("🗑️ Collections vidées");
 
@@ -85,9 +92,9 @@ const produits = await Produit.insertMany([
     location: "Paris",
     state: "occasion",
     sellerType: "professionnel",
-    image: "/images/produits/macbook.jpg",
+    images: ["/images/produits/macbook.jpg"], // tableau d'images
     id_categorie: categories.find(cat => cat.nom === "Informatique")._id,
-    theme: "Informatique",
+    theme: thematiques.find(t => t.nom === "Multimédia").nom,
     vues: 120,
     date: new Date("2023-11-01"),
   },
@@ -98,9 +105,9 @@ const produits = await Produit.insertMany([
     location: "Lyon",
     state: "occasion",
     sellerType: "particulier",
-    image: "/images/produits/peugeot208.jpg",
+    images: ["/images/produits/peugeot208.jpg"], // tableau d'images
     id_categorie: categories.find(cat => cat.nom === "Voitures")._id,
-    theme: "Automobile",
+    theme: thematiques.find(t => t.nom === "Véhicules").nom,
     vues: 300,
     date: new Date("2023-10-25"),
   },
@@ -111,9 +118,9 @@ const produits = await Produit.insertMany([
     location: "Marseille",
     state: "occasion",
     sellerType: "particulier",
-    image: "/images/produits/canape.jpg",
+    images: ["/images/produits/canape.jpg"],
     id_categorie: categories.find(cat => cat.nom === "Meubles")._id,
-    theme: "Mobilier",
+    theme: thematiques.find(t => t.nom === "Immobilier").nom,
     vues: 85,
     date: new Date("2023-10-20"),
   },
@@ -124,9 +131,9 @@ const produits = await Produit.insertMany([
     location: "Bordeaux",
     state: "neuf",
     sellerType: "professionnel",
-    image: "/images/produits/iphone14.jpg",
+    images: ["/images/produits/iphone14.jpg"],
     id_categorie: categories.find(cat => cat.nom === "Téléphonie")._id,
-    theme: "Téléphonie",
+    theme: thematiques.find(t => t.nom === "Multimédia").nom,
     vues: 450,
     date: new Date("2023-11-05"),
   },
@@ -137,9 +144,9 @@ const produits = await Produit.insertMany([
     location: "Toulouse",
     state: "occasion",
     sellerType: "particulier",
-    image: "/images/produits/velo.jpg",
+    images: ["/images/produits/velo.jpg"],
     id_categorie: categories.find(cat => cat.nom === "Vélos")._id,
-    theme: "Mobilité douce",
+    theme: thematiques.find(t => t.nom === "Véhicules").nom,
     vues: 210,
     date: new Date("2023-09-18"),
   },
@@ -150,9 +157,9 @@ const produits = await Produit.insertMany([
     location: "Nice",
     state: "occasion",
     sellerType: "particulier",
-    image: "/images/produits/table.jpg",
+    images: ["/images/produits/table.jpg"],
     id_categorie: categories.find(cat => cat.nom === "Meubles")._id,
-    theme: "Mobilier",
+    theme: thematiques.find(t => t.nom === "Maison").nom,
     vues: 60,
     date: new Date("2023-09-10"),
   },
@@ -163,9 +170,9 @@ const produits = await Produit.insertMany([
     location: "Paris",
     state: "occasion",
     sellerType: "particulier",
-    image: "/images/produits/ps5.jpg",
+    images: ["/images/produits/ps5.jpg"],
     id_categorie: categories.find(cat => cat.nom === "Gaming")._id,
-    theme: "Gaming",
+    theme: thematiques.find(t => t.nom === "Multimédia").nom,
     vues: 780,
     date: new Date("2023-11-08"),
   },
@@ -176,9 +183,9 @@ const produits = await Produit.insertMany([
     location: "Lille",
     state: "neuf",
     sellerType: "professionnel",
-    image: "/images/produits/canon.jpg",
+    images: ["/images/produits/canon.jpg"],
     id_categorie: categories.find(cat => cat.nom === "Photo & Vidéo")._id,
-    theme: "Photographie",
+    theme: thematiques.find(t => t.nom === "Multimédia").nom,
     vues: 150,
     date: new Date("2023-08-22"),
   },
@@ -189,9 +196,9 @@ const produits = await Produit.insertMany([
     location: "Strasbourg",
     state: "neuf",
     sellerType: "particulier",
-    image: "/images/produits/nike.jpg",
+    images: ["/images/produits/nike.jpg"],
     id_categorie: categories.find(cat => cat.nom === "Chaussures")._id,
-    theme: "Chaussures",
+    theme: thematiques.find(t => t.nom === "Mode").nom,
     vues: 95,
     date: new Date("2023-11-03"),
   },
@@ -202,9 +209,9 @@ const produits = await Produit.insertMany([
     location: "Rennes",
     state: "occasion",
     sellerType: "particulier",
-    image: "/images/produits/livre.jpg",
+    images: ["/images/produits/livre.jpg"],
     id_categorie: categories.find(cat => cat.nom === "Livres")._id,
-    theme: "Livres",
+    theme: thematiques.find(t => t.nom === "Loisirs").nom,
     vues: 40,
     date: new Date("2023-07-30"),
   },
@@ -254,8 +261,58 @@ await Publicite.insertMany([
     information: "Séjours et billets d’avion à prix réduit",
     image: "/images/publicites/pub8.jpg"
   },
-]);
-console.log("✅ Publicités insérées");
+  ]);
+  console.log("✅ Publicités insérées");
+
+    // Insérer utilisateurs
+    const users = [
+    {
+      name: "Admin",
+      firstname: "Admin",
+      phonenumber: "0600000001",
+      email: "admin@admin.com",
+      password: await hashPassword("admin"), 
+      role: "admin",
+      adresse: {
+        rue: "10 Rue de Rivoli",
+        ville: "Paris",
+        codePostal: "75001",
+        pays: "France",
+      },
+    },
+    {
+      name: "Moderator",
+      firstname: "Moderator",
+      phonenumber: "0600000002",
+      email: "moderator@Moderator.com",
+      password: await hashPassword("moderator"),
+      role: "moderator",
+      adresse: {
+        rue: "15 Avenue Foch",
+        ville: "Lyon",
+        codePostal: "69000",
+        pays: "France",
+      },
+    },
+    {
+      name: "Martin",
+      firstname: "Lucas",
+      phonenumber: "0600000003",
+      email: "user@test.com",
+      password: await hashPassword("user123"),
+      role: "user",
+      adresse: {
+        rue: "20 Rue de la République",
+        ville: "Marseille",
+        codePostal: "13000",
+        pays: "France",
+      },
+    },
+  ];
+
+  await User.insertMany(users);
+
+  console.log("✅ Utilisateurs de test insérés avec succès !");
 
     console.log("🎉 Base de données initialisée avec succès !");
     process.exit();
