@@ -14,7 +14,7 @@
           />
         </div>
         <div style="display: grid; grid-template-rows: 22px 30px; margin-bottom: 50px;">
-          <label for="couleur">Choisissez une catégorie* :</label>
+          <label for="couleur">Choisissez une thématique* :</label>
           <select id="couleur" name="couleur">
             <option v-for="cat in categories" :key="cat._id" :value="cat.name">
               {{ cat.name }}
