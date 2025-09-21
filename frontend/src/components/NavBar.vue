@@ -28,7 +28,7 @@
         <li><RouterLink to="/">Accueil</RouterLink></li>
         <li><RouterLink to="/search">Catégories</RouterLink></li>
         <li><RouterLink to="/favorites" v-if="isLoggedIn">Favoris</RouterLink></li>
-        <li><RouterLink to="/dashboard">Dashboard</RouterLink></li>
+        <li><RouterLink to="/dashboard" v-if="isLoggedIn & userStore.isAdmin">Dashboard</RouterLink></li>
         <li><RouterLink  to="/profile">Mon compte</RouterLink></li>
         <li>
           <RouterLink v-if="isLoggedIn" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
@@ -53,6 +53,8 @@
 import { ref, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 import { useRoute, useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
+const userStore = useUserStore();
 
 const route = useRoute();
 const router = useRouter();
