@@ -4,7 +4,7 @@
       v-for="thematique in thematiques"
       :key="thematique._id"
       class="card"
-      @click="goToSearch(thematique.nom)"
+      @click="goToSearch(thematique)"
     >
       <img :src="thematique.image" alt="thematique" />
       <p>{{ thematique.nom }}</p>
@@ -25,11 +25,11 @@ defineProps({
 const router = useRouter();
 const LS_KEY = "searchContext";
 
-const goToSearch = (itemName) => {
+const goToSearch = (item) => {
   // Contexte sauvegardé
   const ctx = {
     group: "Découvertes",
-    item: itemName,
+    item: item.nom,
     ts: Date.now(),
   };
   try {
@@ -41,7 +41,7 @@ const goToSearch = (itemName) => {
   // Redirection avec query param
   router.push({
     name: "search",
-    query: { theme: itemName },
+    query: { item: item._id, itemName: item.nom },
   });
 };
 </script>

@@ -58,7 +58,7 @@ const goToSearch = (categorie) => {
 }
 
 .card {
-  min-width: 170px;
+  min-width: 220px;
   height: 200px;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -76,7 +76,7 @@ const goToSearch = (categorie) => {
 
 .card img {
   width: 100%;
-  height: 150px;
+  height: 75%;
   object-fit: cover;
   border-radius: 10px 10px 0 0;
 }

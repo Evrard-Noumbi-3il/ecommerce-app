@@ -4,7 +4,7 @@
       v-for="tendance in thematiques"
       :key="tendance._id"
       class="card"
-      @click="goToSearch(tendance.nom)"
+      @click="goToSearch(tendance)"
     >
       <img :src="tendance.image" alt="tendance" />
       <p>{{ tendance.nom }}</p>
@@ -25,11 +25,11 @@ defineProps({
 const router = useRouter();
 const LS_KEY = "searchContext";
 
-const goToSearch = (itemName) => {
+const goToSearch = (tendance) => {
   // Sauvegarde du contexte
   const ctx = {
     group: "Tendances",
-    item: itemName,
+    item: tendance.nom,
     ts: Date.now(),
   };
   try {
@@ -41,7 +41,7 @@ const goToSearch = (itemName) => {
   // Redirection vers la page recherche
   router.push({
     name: "search",
-    query: { tendance: itemName },
+    query: { theme: tendance._id, themeName: tendance.nom },
   });
 };
 </script>
@@ -57,7 +57,7 @@ const goToSearch = (itemName) => {
 }
 
 .card {
-  min-width: 150px;
+  width: 220px;
   height: 200px;
   background: white;
   border: 1px solid #ddd;

@@ -1,9 +1,10 @@
 import express from "express";
-import { getProducts } from "../controllers/filterController.js";
+import { getProducts, getCategories, getThematiques } from "../controllers/filterController.js";
 
 const router = express.Router();
 
-// GET /api/products?category=Mode&priceMin=10&priceMax=100&location=Paris&state=neuf
 router.get("/", getProducts);
+router.get("/categories", getCategories);
+router.get("/thematiques", getThematiques);
 
 export default router;

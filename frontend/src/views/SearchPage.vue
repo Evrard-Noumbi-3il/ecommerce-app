@@ -38,18 +38,26 @@
           <!-- Catégorie -->
           <div class="filter-group">
             <label class="filter-label">Catégorie</label>
-            <select v-model="filters.category" class="filter-select">
+            <select
+              :value="filters.category"
+              @change="onCategoryChange($event)"
+              class="filter-select"
+            >
               <option value="">Toutes les catégories</option>
-              <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+              <option v-for="cat in categories" :key="cat" :value="cat._id">{{ cat.nom }}</option>
             </select>
           </div>
 
           <!-- Thématique -->
           <div class="filter-group">
             <label class="filter-label">Thématique</label>
-            <select v-model="filters.theme" class="filter-select">
+            <select 
+            :value="filters.theme"
+            @change="onThemeChange($event)"
+            class="filter-select"
+            >
               <option value="">Toutes les thématiques</option>
-              <option v-for="theme in themes" :key="theme" :value="theme">{{ theme }}</option>
+              <option v-for="theme in themes" :key="theme" :value="theme._id">{{ theme.nom }}</option>
             </select>
           </div>
 
@@ -177,11 +185,11 @@
           <span class="active-filters-label">Filtres actifs :</span>
           <div class="filter-tags">
             <span v-if="filters.category" class="filter-tag">
-              {{ filters.category }}
+              {{ filters.categoryName }}
               <button @click="filters.category = ''" class="remove-tag">×</button>
             </span>
             <span v-if="filters.theme" class="filter-tag">
-              {{ filters.theme }}
+              {{ filters.themeName }}
               <button @click="filters.theme = ''" class="remove-tag">×</button>
             </span>
             <span v-if="filters.priceMin || filters.priceMax" class="filter-tag">
@@ -206,7 +214,7 @@
             @click="goToProduct(item._id)"
           >
             <div class="card-image-container">
-              <img :src="item.image || '/placeholder.jpg'" :alt="item.titre" class="card-image" />
+              <img :src="item.images[0] || '/placeholder.jpg'" :alt="item.titre" class="card-image" />
               <div class="card-badges">
                 <span v-if="item.state === 'neuf'" class="badge badge-new">Neuf</span>
                 <span v-if="item.urgent" class="badge badge-urgent">Urgent</span>
@@ -265,8 +273,8 @@ import axios from "axios";
 const route = useRoute();
 const router = useRouter();
 
-const categories = ["Immobilier", "Véhicules", "Électronique", "Mode", "Maison"];
-const themes = ["Loisirs", "Sport", "Culture", "Décoration"];
+const categories = ref([]);
+const themes = ref([]);
 
 const results = ref([]);
 const isLoading = ref(false);
@@ -274,12 +282,12 @@ const searchTerm = ref("");
 
 // Pagination
 const currentPage = ref(1);
-const itemsPerPage = 20;
 const totalPages = ref(1);
 
 // Filtres
 const filters = ref({
   category: "",
+  categoryName: "",
   theme: "",
   priceMin: "",
   priceMax: "",
@@ -292,6 +300,25 @@ const filters = ref({
 });
 
 // --------- UTILITAIRES ---------
+
+const fetchCategories = async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/api/products/categories')
+    categories.value = response.data 
+  } catch (error) {
+
+    console.error('Erreur lors du chargement des catégories :', error)
+  }
+};
+
+const fetchThemes = async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/api/products/thematiques')
+    themes.value = response.data 
+  } catch (error) {
+    console.error('Erreur lors du chargement des thématiques :', error)
+  }
+};
 
 // Nettoyer les filtres avant push
 const buildQueryParams = () => {
@@ -313,7 +340,9 @@ const buildQueryParams = () => {
 const initFiltersFromQuery = (query) => {
   filters.value = {
     category: query.category || "",
+    categoryName: query.categoryName || "",
     theme: query.theme || "",
+    themeName: query.themeName || "",
     priceMin: query.priceMin ? Number(query.priceMin) : "",
     priceMax: query.priceMax ? Number(query.priceMax) : "",
     location: query.location || "",
@@ -432,8 +461,23 @@ const toggleFavorite = (id) => {
   console.log("Toggle favorite for:", id);
 };
 
+const onCategoryChange = (event) => {
+  const selectedId = event.target.value;
+  filters.value.category = selectedId;
+  const selectedCategory = categories.value.find(cat => cat._id === selectedId);
+  filters.value.categoryName = selectedCategory ? selectedCategory.nom : "";
+};
+
+const onThemeChange = (event) => {
+  const selectedId = event.target.value;
+  filters.value.theme = selectedId;
+  const selectedTheme = themes.value.find(theme => theme._id === selectedId);
+  filters.value.themeName = selectedTheme ? selectedTheme.nom : "";
+};
 // --------- LIFECYCLE ---------
 onMounted(() => {
+  fetchCategories();
+  fetchThemes();
   initFiltersFromQuery(route.query);
   fetchResults();
 });
@@ -655,6 +699,7 @@ watch(
 .radio-group {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 8px;
 }
 

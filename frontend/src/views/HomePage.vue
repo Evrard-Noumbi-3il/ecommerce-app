@@ -34,7 +34,7 @@
                 Tendances
               </h2>
             </div>
-            <button class="see-all-btn">
+            <button class="see-all-btn" @click="goToPage">
               Voir tout
               <svg viewBox="0 0 24 24" width="16" height="16">
                 <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" fill="currentColor"/>
@@ -56,7 +56,7 @@
                 Catégories
               </h2>
             </div>
-            <button class="see-all-btn">
+            <button class="see-all-btn" @click="goToPage">
               Toutes les catégories
               <svg viewBox="0 0 24 24" width="16" height="16">
                 <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" fill="currentColor"/>
@@ -79,7 +79,7 @@
                 Nouveautés
               </h2>
             </div>
-            <button class="see-all-btn">
+            <button class="see-all-btn" @click="goToPage">
               Découvrir plus
               <svg viewBox="0 0 24 24" width="16" height="16">
                 <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" fill="currentColor"/>
@@ -101,7 +101,7 @@
                 Découvrir
               </h2>
             </div>
-            <button class="see-all-btn">
+            <button class="see-all-btn" @click="goToPage">
               Découvrir plus
               <svg viewBox="0 0 24 24" width="16" height="16">
                 <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" fill="currentColor"/>
@@ -129,6 +129,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 import PubliciteBar from "../components/PubliciteBar.vue";
 import TendancesThematique from "../components/TendancesThematique.vue";
@@ -136,6 +138,9 @@ import CategoriesList from "../components/CategoriesList.vue";
 import NouveautesProduits from "../components/NouveautesproduitsBar.vue";
 import DecouvrirSection from "../components/DecouvrirSection.vue";
 
+const goToPage = () => {
+  router.push({ name: 'search' });
+};
 const publicites = ref([]);
 const tendances = ref([]);
 const categories = ref([]);
@@ -189,7 +194,7 @@ onMounted(() => {
 
 .hero-section {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  padding: 10px 20px 150px 20px;
+  padding: 15px 20px 150px 0px;
   text-align: center;
   max-height: 500px;
 }

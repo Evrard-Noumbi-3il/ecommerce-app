@@ -25,6 +25,28 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
+    role: { 
+    type: String, 
+    enum: ["user", "moderator", "admin"], 
+    default: "user" 
+  },
+    favoris: [{ 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "Produits" }],
+    misEnVente: [{ 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "Produits" 
+    }],
+    photo: {
+      type: String,
+      default: "/images/default-profile.png",
+    },
+    adresse: {
+      rue : String,
+      ville : String,
+      codePostal : String,
+      pays : String
+    },
   },
   { timestamps: true }
 );
