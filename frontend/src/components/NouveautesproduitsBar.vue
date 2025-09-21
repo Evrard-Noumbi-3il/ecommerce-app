@@ -36,13 +36,12 @@ defineProps({
   border: 1px solid #ddd;
   border-radius: 10px;
   text-align: center;
-  padding: 10px;
   flex-shrink: 0;
 }
 .card img {
-  max-width: 100%;
+  width: 100%;
   height: 100px;
   object-fit: cover;
-  border-radius: 5px;
+  border-radius: 10px 10px 0 0;
 }
 </style>

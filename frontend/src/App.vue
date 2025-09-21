@@ -27,7 +27,7 @@
   const showNavBar = computed(() => !excludedRoutes.includes(route.path));
 </script>
 <style>
-#app {
+#app{
   padding-top: 10px;
 }
 </style>

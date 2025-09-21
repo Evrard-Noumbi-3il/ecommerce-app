@@ -19,7 +19,7 @@ export const login = async (req, res) => {
 
     // Générer un token JWT
     const token = jwt.sign(
-      { id: user._id },
+      { id: user._id , role: user.role},
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -59,7 +59,7 @@ export const registerUser = async (req, res) => {
     const newUser = new User({ name, firstname, phonenumber, email, password: hashedPassword });
     await newUser.save();
 
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     return res.status(201).json({ message: "Utilisateur créé avec succès 🚀", token });
   } catch (error) {
