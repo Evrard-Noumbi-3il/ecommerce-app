@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <!-- Menu latéral -->
     <div class="menu">
       <button :class="{'active': currentPage === 'profil'}" @click="currentPage = 'profil'">
         <i class="fas fa-user"></i> Mon Profil
@@ -12,16 +13,27 @@
       </button>
     </div>
 
+    <!-- Contenu principal -->
     <div class="content">
-      <div v-if="currentPage === 'profil'">
-        <h2 class="section-title"><i class="fas fa-user-circle"></i> Mon Profil</h2>
+      <!-- Profil -->
+      <div v-if="currentPage === 'profil'" class="profile-wrapper">
         <div class="profile-card">
-          <div class="profile-image-container">
-            <img :src="user.profileImage" alt="Photo de profil" class="profile-image">
-            <input type="file" @change="handleImageUpload" class="file-input" accept="image/*" />
-            <button class="upload-btn" @click="triggerFileInput"><i class="fas fa-camera"></i></button>
+          <!-- En-tête avec photo -->
+          <div class="profile-header">
+            <div class="profile-image-container">
+              <img :src="user.profileImage" alt="Photo de profil" class="profile-image">
+              <input type="file" @change="handleImageUpload" class="file-input" accept="image/*" />
+              <button class="upload-btn" @click="triggerFileInput">
+                <i class="fas fa-camera"></i>
+              </button>
+            </div>
+            <h2 class="profile-name">{{ user.name }}</h2>
+            <p class="profile-email">{{ user.email }}</p>
           </div>
-          <div class="profile-info">
+
+          <!-- Infos -->
+          <div class="profile-body">
+            <h3>Informations personnelles</h3>
             <div class="info-group">
               <label>Nom :</label>
               <input type="text" v-model="user.name" class="info-input">
@@ -30,18 +42,30 @@
               <label>Email :</label>
               <input type="email" v-model="user.email" class="info-input">
             </div>
-            <div class="actions">
-              <button @click="saveProfile" class="save-btn"><i class="fas fa-save"></i> Modifier profile</button>
+            <div class="info-group">
+              <label>Numero de téléphone :</label>
+              <input type="text" v-model="user.phone" class="info-input">
             </div>
+            <div class="info-group">
+              <label>Adresse :</label>
+              <input type="text" v-model="user.address" class="info-input">
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="profile-footer">
+            <button @click="saveProfile" class="save-btn"><i class="fas fa-save"></i> Modifier</button>
           </div>
         </div>
       </div>
 
+      <!-- Messages -->
       <div v-if="currentPage === 'messages'">
         <h2 class="section-title"><i class="fas fa-envelope"></i> Mes Messages</h2>
         <p>Bienvenue dans votre boîte de réception. Aucun nouveau message.</p>
       </div>
 
+      <!-- Notifications -->
       <div v-if="currentPage === 'notifications'">
         <h2 class="section-title"><i class="fas fa-bell"></i> Mes Notifications</h2>
         <p>Vous n’avez aucune notification pour l’instant.</p>
@@ -57,8 +81,11 @@ export default {
     return {
       currentPage: 'profil',
       user: {
-        name: 'kabso',
+        name: 'Kabso',
         email: 'kabso@yema.com',
+        phone: '+33 612345678',
+        address: '12 rue de Paris, 87000 Limoges',
+        profileImage: 'https://via.placeholder.com/150'
       },
       originalUser: {},
     };
@@ -82,10 +109,7 @@ export default {
     },
     saveProfile() {
       this.originalUser = { ...this.user };
-      alert('Profil enregistré avec succès !');
-    },
-    resetProfile() {
-      this.user = { ...this.originalUser };
+      alert('Profil sauvegardé avec succès !');
     }
   }
 };
@@ -97,12 +121,13 @@ export default {
 
 .app-container {
   display: flex;
-  min-height: 80vh;
+  min-height: 100vh;
   font-family: 'Roboto', sans-serif;
-  background-color: #f4f7f9;
-  margin-top: 40px;
+  background-color: #f0f3f7;
+  margin-top: 40px; /* ✅ Décale sous la nav-bar */
 }
 
+/* Menu latéral */
 .menu {
   width: 250px;
   background-color: #2c3e50;
@@ -110,7 +135,6 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 20px 0;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .menu button {
@@ -122,38 +146,34 @@ export default {
   margin: 5px 0;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.3s, color 0.3s;
   border-left: 4px solid transparent;
   display: flex;
   align-items: center;
   gap: 15px;
+  transition: 0.3s;
 }
 
 .menu button:hover {
   background-color: #34495e;
-  border-left-color: #1abc9c;
+  border-left-color: #5dade2;
 }
 
 .menu button.active {
   background: #34495e;
-  border-left-color: #1abc9c;
+  border-left-color: #5dade2;
   font-weight: 500;
-  color: #1abc9c;
+  color: #5dade2;
 }
 
-.menu button i {
-  width: 20px;
-  text-align: center;
-}
-
+/* Contenu */
 .content {
   flex: 1;
   padding: 40px;
-  background: #f4f7f9;
 }
 
+/* Section titre */
 .section-title {
-  font-size: 2em;
+  font-size: 1.8em;
   color: #2c3e50;
   margin-bottom: 20px;
   border-bottom: 2px solid #ddd;
@@ -163,30 +183,45 @@ export default {
   gap: 15px;
 }
 
+/* Profil */
+.profile-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .profile-card {
   background: #ffffff;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 600px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
-  align-items: center;
+}
+
+.profile-header {
+  background: linear-gradient(135deg, #5dade2, #3498db);
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
 }
 
 .profile-image-container {
   position: relative;
-  width: 150px;
-  height: 150px;
-  margin-bottom: 20px;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 15px auto;
 }
 
 .profile-image {
-  width: 100%;
-  height: 100%;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
+  border: 4px solid white;
   object-fit: cover;
-  border: 4px solid #1abc9c;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .file-input {
@@ -195,29 +230,40 @@ export default {
 
 .upload-btn {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  background-color: #1abc9c;
-  color: white;
+  bottom: 5px;
+  right: 5px;
+  background-color: #fff;
+  color: #3498db;
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 16px;
+  width: 38px;
+  height: 38px;
+  font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s;
 }
 
-.upload-btn:hover {
-  background-color: #16a085;
+.profile-name {
+  font-size: 24px;
+  font-weight: 700;
 }
 
-.profile-info {
-  width: 100%;
-  max-width: 500px;
+.profile-email {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Corps */
+.profile-body {
+  padding: 30px;
+}
+
+.profile-body h3 {
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #2c3e50;
 }
 
 .info-group {
@@ -227,69 +273,40 @@ export default {
 .info-group label {
   display: block;
   font-weight: 500;
-  color: #555;
   margin-bottom: 8px;
+  color: #555;
 }
 
-.info-input, .info-textarea {
+.info-input {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 16px;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  box-sizing: border-box;
 }
 
-.info-input:focus, .info-textarea:focus {
-  outline: none;
-  border-color: #1abc9c;
-  box-shadow: 0 0 5px rgba(26, 188, 156, 0.3);
-}
-
-.info-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.actions {
+/* Pied */
+.profile-footer {
   display: flex;
   justify-content: flex-end;
   gap: 15px;
-}
-
-.save-btn, .cancel-btn {
-  padding: 12px 25px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-  transition: background-color 0.3s, transform 0.2s;
+  padding: 20px 30px;
+  border-top: 1px solid #eee;
 }
 
 .save-btn {
-  background-color: #1abc9c;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3498db;
   color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 .save-btn:hover {
-  background-color: #16a085;
-  transform: translateY(-2px);
-}
-
-.cancel-btn {
-  background-color: #e74c3c;
-  color: white;
-}
-
-.cancel-btn:hover {
-  background-color: #c0392b;
-  transform: translateY(-2px);
-}
-
-html, body {
-  overflow: hidden;
-  height: 100%;
+  background-color: #2e86c1;
 }
 </style>
