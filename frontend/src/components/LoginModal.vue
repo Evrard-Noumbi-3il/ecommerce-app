@@ -9,15 +9,13 @@
           @focus="showPassword= true"
           v-model="email"
           placeholder="Email"
-          class="w-full px-3 py-2 border rounded-lg mb-3"
           required
         />
         <input
           type="password"
-          v-if="showPassword"
+          class="input-login"
           v-model="password"
           placeholder="Mot de passe"
-          class="w-full px-3 py-2 border rounded-lg mb-3"
           required
         />
         <button
@@ -109,7 +107,7 @@ export default {
     max-width: 100%;
   }
 
-  input{
+  .input-login{
     border-radius: 6px;
     border: 2px solid gray;
     width: 100%;

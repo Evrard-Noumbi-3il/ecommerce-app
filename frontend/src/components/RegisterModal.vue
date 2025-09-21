@@ -7,12 +7,14 @@
 
         <input
           type="text"
+          class="input-register"
           v-model="name"
           placeholder="Nom*"
           required
         />
         <input
           type="text"
+          class="input-register"
           v-model="firstname"
           placeholder="Prenom*"
           required
@@ -22,6 +24,7 @@
 
           <input
             type="tel"
+            class="input-register"
             pattern="[0-9]{10}"
             maxlength="10"
             v-model="phonenumber"
@@ -30,6 +33,7 @@
 
           <input
             type="email"
+            class="input-register"
             v-model="email"
             placeholder="Email*"
             required
@@ -40,6 +44,7 @@
 
         <input
           type="password"
+          class="input-register"
           @focus="showConfirmPassword= true"
           v-model="password"
           placeholder="Mot de passe*"
@@ -47,10 +52,10 @@
         />
         <input
           type="password"
+          class="input-register"
           v-if="showConfirmPassword"
           v-model="confirmpassword"
           placeholder="Confirmer le mot de passe*"
-          class="w-full px-3 py-2 border rounded-lg mb-3"
 
         />
 
@@ -129,7 +134,7 @@ export default {
     left: 0;
     width: 100vw;
     height: 100vh;
-    jutify-self: center;
+    justify-self: center;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -157,7 +162,7 @@ export default {
     max-width: 100%;
   }
 
-  input{
+  .input-register{
     border-radius: 6px;
     border: 2px solid gray;
     width: 100%;
