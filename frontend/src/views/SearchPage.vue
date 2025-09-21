@@ -661,6 +661,7 @@ watch(
 .price-input {
   flex: 1;
   padding: 8px 12px;
+  max-width: 100px;
   border: 1px solid #ced4da;
   border-radius: 6px;
   font-size: 0.875rem;
@@ -674,6 +675,7 @@ watch(
 
 .location-input {
   space-y: 12px;
+  max-width: 250px;
 }
 
 .radius-input {
