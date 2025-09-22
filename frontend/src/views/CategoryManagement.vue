@@ -414,9 +414,9 @@ const addCategory = async () => {
   }
 
   try {
-    const response = await axios.post(`${API_BASE}/categories`, form, {
+     await axios.post(`${API_BASE}/categories`, form, {
       headers: { 'Content-Type': 'multipart/form-data' }
-    });
+    }); 
     resetForm();
     showMessage('Catégorie ajoutée avec succès', 'success');
   } catch (err) {
@@ -594,7 +594,6 @@ onMounted(() => {
 <style scoped>
 .categories-container {
   max-width: 1200px;
-  margin-left: 200px;
   padding: 2rem;
   background: #f8fafc;
   min-height: 100vh;
