@@ -14,18 +14,35 @@ const routes = [
   { path: "/search", name: "search", component: SearchPage },
   { path: "/profile", name: "ProfilUser", component: ProfilUser },
   { path: "/post-ad", name: "PostAndAdd", component: PostAndAdd },
-  { path: "/profile", name: "ProfilUser", component:ProfilUser },
-    { path: "/admin", component: AdminLayout, children: [
-    { path: "/dashboard", name: "Dashboard", component: Dashboard },
-    { path: "/users", name: "UserManagement", component: UserManagement },
-    { path: "/categories", name: "CategoryManagement", component: CategoryManagement },
-    { path: "/reported-products", name: "ReportedProducts", component: ReportedProducts },
-  ], meta: { requiresAuth: true, role: ["admin", "moderator"] } },
 
+
+  { 
+    path: "/admin", 
+    component: AdminLayout, 
+    meta: { requiresAuth: true, role: ["admin", "moderator"] },
+    children: [
+      { path: "dashboard", name: "Dashboard", component: Dashboard },
+      { path: "users", name: "UserManagement", component: UserManagement },
+      { path: "categories", name: "CategoryManagement", component: CategoryManagement },
+      { path: "reported-products", name: "ReportedProducts", component: ReportedProducts },
+    ]
+  },
 ];
+
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem("token"); 
+  const userRole = JSON.parse(localStorage.getItem("user"))?.role;
+
+  if (to.meta.requiresAuth) {
+    if (!token) return next("/"); 
+    if (to.meta.role && !to.meta.role.includes(userRole)) return next("/"); }
+  next();
 });
 
 export default router;

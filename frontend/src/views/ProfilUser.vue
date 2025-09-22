@@ -21,10 +21,13 @@
           <!-- En-tête avec photo -->
           <div class="profile-header">
             <div class="profile-image-container">
-              <img :src="user.profileImage" alt="Photo de profil" class="profile-image">
+              <div v-if="!user.profileImage" class="default-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <img v-else :src="user.profileImage" alt="Photo de profil" class="profile-image">
               <input type="file" @change="handleImageUpload" class="file-input" accept="image/*" />
               <button class="upload-btn" @click="triggerFileInput">
-                <i class="fas fa-camera"></i>
+                <i class="fas fa-plus"></i>
               </button>
             </div>
             <h2 class="profile-name">{{ user.name }}</h2>
@@ -34,22 +37,10 @@
           <!-- Infos -->
           <div class="profile-body">
             <h3>Informations personnelles</h3>
-            <div class="info-group">
-              <label>Nom :</label>
-              <input type="text" v-model="user.name" class="info-input">
-            </div>
-            <div class="info-group">
-              <label>Email :</label>
-              <input type="email" v-model="user.email" class="info-input">
-            </div>
-            <div class="info-group">
-              <label>Numero de téléphone :</label>
-              <input type="text" v-model="user.phone" class="info-input">
-            </div>
-            <div class="info-group">
-              <label>Adresse :</label>
-              <input type="text" v-model="user.address" class="info-input">
-            </div>
+            <p><strong>Nom :</strong> {{ user.name }}</p>
+            <p><strong>Email :</strong> {{ user.email }}</p>
+            <p><strong>Numéro :</strong> {{ user.phone }}</p>
+            <p><strong>Adresse :</strong> {{ user.address }}</p>
           </div>
 
           <!-- Actions -->
@@ -75,23 +66,24 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-  name: "App",
+  name: "ProfileUser",
   data() {
     return {
       currentPage: 'profil',
       user: {
-        name: 'Kabso',
-        email: 'kabso@yema.com',
-        phone: '+33 612345678',
-        address: '12 rue de Paris, 87000 Limoges',
-        profileImage: 'https://via.placeholder.com/150'
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        profileImage: null 
       },
-      originalUser: {},
     };
   },
   created() {
-    this.originalUser = { ...this.user };
+    this.fetchUser();
   },
   methods: {
     triggerFileInput() {
@@ -107,9 +99,35 @@ export default {
         reader.readAsDataURL(file);
       }
     },
-    saveProfile() {
-      this.originalUser = { ...this.user };
-      alert('Profil sauvegardé avec succès !');
+    async saveProfile() {
+      try {
+        await axios.put('/api/user/me', {
+          name: this.user.name,
+          email: this.user.email,
+          phone: this.user.phone,
+          address: this.user.address
+        });
+        alert('Profil sauvegardé avec succès !');
+      } catch (err) {
+        alert('Erreur lors de la sauvegarde du profil');
+      }
+    },
+    async fetchUser() {
+      try {
+
+        const token = localStorage.getItem("token");
+        const id = token && (JSON.parse(atob(token.split('.')[1]))._id);
+        const res = await axios.get('/api/user/me');
+        const data = res.data;
+
+        this.user.name = data.name;
+        this.user.email = data.email;
+        this.user.phone = data.phonenumber || '';
+        this.user.address = data.adresse?.rue || '';
+        this.user.profileImage = data.photo || null;
+      } catch (err) {
+        console.error('Erreur récupération profil:', err);
+      }
     }
   }
 };
@@ -124,10 +142,9 @@ export default {
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
   background-color: #f0f3f7;
-  margin-top: 40px; /* ✅ Décale sous la nav-bar */
+  margin-top: 50px;
 }
 
-/* Menu latéral */
 .menu {
   width: 250px;
   background-color: #2c3e50;
@@ -165,13 +182,11 @@ export default {
   color: #5dade2;
 }
 
-/* Contenu */
 .content {
   flex: 1;
   padding: 40px;
 }
 
-/* Section titre */
 .section-title {
   font-size: 1.8em;
   color: #2c3e50;
@@ -183,7 +198,6 @@ export default {
   gap: 15px;
 }
 
-/* Profil */
 .profile-wrapper {
   display: flex;
   justify-content: center;
@@ -193,7 +207,7 @@ export default {
 .profile-card {
   background: #ffffff;
   width: 100%;
-  max-width: 600px;
+  max-width: 400px;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
@@ -202,26 +216,40 @@ export default {
 }
 
 .profile-header {
-  background: linear-gradient(135deg, #5dade2, #3498db);
+  background: linear-gradient(135deg, #9cb6c8ff, #5f6a71ff);
   color: white;
-  padding: 40px 20px;
+  padding: 30px 20px;
   text-align: center;
 }
 
 .profile-image-container {
   position: relative;
-  width: 130px;
-  height: 130px;
+  width: 100px;
+  height: 100px;
   margin: 0 auto 15px auto;
 }
 
 .profile-image {
-  width: 130px;
-  height: 130px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  border: 4px solid white;
+  border: 3px solid white;
   object-fit: cover;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.default-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #3498db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+  border: 3px solid white;
+  margin: 0 auto;
 }
 
 .file-input {
@@ -230,14 +258,14 @@ export default {
 
 .upload-btn {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
+  bottom: 0;
+  right: 0;
   background-color: #fff;
-  color: #3498db;
+  color: #4a4d4fff;
   border: none;
   border-radius: 50%;
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   font-size: 14px;
   cursor: pointer;
   display: flex;
@@ -246,7 +274,7 @@ export default {
 }
 
 .profile-name {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
 }
 
@@ -255,47 +283,31 @@ export default {
   opacity: 0.9;
 }
 
-/* Corps */
 .profile-body {
-  padding: 30px;
+  padding: 20px;
 }
 
 .profile-body h3 {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   font-size: 18px;
   color: #2c3e50;
 }
 
-.info-group {
-  margin-bottom: 20px;
-}
-
-.info-group label {
-  display: block;
-  font-weight: 500;
-  margin-bottom: 8px;
+.profile-body p {
+  margin-bottom: 10px;
+  font-size: 16px;
   color: #555;
 }
 
-.info-input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-/* Pied */
 .profile-footer {
   display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  padding: 20px 30px;
+  justify-content: center;
+  padding: 15px;
   border-top: 1px solid #eee;
 }
 
 .save-btn {
-  padding: 12px 25px;
+  padding: 10px 20px;
   border: none;
   border-radius: 8px;
   background-color: #3498db;
