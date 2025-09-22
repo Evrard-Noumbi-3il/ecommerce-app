@@ -5,7 +5,16 @@ import Thematique from "../models/Thematique.js";
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password");
+    const users = await User.find({ role: { $in: ["admin", "moderator"] } }).select("-password");
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+};
+
+export const getAdminOrModerators = async (req, res) => {
+  try {
+    const users = await User.find({ role: { $in: ["admin", "moderator"] } }).select("-password");
     res.json(users);
   } catch (err) {
     res.status(500).json({ message: "Erreur serveur", error: err.message });
