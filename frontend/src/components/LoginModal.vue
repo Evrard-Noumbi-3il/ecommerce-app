@@ -6,6 +6,7 @@
       <form @submit.prevent="loginUser" class="form-grid" >
         <input
           type="email"
+          class="input-login"
           @focus="showPassword= true"
           v-model="email"
           placeholder="Email"
@@ -14,6 +15,7 @@
         <input
           type="password"
           class="input-login"
+          v-if="showPassword"
           v-model="password"
           placeholder="Mot de passe"
           required

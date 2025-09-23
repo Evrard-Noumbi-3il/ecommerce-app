@@ -9,11 +9,11 @@
 
         <!-- Barre de recherche -->
       <div class="search-bar" v-if="route.name !== 'search'">
-        <input 
-          type="text" 
-          v-model="searchQuery" 
+        <input
+          type="text"
+          v-model="searchQuery"
           placeholder="Rechercher une annonce..."
-          @keyup.enter="goToSearch" 
+          @keyup.enter="goToSearch"
         />
         <button @click="goToSearch">
           <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20">
@@ -31,7 +31,7 @@
         <li><RouterLink to="/dashboard">Dashboard</RouterLink></li>
         <li><RouterLink  to="/profile">Mon compte</RouterLink></li>
         <li>
-          <RouterLink v-if="isLoggedIn" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
+          <RouterLink v-if="isLoggedIn && display" @click="display=false" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
         </li>
         <li ><button v-if="!isLoggedIn" @click="$emit('open-Register')" style="border: none; background-color: #0d1b2a; color: white; padding: 0px; font-weight: 500; font-size: 15px; cursor: pointer;">Se connecter/S'inscrire</button></li>
         <li> <RouterLink v-if="isLoggedIn" to="/" @click="logout" class="btn-deconnexion">Déconnexion</RouterLink> </li>
@@ -61,6 +61,7 @@ const searchQuery = ref("");
 
 const isMenuOpen = ref(false);
 const isLoggedIn = ref(false);
+const display = ref(true);
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -98,7 +99,7 @@ li{
 }
 
 .navbar {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   width: 96%;

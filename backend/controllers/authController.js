@@ -19,7 +19,7 @@ export const login = async (req, res) => {
 
     // Générer un token JWT
     const token = jwt.sign(
-      { id: user._id , role: user.role},
+      { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -42,10 +42,16 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Email et mot de passe requis" });
     }
 
-    // Vérifier si l’utilisateur existe déjà
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    // Vérifier si l’émail est déjà utilisé
+    const existingUserEmail = await User.findOne({ email });
+    if (existingUserEmail) {
       return res.status(400).json({ message: "Cet email est déjà utilisé" });
+    }
+
+    // Vérifier si le numéro de téléphone est déjà utilisé
+    const existingUserNum = await User.findOne({ phonenumber });
+    if (existingUserNum && phonenumber !== 0) {
+      return res.status(400).json({ message: "Ce numéro de télépone est déjà utilisé" });
     }
 
     if (password !== confirmpassword) {

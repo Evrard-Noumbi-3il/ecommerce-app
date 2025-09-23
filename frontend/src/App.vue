@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <NavBar v-if="showNavBar" @open-Register="showRegister = true" />
+    <header>
+      <NavBar v-if="showNavBar" @open-Register="showRegister = true" />
+    </header>
     <router-view />
 
     <RegisterModal v-if="showRegister" @close-Register="showRegister = false" @open-login="showlogin = true"/>
@@ -27,7 +29,6 @@
   const showNavBar = computed(() => !excludedRoutes.includes(route.path));
 </script>
 <style>
-#app{
-  padding-top: 10px;
-}
+
+
 </style>
