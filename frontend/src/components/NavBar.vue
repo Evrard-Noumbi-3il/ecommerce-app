@@ -8,7 +8,7 @@
       </div>
 
         <!-- Barre de recherche -->
-      <div class="search-bar" v-if="route.name !== 'search'">
+      <div class="search-bar" v-if="route.name !== 'search' && !isAdminOrModerator">
         <input
           type="text"
           v-model="searchQuery"
@@ -27,11 +27,11 @@
       <ul class="nav-links" :class="{ active: isMenuOpen }">
         <li><RouterLink to="/">Accueil</RouterLink></li>
         <li><RouterLink to="/search">Catégories</RouterLink></li>
-        <li><RouterLink to="/favorites" v-if="isLoggedIn">Favoris</RouterLink></li>
-        <li><RouterLink to="/dashboard">Dashboard</RouterLink></li>
-        <li><RouterLink  to="/profile">Mon compte</RouterLink></li>
+        <li><RouterLink to="/favorites" v-if="isLoggedIn && ! isAdminOrModerator">Favoris</RouterLink></li>
+        <li><RouterLink to="/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
+        <li><RouterLink  to="/profile" v-if="isLoggedIn && !isAdminOrModerator">Mon compte</RouterLink></li>
         <li>
-          <RouterLink v-if="isLoggedIn && display" @click="display=false" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
+          <RouterLink v-if="isLoggedIn && !isAdminOrModerator && display" @click="display=false" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
         </li>
         <li ><button v-if="!isLoggedIn" @click="$emit('open-Register')" style="border: none; background-color: #0d1b2a; color: white; padding: 0px; font-weight: 500; font-size: 15px; cursor: pointer;">Se connecter/S'inscrire</button></li>
         <li> <RouterLink v-if="isLoggedIn" to="/" @click="logout" class="btn-deconnexion">Déconnexion</RouterLink> </li>
@@ -62,6 +62,7 @@ const searchQuery = ref("");
 const isMenuOpen = ref(false);
 const isLoggedIn = ref(false);
 const display = ref(true);
+const isAdminOrModerator = ref(false);
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -80,11 +81,13 @@ const goToSearch = () => {
 onMounted(() => {
   const token = localStorage.getItem("token");
   isLoggedIn.value = !!token;
+  isAdminOrModerator.value = token && (JSON.parse(atob(token.split('.')[1])).role === 'admin' || JSON.parse(atob(token.split('.')[1])).role === 'moderator');
 });
 
 function logout() {
   localStorage.clear();
   isLoggedIn.value = false;
+  isAdminOrModerator.value = false;
   setTimeout(() => window.location.reload(), 500)
 }
 </script>
