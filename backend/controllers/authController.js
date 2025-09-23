@@ -50,9 +50,11 @@ export const registerUser = async (req, res) => {
     }
 
     // Vérifier si le numéro de téléphone est déjà utilisé
-    const existingUserNum = await User.findOne({ phonenumber });
-    if (existingUserNum && phonenumber !== 0) {
-      return res.status(400).json({ message: "Ce numéro de télépone est déjà utilisé" });
+    if (phonenumber) {
+      const existingUserNum = await User.findOne({ phonenumber });
+      if (existingUserNum) {
+        return res.status(400).json({ message: "Ce numéro de téléphone est déjà utilisé" });
+      }
     }
 
     if (password !== confirmpassword) {
