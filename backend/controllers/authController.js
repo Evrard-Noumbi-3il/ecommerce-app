@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/Users.js';
 import jwt from 'jsonwebtoken';
+import Notifications from '../models/Notifications.js';
 
 export const login = async (req, res) => {
   try {
@@ -65,10 +66,19 @@ export const registerUser = async (req, res) => {
     const newUser = new User({ name, firstname, phonenumber, email, password: hashedPassword });
     await newUser.save();
 
+    // Créer une notification de bienvenue
+    const welcomeNotification = new Notifications({
+      type: "info",
+      target: newUser._id,
+      message: "Bienvenue sur notre plateforme ! Nous sommes ravis de vous compter parmi nous.",
+    });
+    await welcomeNotification.save();
+
     const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     return res.status(201).json({ message: "Utilisateur créé avec succès 🚀", token });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "Erreur serveur ❌", error: error.message });
   }
 };

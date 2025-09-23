@@ -397,12 +397,6 @@ const clearFilters = () => {
   applyFilters();
 };
 
-const goToPage = (page) => {
-  currentPage.value = page;
-  const query = buildQueryParams();
-  router.push({ name: "search", query });
-};
-
 // --------- COMPUTED ---------
 
 const filteredResults = computed(() => {
@@ -575,8 +569,6 @@ watch(
 /* Main Container */
 .main-container {
   display: flex;
-  max-width: 1200px;
-  margin: 0 auto;
   gap: 24px;
   padding: 24px 20px;
 }
@@ -588,7 +580,7 @@ watch(
   border-radius: 12px;
   padding: 24px;
   height: fit-content;
-  position: sticky;
+  position: static;
   top: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -661,6 +653,7 @@ watch(
 .price-input {
   flex: 1;
   padding: 8px 12px;
+  max-width: 100px;
   border: 1px solid #ced4da;
   border-radius: 6px;
   font-size: 0.875rem;
@@ -674,6 +667,7 @@ watch(
 
 .location-input {
   space-y: 12px;
+  max-width: 250px;
 }
 
 .radius-input {
@@ -837,7 +831,7 @@ watch(
 /* Results Grid */
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
 }
 
