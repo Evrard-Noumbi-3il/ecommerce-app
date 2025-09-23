@@ -8,17 +8,10 @@
       </div>
 
         <!-- Barre de recherche -->
-<<<<<<< HEAD
-      <div class="search-bar" v-if="route.name !== 'search'">
+      <div class="search-bar" v-if="route.name !== 'search' && !isAdminOrModerator">
         <input
           type="text"
           v-model="searchQuery"
-=======
-      <div class="search-bar" v-if="route.name !== 'search' && !isAdminOrModerator">
-        <input 
-          type="text" 
-          v-model="searchQuery" 
->>>>>>> c6a422d016b0222a6d8667f95c3034886f06aad5
           placeholder="Rechercher une annonce..."
           @keyup.enter="goToSearch"
         />
@@ -38,11 +31,7 @@
         <li><RouterLink to="/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
         <li><RouterLink  to="/profile" v-if="isLoggedIn && !isAdminOrModerator">Mon compte</RouterLink></li>
         <li>
-<<<<<<< HEAD
-          <RouterLink v-if="isLoggedIn && display" @click="display=false" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
-=======
-          <RouterLink v-if="isLoggedIn && !isAdminOrModerator" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
->>>>>>> c6a422d016b0222a6d8667f95c3034886f06aad5
+          <RouterLink v-if="isLoggedIn && !isAdminOrModerator && display" @click="display=false" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
         </li>
         <li ><button v-if="!isLoggedIn" @click="$emit('open-Register')" style="border: none; background-color: #0d1b2a; color: white; padding: 0px; font-weight: 500; font-size: 15px; cursor: pointer;">Se connecter/S'inscrire</button></li>
         <li> <RouterLink v-if="isLoggedIn" to="/" @click="logout" class="btn-deconnexion">Déconnexion</RouterLink> </li>
@@ -72,11 +61,8 @@ const searchQuery = ref("");
 
 const isMenuOpen = ref(false);
 const isLoggedIn = ref(false);
-<<<<<<< HEAD
 const display = ref(true);
-=======
 const isAdminOrModerator = ref(false);
->>>>>>> c6a422d016b0222a6d8667f95c3034886f06aad5
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
