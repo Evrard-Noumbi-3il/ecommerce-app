@@ -116,8 +116,8 @@
             <label>Type de vente* :</label>
             <input v-model="sellerType" list="seller-list" placeholder="Choisissez un type" class="input-postad-text">
             <datalist id="seller-list" >
-              <option value="Particulier">Particulier</option>
-              <option value="Professionnel">Professionnel</option>
+              <option value="particulier">Particulier</option>
+              <option value="professionnel">Professionnel</option>
             </datalist>
 
           </div>
@@ -217,7 +217,6 @@ export default {
           { titre: this.titre, description: this.description, prix: this.prix, id_categorie: this.id_categorie, theme: this.theme, location: this.location, state: this.state, sellerType: this.sellerType }
         );
         alert("Connexion réussie ");
-        localStorage.setItem("token", res.data.token);
         this.$router.push("/");
         setTimeout(() => window.location.reload(), 500)
       } catch (err) {
