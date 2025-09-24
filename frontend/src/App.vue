@@ -4,7 +4,7 @@
     <router-view />
 
     <RegisterModal v-if="showRegister" @close-Register="showRegister = false" @open-login="showlogin = true"/>
-    <loginModal v-if="showlogin" @close-Login="showlogin = false" @open-Register="showRegister = true" @close-Register="showRegister = false"/>
+    <LoginModal v-if="showlogin" @close-Login="showlogin = false" @open-Register="showRegister = true" @close-Register="showRegister = false"/>
   </div>
 </template>
 

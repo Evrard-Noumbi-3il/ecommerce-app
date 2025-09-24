@@ -108,22 +108,20 @@ onUnmounted(() => {
   background: #fff;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
-}
-
-.carousel:hover {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  transform: translateY(-2px);
+  display: flex;
+  flex-direction: column;
 }
 
 .carousel-inner {
   display: flex;
   transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   width: 100%;
+  height: 100%;
 }
 
 .pub-card {
   width: 100%;
-  height: 400px;
+  height: 100%;
   display: flex;
   flex-shrink: 0;
   overflow: hidden;
@@ -133,7 +131,9 @@ onUnmounted(() => {
 .image-container {
   position: relative;
   width: 65%;
+  height: 100%;
   overflow: hidden;
+  min-width: 180px;
 }
 
 .pub-card img {
@@ -141,6 +141,7 @@ onUnmounted(() => {
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s ease;
+  display: block;
 }
 
 .carousel:hover .pub-card img {
@@ -149,10 +150,7 @@ onUnmounted(() => {
 
 .image-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
 }
 
@@ -164,6 +162,7 @@ onUnmounted(() => {
   justify-content: center;
   position: relative;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+  min-width: 140px;
 }
 
 .card-accent {
@@ -216,20 +215,15 @@ onUnmounted(() => {
   opacity: 0.8;
 }
 
+.btn.prev { left: 16px; }
+.btn.next { right: 16px; }
+
 .btn:hover {
   background: rgba(255, 255, 255, 1);
   color: #667eea;
   opacity: 1;
   transform: translateY(-50%) scale(1.1);
   box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
-}
-
-.btn.prev {
-  left: 16px;
-}
-
-.btn.next {
-  right: 16px;
 }
 
 /* Indicateurs */
@@ -266,70 +260,112 @@ onUnmounted(() => {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .carousel {
-    margin: 10px;
+    height: 280px;
     border-radius: 12px;
+    margin: 10px;
   }
-
   .pub-card {
-    height: 160px;
+    height: 280px;
+  }
+  .image-container {
+    width: 55%;
+    min-width: 120px;
+  }
+  .info {
+    padding: 14px;
+    min-width: 100px;
+  }
+  .btn {
+    width: 38px;
+    height: 38px;
+  }
+  .btn.prev { left: 8px; }
+  .btn.next { right: 8px; }
+}
+
+@media (max-width: 600px) {
+  .carousel {
+    height: 180px;
+    border-radius: 8px;
+    margin: 6px;
+  }
+  .carousel-inner {
+    min-height: 180px;
+  }
+  .pub-card {
+    height: 180px;
     flex-direction: column;
   }
-
   .image-container {
     width: 100%;
     height: 60%;
+    min-width: 0;
+    min-height: 80px;
+    max-height: 110px;
   }
-
+  .pub-card img {
+    height: 100%;
+    min-height: 80px;
+    max-height: 110px;
+  }
   .info {
-    padding: 16px;
+    padding: 8px;
+    min-width: 0;
     height: 40%;
+    font-size: 0.9rem;
   }
-
   .info h3 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin-bottom: 6px;
   }
-
   .info p {
-    font-size: 0.85rem;
-    line-height: 1.4;
+    font-size: 0.8rem;
+    line-height: 1.3;
   }
-
   .btn {
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
   }
-
-  .btn.prev {
-    left: 12px;
+  .btn.prev { left: 2px; }
+  .btn.next { right: 2px; }
+  .indicators {
+    bottom: 8px;
+    gap: 4px;
   }
-
-  .btn.next {
-    right: 12px;
+  .indicator {
+    width: 8px;
+    height: 8px;
+  }
+  .indicator.active {
+    width: 16px;
+    border-radius: 4px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 400px) {
   .carousel {
-    margin: 8px;
+    height: 120px;
   }
-
   .pub-card {
-    height: 140px;
+    height: 120px;
   }
-
+  .image-container {
+    max-height: 60px;
+  }
+  .pub-card img {
+    max-height: 60px;
+  }
   .info {
-    padding: 12px;
-  }
-
-  .info h3 {
-    font-size: 1rem;
-  }
-
-  .info p {
+    padding: 4px;
     font-size: 0.8rem;
+  }
+  .info h3 {
+    font-size: 0.85rem;
+  }
+  .info p {
+    font-size: 0.7rem;
   }
 }
 
@@ -347,10 +383,5 @@ onUnmounted(() => {
 
 .pub-card {
   animation: slideIn 0.6s ease-out;
-}
-
-/* Pause l'autoplay au survol */
-.carousel:hover {
-  /* L'autoplay sera géré via JavaScript si nécessaire */
 }
 </style>
