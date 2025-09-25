@@ -3,8 +3,12 @@
     <div class="card-register">
       <h3>INSCRIVEZ VOUS ICI</h3>
 
-      <form @submit.prevent="registerUser" class="form-grid">
+      <!-- Message d'inscription -->
+      <div v-if="message.text" :class="['register-message', message.type]">
+        {{ message.text }}
+      </div>
 
+      <form @submit.prevent="registerUser" class="form-grid">
         <input
           type="text"
           class="input-register"
@@ -19,9 +23,7 @@
           placeholder="Prenom*"
           required
         />
-
         <div style="display: grid; grid-template-columns: 1fr 1fr; width:100%; gap: 50px">
-
           <input
             type="tel"
             class="input-register"
@@ -30,7 +32,6 @@
             v-model="phonenumber"
             placeholder="Telephone"
           />
-
           <input
             type="email"
             class="input-register"
@@ -38,10 +39,7 @@
             placeholder="Email*"
             required
           />
-
-
         </div>
-
         <input
           type="password"
           class="input-register"
@@ -56,18 +54,13 @@
           v-if="showConfirmPassword"
           v-model="confirmpassword"
           placeholder="Confirmer le mot de passe*"
-
         />
-
-
-
         <button
           type="submit"
           class="btn"
         >
           S’inscrire
         </button>
-
       </form>
 
       <p>
@@ -83,45 +76,56 @@
         >
         <span>Continuer avec Google</span>
       </button>
-</div>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref} from "vue";
+import { ref } from "vue";
 import axios from "axios";
 const showConfirmPassword = ref(false);
-export default {
 
+export default {
   name: "RegisterPage",
   data() {
     return {
       name: "",
       firstname: "",
+      phonenumber: "",
       email: "",
       password: "",
+      confirmpassword: "",
+      message: { text: "", type: "" }
     };
   },
   methods: {
     async registerUser() {
+      this.message = { text: "", type: "" };
       try {
         const res = await axios.post(
           `${process.env.VUE_APP_API_URL}/auth/register`,
-          { name: this.name, firstname: this.firstname, phonenumber: this.phonenumber, email: this.email, password: this.password, confirmpassword: this.confirmpassword }
+          {
+            name: this.name,
+            firstname: this.firstname,
+            phonenumber: this.phonenumber,
+            email: this.email,
+            password: this.password,
+            confirmpassword: this.confirmpassword
+          }
         );
-        alert("Inscription réussie ");
-
+        this.message = { text: "Inscription réussie ✅", type: "success" };
         localStorage.setItem("token", res.data.token);
-        this.$router.push("/");
-        setTimeout(() => window.location.reload(), 500)
+        setTimeout(() => {
+          this.$router.push("/");
+          window.location.reload();
+        }, 1200);
       } catch (err) {
-        alert(err.response?.data?.message || "Erreur d'inscription ❌");
+        this.message = { text: err.response?.data?.message || "Erreur d'inscription ❌", type: "error" };
       }
     },
   },
 };
 </script>
-
 
 <style>
   .container {
@@ -201,5 +205,25 @@ export default {
 h3{
   font-weight: 100;
   padding:10px;
+}
+
+.register-message {
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 7px;
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.register-message.success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+.register-message.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
 }
 </style>

@@ -3,9 +3,15 @@
     <div class="card-login">
       <h3>CONNEXION</h3>
 
+      <!-- Message de connexion -->
+      <div v-if="message.text" :class="['login-message', message.type]">
+        {{ message.text }}
+      </div>
+
       <form @submit.prevent="loginUser" class="form-grid" >
         <input
           type="email"
+          class="input-login"
           @focus="showPassword= true"
           v-model="email"
           placeholder="Email"
@@ -14,6 +20,7 @@
         <input
           type="password"
           class="input-login"
+          v-if="showPassword"
           v-model="password"
           placeholder="Mot de passe"
           required
@@ -44,31 +51,36 @@
 </template>
 
 <script>
-import { ref} from "vue";
+import { ref } from "vue";
 import axios from "axios";
 
 const showPassword = ref(false);
+
 export default {
   name: "LoginPage",
   data() {
     return {
       email: "",
       password: "",
+      message: { text: "", type: "" }
     };
   },
   methods: {
     async loginUser() {
+      this.message = { text: "", type: "" };
       try {
         const res = await axios.post(
           `${process.env.VUE_APP_API_URL}/auth/login`,
           { email: this.email, password: this.password }
         );
-        alert("Connexion réussie ");
+        this.message = { text: "Connexion réussie ✅", type: "success" };
         localStorage.setItem("token", res.data.token);
-        this.$router.push("/");
-        setTimeout(() => window.location.reload(), 500)
+        setTimeout(() => {
+          this.$router.push("/");
+          window.location.reload();
+        }, 1200);
       } catch (err) {
-        alert(err.response?.data?.message || "Erreur de connexion ❌");
+        this.message = { text: err.response?.data?.message || "Erreur de connexion ❌", type: "error" };
       }
     },
   },
@@ -76,9 +88,6 @@ export default {
 </script>
 
 <style>
-
-
-
   .container {
     display: flex;
     justify-content: center;
@@ -144,5 +153,25 @@ h3{
 
 .link{
   cursor: pointer;
+}
+
+.login-message {
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 7px;
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.login-message.success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+.login-message.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
 }
 </style>

@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/Users.js';
 import jwt from 'jsonwebtoken';
+import Notifications from '../models/Notifications.js';
 
 export const login = async (req, res) => {
   try {
@@ -19,7 +20,7 @@ export const login = async (req, res) => {
 
     // Générer un token JWT
     const token = jwt.sign(
-      { id: user._id , role: user.role},
+      { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -42,10 +43,18 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Email et mot de passe requis" });
     }
 
-    // Vérifier si l’utilisateur existe déjà
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    // Vérifier si l’émail est déjà utilisé
+    const existingUserEmail = await User.findOne({ email });
+    if (existingUserEmail) {
       return res.status(400).json({ message: "Cet email est déjà utilisé" });
+    }
+
+    // Vérifier si le numéro de téléphone est déjà utilisé
+    if (phonenumber) {
+      const existingUserNum = await User.findOne({ phonenumber });
+      if (existingUserNum) {
+        return res.status(400).json({ message: "Ce numéro de téléphone est déjà utilisé" });
+      }
     }
 
     if (password !== confirmpassword) {
@@ -59,10 +68,19 @@ export const registerUser = async (req, res) => {
     const newUser = new User({ name, firstname, phonenumber, email, password: hashedPassword });
     await newUser.save();
 
+    // Créer une notification de bienvenue
+    const welcomeNotification = new Notifications({
+      type: "info",
+      target: newUser._id,
+      message: "Bienvenue sur notre plateforme ! Nous sommes ravis de vous compter parmi nous.",
+    });
+    await welcomeNotification.save();
+
     const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     return res.status(201).json({ message: "Utilisateur créé avec succès 🚀", token });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "Erreur serveur ❌", error: error.message });
   }
 };

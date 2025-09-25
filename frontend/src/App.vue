@@ -1,10 +1,12 @@
 <template>
   <div id="app">
-    <NavBar v-if="showNavBar" @open-Register="showRegister = true" />
+    <header>
+      <NavBar v-if="showNavBar" @open-Register="showRegister = true" />
+    </header>
     <router-view />
 
     <RegisterModal v-if="showRegister" @close-Register="showRegister = false" @open-login="showlogin = true"/>
-    <loginModal v-if="showlogin" @close-Login="showlogin = false" @open-Register="showRegister = true" @close-Register="showRegister = false"/>
+    <LoginModal v-if="showlogin" @close-Login="showlogin = false" @open-Register="showRegister = true" @close-Register="showRegister = false"/>
   </div>
 </template>
 
@@ -27,7 +29,6 @@
   const showNavBar = computed(() => !excludedRoutes.includes(route.path));
 </script>
 <style>
-#app{
-  padding-top: 10px;
-}
+
+
 </style>
