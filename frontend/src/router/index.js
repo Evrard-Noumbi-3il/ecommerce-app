@@ -8,6 +8,7 @@ import UserManagement from '../views/UserManagement.vue';
 import CategoryManagement from '../views/CategoryManagement.vue';
 import Dashboard from '../views/DashboardManagement.vue';
 import ReportedProducts from '../views/ReportedProducts.vue';
+import ProductView from "@/views/ProductView.vue"; 
 
 const routes = [
   { path: "/", name: "HomePage", component: Home },
@@ -15,6 +16,7 @@ const routes = [
   { path: "/profile", name: "ProfilUser", component: ProfilUser },
   { path: "/post-ad", name: "PostAndAdd", component: PostAndAdd },
   { path: "/profile", name: "ProfilUser", component:ProfilUser },
+  { path: '/product/:id', name: 'product', component: ProductView, props: true},
     { path: "/admin", component: AdminLayout, children: [
     { path: "/dashboard", name: "Dashboard", component: Dashboard },
     { path: "/users", name: "UserManagement", component: UserManagement },
