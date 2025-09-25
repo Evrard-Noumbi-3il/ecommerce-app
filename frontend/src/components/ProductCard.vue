@@ -47,10 +47,10 @@
         <p>Publié le {{ new Date(product.date).toLocaleDateString() }} - {{ product.location }}</p>
         <p>Livraison estimée en 2-3 jours ouvrables*</p>
       </div>
-
+      <div class="product-description">
+      </div>
       <h2>Description</h2>
       <p>{{ product.description }}</p>
-
       
     </div>
 
@@ -100,7 +100,7 @@ defineProps({
 
 .product-buy-row{
   display: flex;
-  gap : 6%;
+  gap : 23%;
   margin-top: 20px; 
   .product-direct-buy-row{
     display: flex;
@@ -149,9 +149,17 @@ defineProps({
 
 }
 
+.product-description{
+  border-top: 1px solid #0D1B2A;
+  width: 30%;
+  margin-left: 14%;
+  margin-top: 30px;
+}
+
 
 .product-delivery-publish-info{
   line-height: 0.3;
+  margin-top: 20px;
   p{
     padding-left: 5px;
     color :#777777;
