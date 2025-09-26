@@ -3,7 +3,9 @@
     <header>
       <NavBar v-if="showNavBar" @open-Register="showRegister = true" />
     </header>
-    <router-view />
+    <router-view
+      @showdisplay="display = true"
+    />
 
     <RegisterModal v-if="showRegister" @close-Register="showRegister = false" @open-login="showlogin = true"/>
     <LoginModal v-if="showlogin" @close-Login="showlogin = false" @open-Register="showRegister = true" @close-Register="showRegister = false"/>

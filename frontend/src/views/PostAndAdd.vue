@@ -132,7 +132,7 @@
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr;">
             <button type="button" @click='showthird=true; showfinal=false' class="btn-back">retour</button>
-            <button type="submit" class="btn-next">terminer</button>
+            <button type="submit" class="btn-next" @click="$emit('showdisplay')">terminer</button>
           </div>
 
 

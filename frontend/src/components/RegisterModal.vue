@@ -147,7 +147,6 @@ export default {
 
   /* Style de la carte */
   .card-register {
-    border: 2px solid #ccc;
     border-radius: 15px;
     padding: 20px 50px 50px 50px;
     background-color: white;
@@ -164,12 +163,19 @@ export default {
   }
 
   .input-register{
-    border-radius: 6px;
-    border: 2px solid gray;
-    width: 100%;
-    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     padding: 15px;
+    width: 100%;
+    font-size: 14px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
     justify-self: center;
+  }
+
+  input:focus {
+    border-color: #0d1b2a;
+    box-shadow: 0 0 5px #0d1b2a;
+    outline: none;
   }
 
 
@@ -178,7 +184,6 @@ export default {
     justify-self: center;
     justify-content: center;
     padding: 8px 20px;
-    border: 1px solid #444;
     border-radius: 10px;
     background: #0d1b2a;
     color: white;
@@ -186,6 +191,8 @@ export default {
     display: flex;
     align-items: center;
     font-size: 16px;
+    border: none;
+
 }
 
 
@@ -202,9 +209,13 @@ export default {
   border-bottom: solid;
 }
 
-h3{
-  font-weight: 100;
-  padding:10px;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+h3 {
+  font-family: 'Poppins', sans-serif;
+  color: #f0f1f2;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .register-message {
