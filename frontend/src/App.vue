@@ -21,6 +21,7 @@
   import RegisterModal from "./components/RegisterModal.vue";
   import LoginModal from "./components/LoginModal.vue";
 
+
   // Etat réactif pour la modale
   const showRegister = ref(false);
   const showlogin = ref(false);
