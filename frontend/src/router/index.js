@@ -20,6 +20,7 @@ const routes = [
   { path: "/search", name: "search", component: SearchPage },
   { path: "/profile", name: "ProfilUser", component: ProfilUser },
   { path: "/post-ad", name: "PostAndAdd", component: PostAndAdd },
+  { path: "/product/:id", name: "Product", component: ProductView, props: true },
 
   // ✅ Chaque page admin utilise AdminLayout comme wrapper
   {
