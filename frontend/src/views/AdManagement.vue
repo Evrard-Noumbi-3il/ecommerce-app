@@ -1,153 +1,221 @@
 <template>
-  <div class="ads">
-    <h1>📢 Publicités</h1>
+  <div class="ad-container">
+    <h1>Gestion des publicités</h1>
 
-    <button class="btn add-btn" @click="showAddForm = true">➕ Ajouter une publicité</button>
+    <form @submit.prevent="addPub">
+      <input v-model="formData.titre" placeholder="Titre" required />
+      <input type="text" v-model="formData.information" placeholder="Information" required />
+      <input type="file" @change="handleFileUpload" />
+      <button type="submit">Ajouter</button>
+    </form>
 
-    <AdForm v-if="showAddForm" @close="showAddForm = false" @refresh="fetchAds" />
+    <hr />
 
-    <div v-if="ads.length === 0" class="empty">Aucune publicité actuellement.</div>
-
-    <table class="admin-table" v-else>
-      <thead>
-        <tr>
-          <th>Titre</th>
-          <th>Image</th>
-          <th>Période</th>
-          <th>Statut</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="ad in ads" :key="ad._id">
-          <td>{{ ad.title }}</td>
-          <td><img :src="ad.imageUrl" alt="pub" class="thumb" /></td>
-          <td>{{ formatPeriod(ad.startDate, ad.endDate) }}</td>
-          <td><span :class="['status', getStatus(ad)]">{{ getStatus(ad) }}</span></td>
-          <td>
-            <button class="btn edit" @click="editAd(ad)">✏️</button>
-            <button class="btn delete" @click="deleteAd(ad._id)">🗑️</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <ul>
+      <li v-for="pub in publicites" :key="pub._id">
+        <img v-if="pub.image" :src="pub.image" width="50" />
+        <strong>{{ pub.titre }}</strong> - {{ pub.information }}
+        <button @click="deletePub(pub._id)">🗑 Supprimer</button>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import AdForm from "@/components/AdForm.vue";
 
-const ads = ref([]);
-const showAddForm = ref(false);
-const fetchAds = async () => {
-  const { data } = await axios.get("http://localhost:3000/api/admin/ads");
-  ads.value = data;
+const API_BASE = "http://localhost:3000/api/admin";
+
+const publicites = ref([]);
+const formData = ref({ titre: "", information: "", image: null });
+
+const fetchPubs = async () => {
+  const { data } = await axios.get(`${API_BASE}/publicites`);
+  publicites.value = data;
 };
 
-const formatPeriod = (start, end) => {
-  return `${new Date(start).toLocaleDateString()} → ${new Date(end).toLocaleDateString()}`;
+const addPub = async () => {
+  const form = new FormData();
+  form.append("titre", formData.value.titre);
+  form.append("information", formData.value.information);
+  if (formData.value.image) form.append("image", formData.value.image);
+
+  const { data } = await axios.post(`${API_BASE}/publicites`, form, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  publicites.value.push(data);
+  formData.value = { titre: "", information: "", image: null };
 };
 
-const getStatus = (ad) => {
-  const now = new Date();
-  const start = new Date(ad.startDate);
-  const end = new Date(ad.endDate);
-  if (now < start) return "programmée";
-  if (now > end) return "expirée";
-  return "active";
+const deletePub = async (id) => {
+  await axios.delete(`${API_BASE}/publicites/${id}`);
+  publicites.value = publicites.value.filter((p) => p._id !== id);
 };
 
-const editAd = (ad) => {
-  alert("TODO: ouvrir l'éditeur de pub pour " + ad.title);
+const handleFileUpload = (e) => {
+  formData.value.image = e.target.files[0];
 };
 
-const deleteAd = async (id) => {
-  await axios.delete(`http://localhost:3000/api/admin/ads/${id}`);
-  fetchAds();
-};
-
-onMounted(fetchAds);
+onMounted(fetchPubs);
 </script>
 
 <style scoped>
-.ads {
-  padding: 20px;
+body {
+  background: #f9fafb;
 }
+
+.ad-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+  padding: 32px 24px;
+}
+
 h1 {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-  color: #1e293b;
-}
-.btn {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-}
-.add-btn {
-  background: #10b981;
-  color: white;
-  margin-bottom: 15px;
-}
-.edit {
-  background: #3b82f6;
-  color: white;
-}
-.delete {
-  background: #ef4444;
-  color: white;
-  margin-left: 5px;
-}
-.thumb {
-  width: 60px;
-  height: auto;
-  border-radius: 4px;
-}
-.status {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  text-transform: capitalize;
-}
-.status.active {
-  background: #4ade80;
-  color: #064e3b;
-}
-.status.programmée {
-  background: #facc15;
-  color: #78350f;
-}
-.status.expirée {
-  background: #f87171;
-  color: #7f1d1d;
-}
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-.admin-table th,
-.admin-table td {
-  padding: 14px;
-  border-bottom: 1px solid #e2e8f0;
-  text-align: left;
-}
-.admin-table th {
-  background: #f1f5f9;
-  font-weight: 600;
-  color: #334155;
-}
-.empty {
-  background: #fef3c7;
-  padding: 15px;
-  border-radius: 6px;
   text-align: center;
-  color: #92400e;
+  font-size: 2rem;
+  color: #1e293b;
+  margin-bottom: 32px;
+  letter-spacing: 1px;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  background: #f3f4f6;
+  padding: 18px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 32px;
+}
+
+form input[type="text"],
+form input[type="file"] {
+  flex: 1 1 180px;
+  padding: 10px 14px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #fff;
+}
+
+form input[type="text"]:focus,
+form input[type="file"]:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px #3b82f622;
+}
+
+form button[type="submit"] {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.08);
+}
+
+form button[type="submit"]:hover {
+  background: #2563eb;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+}
+
+hr {
+  margin: 32px 0 18px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  background: #f9fafb;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  transition: box-shadow 0.2s;
+}
+
+li:hover {
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.1);
+}
+
+li img {
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #f3f4f6;
+}
+
+li strong {
+  font-size: 1.08rem;
+  color: #1e293b;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+li button {
+  margin-left: auto;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.98rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+li button:hover {
+  background: #dc2626;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+}
+
+@media (max-width: 600px) {
+  .ad-container {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+  }
+
+  form {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 8px;
+  }
+
+  li {
+    padding: 10px 8px;
+    gap: 8px;
+  }
+
+  li img {
+    width: 40px;
+    height: 28px;
+  }
 }
 </style>

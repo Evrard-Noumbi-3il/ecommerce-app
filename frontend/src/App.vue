@@ -3,9 +3,12 @@
     <header>
       <NavBar v-if="showNavBar" @open-Register="showRegister = true" />
     </header>
-    <router-view
+    <component :is="layout">
+      <router-view
       @showdisplay="display = true"
     />
+    </component>
+    
 
     <RegisterModal v-if="showRegister" @close-Register="showRegister = false" @open-login="showlogin = true"/>
     <LoginModal v-if="showlogin" @close-Login="showlogin = false" @open-Register="showRegister = true" @close-Register="showRegister = false"/>
@@ -30,6 +33,9 @@
   const route = useRoute();
   const excludedRoutes = ["/login", "/register"];
   const showNavBar = computed(() => !excludedRoutes.includes(route.path));
+  const layout = computed(() => {
+  return route.meta.layout || "div"; // si pas de layout, on met un simple div
+});
 </script>
 <style>
 
