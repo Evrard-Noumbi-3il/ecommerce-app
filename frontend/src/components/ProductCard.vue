@@ -5,7 +5,11 @@
 
       <div class="image-box">
         <span class="badge">NEUF</span>
-        <img :src="product.images[0]" alt="Produit">
+        <img v-if="product.images && product.images.length > 0"
+          :src="product.images[0]"
+          alt="Produit"
+        />
+
         <button class="fav">♥</button>
       </div>
 
@@ -14,7 +18,7 @@
           Levendeur
          <br><small>Particulier</small>
         </div>
-        
+
         <p>Note</p>
         <h2>2,9 ★</h2>
 
@@ -26,13 +30,19 @@
       </div>
 
     </div>
-    
+
     <div class="product-info-details">
 
-      <div class="product-info-without-comments">
-        <div class="product-title-theme">
-          <h1>{{ product.titre }}</h1>
-          <p>{{ product.theme }} -> test</p>
+      <div class="product-title-theme">
+        <h1>{{ product.titre }}</h1>
+        <p>{{ product.theme }} -> test</p>
+      </div>
+
+      <div class="product-buy-row">
+
+        <div class="product-direct-buy-row">
+          <h2 class="product-price">{{ product.prix }} €</h2>
+          <button class="direct-buy-button">Payer</button>
         </div>
         <div class="product-buy-row">
           <div class="product-direct-buy-row">
@@ -78,7 +88,11 @@
         </div>
        
       </div>
-      
+      <div class="product-description">
+      </div>
+      <h2>Description</h2>
+      <p>{{ product.description }}</p>
+
     </div>
 
   </div>
@@ -101,11 +115,11 @@ defineProps({
 }
 
 .product-info {
-  display: flex;  
+  display: flex;
   flex-direction: column;
   align-content: center;
   justify-content: center;
-  width: 60%;  
+  width: 60%;
 }
 .product-card {
   display: grid;
@@ -128,18 +142,18 @@ defineProps({
 .product-buy-row{
   display: flex;
   gap : 23%;
-  margin-top: 20px; 
+  margin-top: 20px;
   .product-direct-buy-row{
     display: flex;
-    
+
     border-radius: 45px;
     background-color: #0d1c2b;
 
-  
+
     .product-price{
       color : #0D1B2A;
       background-color: #FABA20;
-      
+
       margin:0;
       border-radius:  45px ;
       padding: 10px 20px;
@@ -156,7 +170,7 @@ defineProps({
       height: 100%;
       align-self: center;
       padding: 10px 20px;
-    
+
     }
 
  }
@@ -230,7 +244,7 @@ defineProps({
   background: #FDBF37;
   border-radius:20px ;
 
-  box-shadow: 0 0 8px rgba(0, 0, 0); 
+  box-shadow: 0 0 8px rgba(0, 0, 0);
   height: 250px;
 }
 .image-box img {
