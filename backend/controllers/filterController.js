@@ -2,6 +2,17 @@ import Product from "../models/Produits.js";
 import Category from "../models/Categorie.js";
 import Thematique from "../models/Thematique.js";
 
+export const getProductById = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ error: "Produit non trouvé" });
+    res.json(product);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+}
+
 export const getProducts = async (req, res) => {
   try {
     const {

@@ -25,11 +25,11 @@
 
       <!-- Liens de navigation -->
       <ul class="nav-links" :class="{ active: isMenuOpen }">
-        <li><RouterLink to="/">Accueil</RouterLink></li>
-        <li><RouterLink to="/search">Catégories</RouterLink></li>
-        <li><RouterLink to="/favorites" v-if="isLoggedIn && ! isAdminOrModerator">Favoris</RouterLink></li>
-        <li><RouterLink to="/admin/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
-        <li><RouterLink  to="/profile" v-if="isLoggedIn && !isAdminOrModerator">Mon compte</RouterLink></li>
+        <li><RouterLink to="/" @click="display=true">Accueil</RouterLink></li>
+        <li><RouterLink to="/search" @click="display=true">Catégories</RouterLink></li>
+        <li><RouterLink to="/favorites" v-if="isLoggedIn && ! isAdminOrModerator" @click="display=true">Favoris</RouterLink></li>
+        <li><RouterLink to="/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
+        <li><RouterLink  to="/profile" v-if="isLoggedIn && !isAdminOrModerator" @click="display=true">Mon compte</RouterLink></li>
         <li>
           <RouterLink v-if="isLoggedIn && !isAdminOrModerator && display" @click="display=false" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
         </li>
@@ -61,7 +61,7 @@ const searchQuery = ref("");
 
 const isMenuOpen = ref(false);
 const isLoggedIn = ref(false);
-const display = ref(true);
+const display = ref(false);
 const isAdminOrModerator = ref(false);
 
 const toggleMenu = () => {
@@ -82,6 +82,11 @@ onMounted(() => {
   const token = localStorage.getItem("token");
   isLoggedIn.value = !!token;
   isAdminOrModerator.value = token && (JSON.parse(atob(token.split('.')[1])).role === 'admin' || JSON.parse(atob(token.split('.')[1])).role === 'moderator');
+
+  if (!sessionStorage.getItem("appStarted")) {
+    display.value = true;
+    sessionStorage.setItem("appStarted", "true");
+  }
 });
 
 function logout() {
