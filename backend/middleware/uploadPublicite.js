@@ -5,7 +5,7 @@ import fs from "fs";
 // Définition du dossier d’upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    let uploadPath = path.join("../frontend/public/images/thematique");
+    let uploadPath = path.join("../frontend/public/images/publicites");
 
     // Si le dossier n’existe pas, on le crée
     if (!fs.existsSync(uploadPath)) {
@@ -30,6 +30,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ storage, fileFilter });
+const uploadPub = multer({ storage, fileFilter });
 
-export default upload;
+export default uploadPub;

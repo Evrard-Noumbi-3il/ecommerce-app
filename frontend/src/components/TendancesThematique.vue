@@ -53,7 +53,7 @@ const goToSearch = (tendance) => {
   overflow-x: auto;
   padding: 10px;
   max-width: 1200px;
-  flex-wrap: wrap;
+  
 }
 
 .card {

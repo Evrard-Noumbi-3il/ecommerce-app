@@ -28,7 +28,7 @@
         <li><RouterLink to="/">Accueil</RouterLink></li>
         <li><RouterLink to="/search">Catégories</RouterLink></li>
         <li><RouterLink to="/favorites" v-if="isLoggedIn && ! isAdminOrModerator">Favoris</RouterLink></li>
-        <li><RouterLink to="/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
+        <li><RouterLink to="/admin/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
         <li><RouterLink  to="/profile" v-if="isLoggedIn && !isAdminOrModerator">Mon compte</RouterLink></li>
         <li>
           <RouterLink v-if="isLoggedIn && !isAdminOrModerator && display" @click="display=false" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
