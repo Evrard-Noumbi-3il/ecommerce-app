@@ -16,7 +16,7 @@
       <div class="info-box">
         <div>
           Levendeur
-         <br><small>Particulier</small>
+        <br><small>Particulier</small>
         </div>
 
         <p>Note</p>

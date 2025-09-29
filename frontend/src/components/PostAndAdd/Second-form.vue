@@ -18,7 +18,11 @@
 
         <div style="display: grid; ;margin-bottom: 30px; grid-template-rows: 38px; ">
           <label>Description de l'annonce*</label>
-          <textarea v-model="description"> </textarea>
+          <textarea
+            @input="emit('update:description', $event.target.value)"
+            :value="description"
+            placeholder="Décrivez votre produit en détail..."
+          > </textarea>
         </div>
 
         <div style="display: grid; grid-template-columns: 30% 35% 35%;">
@@ -26,7 +30,8 @@
           <label>
             <input
               type="radio"
-              v-model="state"
+              :checked="state === 'neuf'"
+              @input="emit('update:state', $event.target.value)"
               value="neuf"
               name="etat"
             />
@@ -35,7 +40,8 @@
           <label>
             <input
               type="radio"
-              v-model="state"
+              :checked="state === 'occasion'"
+              @input="emit('update:state', $event.target.value)"
               value="occasion"
               name="etat"/>
             <span>Occasion</span>
@@ -53,10 +59,6 @@
 
 <script setup>
   import { ref } from "vue";
-
-  const description = ref('');
-  const state = ref('');
-  const image = ref(null);
 
   const props = defineProps({
     titre: String,
@@ -130,7 +132,7 @@
     top: -15%;
     left: -8px;
     font-size: 30px;
-    background-color:  rgba(0,0,0,0.1);
+    background-color:  rgba(34, 52, 74, 0.366);
     color: #0d1b2a;
     border-radius: 5px;
     padding: 0 0 0 70px;

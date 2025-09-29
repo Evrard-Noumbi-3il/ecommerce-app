@@ -35,7 +35,7 @@
         <input
           list="categories"
           :value="id_categorie"
-          @input="emit('update:id_categorie', Number($event.target.value))"
+          @input="emit('update:id_categorie', $event.target.value)"
           placeholder="Commencez à taper..."
           class="input-postad-text">
         <datalist id="categories">
@@ -56,8 +56,10 @@
   const props = defineProps({
     titre: String,
     theme: String,
-    id_categorie: Number
+    id_categorie: String
   })
+  const categories = ref([]);
+  const thematiques = ref([]);
 
   const emit = defineEmits(['update:titre', 'update:theme', 'update:id_categorie'])
 
@@ -70,7 +72,7 @@
       })
       .catch(err => console.error(err));
 
-     axios.get("http://localhost:3000/api/products/thematiques")
+    axios.get("http://localhost:3000/api/products/thematiques")
       .then(res => {
         thematiques.value = res.data;
       })
@@ -87,7 +89,7 @@
     top: -9%;
     left: -5px;
     font-size: 30px;
-    background-color:  rgba(0,0,0,0.1);
+    background-color:  rgba(34, 52, 74, 0.366);
     color: #0d1b2a;
     border-radius: 5px;
     padding: 0 0 0 31px;
@@ -111,8 +113,6 @@
     border: 1px solid rgba(0,0,0,0.1);
     box-sizing: border-box;
   }
-
-
 
   label{
     display: block;
