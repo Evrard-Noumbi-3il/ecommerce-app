@@ -29,28 +29,55 @@
     
     <div class="product-info-details">
 
-      <div class="product-title-theme">
-        <h1>{{ product.titre }}</h1>
-        <p>{{ product.theme }} -> test</p>
-      </div>
-      
-      <div class="product-buy-row">
-        
-        <div class="product-direct-buy-row">
-          <h2 class="product-price">{{ product.prix }} €</h2>
-          <button class="direct-buy-button">Payer</button>
+      <div class="product-info-without-comments">
+        <div class="product-title-theme">
+          <h1>{{ product.titre }}</h1>
+          <p>{{ product.theme }} -> test</p>
         </div>
+        <div class="product-buy-row">
+          <div class="product-direct-buy-row">
+            <h2 class="product-price">{{ product.prix }} €</h2>
+            <button class="direct-buy-button">Payer</button>
+          </div>
         <button class="offer-button">faire une offre</button>
+        </div>
+        <div class="product-delivery-publish-info">
+          <p>Publié le {{ new Date(product.date).toLocaleDateString() }} - {{ product.location }}</p>
+          <p>Livraison estimée en 2-3 jours ouvrables*</p>
+        </div>
+        <div class="product-description">
+        </div>
+        <h2>Description</h2>
+        <p>{{ product.description }}</p>
       </div>
 
-      <div class="product-delivery-publish-info">
-        <p>Publié le {{ new Date(product.date).toLocaleDateString() }} - {{ product.location }}</p>
-        <p>Livraison estimée en 2-3 jours ouvrables*</p>
+      <div class="comments-seller">
+        <div class="content-comments" >
+          <h2>Avis</h2>
+          <div class="user-comments">
+            <div class="username-and-rating">
+              <p>Kun Mbz</p>
+              <p>1★   10/04/2025</p>
+            </div>
+          <div class="message-comments">
+              <p>Il m’a vendu une montre de merde.Franchement, je suis très déçu par cette montre connectée.
+                 L’autonomie est catastrophique : je dois la recharger 
+                 presque tous les jours, alors qu’elle était annoncée avec 
+                 *une semaine de batterie. L’écran manque de luminosité et de
+                 *vient pratiquement illisible en plein soleil. Les notifications arrivent
+                  parfois avec un retard énorme, ce qui annule totalement l’intérêt
+                   d’une montre censée me tenir informé en temps réel. De plus, 
+                   l’application mobile est lente, mal traduite et plante régulièrement. 
+                   Enfin, le bracelet est inconfortable et a commencé à s’user après 
+                   seulement quelques semaines d’utilisation. Pour le prix, je m’attendais à beaucoup mieux, et honnêtement je regrette cet achat</p>
+          </div>
+
+          </div>
+          
+          
+        </div>
+       
       </div>
-      <div class="product-description">
-      </div>
-      <h2>Description</h2>
-      <p>{{ product.description }}</p>
       
     </div>
 
@@ -156,6 +183,37 @@ defineProps({
   margin-top: 30px;
 }
 
+
+.product-info-details{
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.comments-seller{
+  border-left: 1px solid #0D1B2A;
+  margin-top : 30px;
+
+
+  .content-comments{
+    padding-left: 40px;
+     .username-and-rating{
+      line-height: 0.3;
+     }
+     .message-comments{
+      border-bottom-left-radius: 45px;
+      border-bottom-right-radius: 45px;
+      border-top-right-radius: 45px;
+      padding: 10px;
+      width: 300px;
+      height: auto;
+      word-wrap: break-word;
+      background-color: #D9D9D9;
+
+     }
+
+
+  }
+}
 
 .product-delivery-publish-info{
   line-height: 0.3;
