@@ -5,7 +5,10 @@
 
       <div class="image-box">
         <span class="badge">NEUF</span>
-        <img :src="product.images[0]" alt="Produit">
+        <img v-if="product.images && product.images.length > 0"
+          :src="product.images[0]"
+          alt="Produit"
+        />
         <button class="fav">♥</button>
       </div>
 
