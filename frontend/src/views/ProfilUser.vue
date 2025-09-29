@@ -16,7 +16,7 @@
     <!-- Contenu principal -->
     <div class="content">
       <div class="content-scroll">
-        
+
         <!-- Page Profil -->
         <div v-if="currentPage === 'profil'" class="profile-layout-v4">
           <h2 class="page-title-v4"><i class="fas fa-user-shield"></i> Mon Profil</h2>
@@ -129,9 +129,9 @@ export default {
         email: '',
         phone: '',
         address: '',
-        profileImage: null 
+        profileImage: null
       },
-      userFile: null, 
+      userFile: null,
     };
   },
   created() {
@@ -144,10 +144,10 @@ export default {
     handleImageUpload(event) {
       const file = event.target.files[0];
       if (file) {
-        this.userFile = file; 
+        this.userFile = file;
         const reader = new FileReader();
         reader.onload = (e) => {
-          this.user.profileImage = e.target.result; 
+          this.user.profileImage = e.target.result;
         };
         reader.readAsDataURL(file);
       }
@@ -164,11 +164,11 @@ export default {
         formData.append('phone', this.user.phone);
         formData.append('address', this.user.address);
         if (this.userFile) {
-          formData.append('profilePhoto', this.userFile); 
+          formData.append('profilePhoto', this.userFile);
         }
         await axios.put('http://localhost:3000/api/user/me', formData, {});
         alert('Profil sauvegardé avec succès !');
-        this.userFile = null; 
+        this.userFile = null;
       } catch (err) {
         console.error('Erreur lors de la sauvegarde du profil:', err);
         alert('Erreur lors de la sauvegarde du profil');
@@ -200,7 +200,7 @@ export default {
 :root {
   --main-color: #047857;
   --secondary-color: #f9fafb;
-  --text-dark: #1f2937; 
+  --text-dark: #1f2937;
   --text-muted: #6b7280;
 }
 
@@ -209,8 +209,7 @@ export default {
   min-height: 100vh;
   background-color: var(--secondary-color);
   font-family: 'Poppins', sans-serif;
-  margin-top:40px;
-  mrgin:100px;
+  margin:100px;
 }
 
 /* MENU LATÉRAL */

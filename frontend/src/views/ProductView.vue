@@ -1,6 +1,6 @@
 <template>
   <div class="product-view">
-    
+
     <div v-if="loading">Chargement...</div>
     <div v-else-if="error">{{ error }}</div>
     <ProductCard v-else :product="product" />
@@ -23,7 +23,7 @@ const error = ref(null);
 const fetchProduct = async (id) => {
   try {
     const response = await axios.get(`http://localhost:3000/api/products/${id}`);
-    product.value = response.data 
+    product.value = response.data
   } catch (error) {
     console.error("Produit introuvable : ", error)
   }finally {
@@ -38,10 +38,10 @@ onMounted(() => {
 
 <style scoped>
 .product-view {
- padding-top: 90px;   
- display: flex;
- align-content: center;
- justify-content: center;
- align-self: center;
+  padding-top: 120px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-self: center;
 }
 </style>

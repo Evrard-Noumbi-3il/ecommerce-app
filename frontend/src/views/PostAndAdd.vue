@@ -52,7 +52,7 @@
       </form>
     </div>
 
-    <div style="width: 100%; max-width:100%; display: flex; justify-content: center; align-content: center; ">
+    <div style="padding: 110px 0 0 0;width: 100%; max-width:100%; display: flex; justify-content: center; align-content: center; ">
       <ProductCard
         style="width: 100%; justify-content: center; align-content: center;"
         :product="product"
