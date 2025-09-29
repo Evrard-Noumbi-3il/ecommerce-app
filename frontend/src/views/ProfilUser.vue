@@ -3,63 +3,113 @@
     <!-- Menu latéral -->
     <div class="menu">
       <button :class="{'active': currentPage === 'profil'}" @click="currentPage = 'profil'">
-        <i class="fas fa-user"></i> Mon Profil
+        <i class="fas fa-id-card"></i> Mon Profil
       </button>
       <button :class="{'active': currentPage === 'messages'}" @click="currentPage = 'messages'">
-        <i class="fas fa-envelope"></i> Mes Messages
+        <i class="fas fa-comment-dots"></i> Messages
       </button>
       <button :class="{'active': currentPage === 'notifications'}" @click="currentPage = 'notifications'">
-        <i class="fas fa-bell"></i> Mes Notifications
+        <i class="fas fa-exclamation-circle"></i> Alertes
       </button>
     </div>
 
     <!-- Contenu principal -->
     <div class="content">
-      <!-- Profil -->
-      <div v-if="currentPage === 'profil'" class="profile-wrapper">
-        <div class="profile-card">
-          <!-- En-tête avec photo -->
-          <div class="profile-header">
-            <div class="profile-image-container">
-              <div v-if="!user.profileImage" class="default-avatar">
-                <i class="fas fa-user"></i>
+      <div class="content-scroll">
+        
+        <!-- Page Profil -->
+        <div v-if="currentPage === 'profil'" class="profile-layout-v4">
+          <h2 class="page-title-v4"><i class="fas fa-user-shield"></i> Mon Profil</h2>
+
+          <div class="main-profile-card">
+            <div class="card-content-v4">
+
+              <!-- Mode Carte de Visite -->
+              <div v-if="!isEditing" class="business-card">
+                <div class="card-header-v4">
+                  <div class="profile-image-container-v4">
+                    <img v-if="user.profileImage" :src="user.profileImage" alt="Photo de profil" class="profile-image-v4">
+                    <div v-else class="default-avatar-v4">
+                      <i class="fas fa-user-circle"></i>
+                    </div>
+                  </div>
+                  <div class="profile-text-v4">
+                    <h1 class="profile-name-v4">{{ user.name }}</h1>
+                    <p><i class="fas fa-phone"></i> {{ user.phone || 'Non renseigné' }}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> {{ user.address || 'Non renseigné' }}</p>
+                  </div>
+                </div>
+                <div class="card-footer-v4">
+                  <button @click="isEditing = true" class="action-btn-v4">
+                    <i class="fas fa-edit"></i> Modifier
+                  </button>
+                </div>
               </div>
-              <img v-else :src="user.profileImage" alt="Photo de profil" class="profile-image">
-              <input type="file" @change="handleImageUpload" class="file-input" accept="image/*" />
-              <button class="upload-btn" @click="triggerFileInput">
-                <i class="fas fa-plus"></i>
-              </button>
+
+              <!-- Mode Edition (Formulaire complet) -->
+              <div v-else>
+                <div class="card-header-v4">
+                  <div class="profile-image-container-v4">
+                    <img v-if="user.profileImage" :src="user.profileImage" alt="Photo de profil" class="profile-image-v4">
+                    <div v-else class="default-avatar-v4">
+                      <i class="fas fa-user-circle"></i>
+                    </div>
+                    <input type="file" @change="handleImageUpload" class="file-input" accept="image/*" />
+                    <button class="upload-btn-v4" @click="triggerFileInput" title="Changer de photo">
+                      <i class="fas fa-camera"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="details-grid-v4">
+                  <div class="detail-item-v4">
+                    <label><i class="fas fa-user"></i> Nom/Pseudo</label>
+                    <input type="text" v-model="user.name" class="profile-input" />
+                  </div>
+                  <div class="detail-item-v4">
+                    <label><i class="fas fa-envelope"></i> E-mail</label>
+                    <input type="email" v-model="user.email" class="profile-input" />
+                  </div>
+                  <div class="detail-item-v4">
+                    <label><i class="fas fa-phone"></i> Téléphone</label>
+                    <input type="text" v-model="user.phone" class="profile-input" />
+                  </div>
+                  <div class="detail-item-v4 full-width-v4">
+                    <label><i class="fas fa-map-marker-alt"></i> Adresse</label>
+                    <input type="text" v-model="user.address" class="profile-input" />
+                  </div>
+                </div>
+
+                <div class="card-footer-v4">
+                  <button @click="saveAndClose" class="action-btn-v4">
+                    <i class="fas fa-save"></i> Sauvegarder
+                  </button>
+                  <button @click="isEditing = false" class="cancel-btn-v4">
+                    <i class="fas fa-times"></i> Annuler
+                  </button>
+                </div>
+              </div>
+
             </div>
-            <h2 class="profile-name">{{ user.name }}</h2>
-            <p class="profile-email">{{ user.email }}</p>
-          </div>
-
-          <!-- Infos -->
-          <div class="profile-body">
-            <h3>Informations personnelles</h3>
-            <p><strong>Nom :</strong> {{ user.name }}</p>
-            <p><strong>Email :</strong> {{ user.email }}</p>
-            <p><strong>Numéro :</strong> {{ user.phone }}</p>
-            <p><strong>Adresse :</strong> {{ user.address }}</p>
-          </div>
-
-          <!-- Actions -->
-          <div class="profile-footer">
-            <button @click="saveProfile" class="save-btn"><i class="fas fa-save"></i> Modifier</button>
           </div>
         </div>
-      </div>
 
-      <!-- Messages -->
-      <div v-if="currentPage === 'messages'">
-        <h2 class="section-title"><i class="fas fa-envelope"></i> Mes Messages</h2>
-        <p>Bienvenue dans votre boîte de réception. Aucun nouveau message.</p>
-      </div>
+        <!-- Page Messages -->
+        <div v-if="currentPage === 'messages'">
+          <h2 class="page-title-v4"><i class="fas fa-comment-dots"></i> Mes Messages</h2>
+          <div class="empty-state-v4">
+            <p>Pas de nouveaux messages. Gardez l'œil ouvert !</p>
+          </div>
+        </div>
 
-      <!-- Notifications -->
-      <div v-if="currentPage === 'notifications'">
-        <h2 class="section-title"><i class="fas fa-bell"></i> Mes Notifications</h2>
-        <p>Vous n’avez aucune notification pour l’instant.</p>
+        <!-- Page Notifications -->
+        <div v-if="currentPage === 'notifications'">
+          <h2 class="page-title-v4"><i class="fas fa-exclamation-circle"></i> Mes Alertes</h2>
+          <div class="empty-state-v4">
+            <p>Vous n'avez aucune alerte importante en attente.</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -73,13 +123,15 @@ export default {
   data() {
     return {
       currentPage: 'profil',
+      isEditing: false,
       user: {
-        name: '',
+        name: 'toto',
         email: '',
         phone: '',
         address: '',
         profileImage: null 
       },
+      userFile: null, 
     };
   },
   created() {
@@ -92,35 +144,43 @@ export default {
     handleImageUpload(event) {
       const file = event.target.files[0];
       if (file) {
+        this.userFile = file; 
         const reader = new FileReader();
         reader.onload = (e) => {
-          this.user.profileImage = e.target.result;
+          this.user.profileImage = e.target.result; 
         };
         reader.readAsDataURL(file);
       }
     },
+    async saveAndClose() {
+      await this.saveProfile();
+      this.isEditing = false;
+    },
     async saveProfile() {
       try {
-        await axios.put('/api/user/me', {
-          name: this.user.name,
-          email: this.user.email,
-          phone: this.user.phone,
-          address: this.user.address
-        });
+        const formData = new FormData();
+        formData.append('name', this.user.name);
+        formData.append('email', this.user.email);
+        formData.append('phone', this.user.phone);
+        formData.append('address', this.user.address);
+        if (this.userFile) {
+          formData.append('profilePhoto', this.userFile); 
+        }
+        await axios.put('http://localhost:3000/api/user/me', formData, {});
         alert('Profil sauvegardé avec succès !');
+        this.userFile = null; 
       } catch (err) {
+        console.error('Erreur lors de la sauvegarde du profil:', err);
         alert('Erreur lors de la sauvegarde du profil');
       }
     },
     async fetchUser() {
       try {
-
         const token = localStorage.getItem("token");
-        const id = token && (JSON.parse(atob(token.split('.')[1]))._id);
-        const res = await axios.get('/api/user/me');
+        const id = token && (JSON.parse(atob(token.split('.')[1])).id);
+        const res = await axios.get(`http://localhost:3000/api/user/me/${id}`);
         const data = res.data;
-
-        this.user.name = data.name;
+        this.user.name = data.name || "titi";
         this.user.email = data.email;
         this.user.phone = data.phonenumber || '';
         this.user.address = data.adresse?.rue || '';
@@ -134,191 +194,223 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+
+:root {
+  --main-color: #047857;
+  --secondary-color: #f9fafb;
+  --text-dark: #1f2937; 
+  --text-muted: #6b7280;
+}
 
 .app-container {
   display: flex;
   min-height: 100vh;
-  font-family: 'Roboto', sans-serif;
-  background-color: #f0f3f7;
-  margin-top: 50px;
+  background-color: var(--secondary-color);
+  font-family: 'Poppins', sans-serif;
+  margin-top:40px;
+  mrgin:100px;
 }
 
+/* MENU LATÉRAL */
 .menu {
   width: 250px;
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  display: flex;
-  flex-direction: column;
-  padding: 20px 0;
+  background-color: white;
+  padding: 30px 0;
+  box-shadow: 4px 0 10px rgba(0,0,0,0.05);
+  flex-shrink: 0;
 }
 
 .menu button {
   background: none;
   border: none;
-  color: #ecf0f1;
+  color: var(--text-dark);
   text-align: left;
-  padding: 15px 25px;
-  margin: 5px 0;
-  font-size: 16px;
-  cursor: pointer;
-  border-left: 4px solid transparent;
+  padding: 18px 30px;
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 15px;
-  transition: 0.3s;
+  font-size: 15px;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: all 0.2s;
 }
 
 .menu button:hover {
-  background-color: #34495e;
-  border-left-color: #5dade2;
+  background-color: #f3f4f6;
 }
 
 .menu button.active {
-  background: #34495e;
-  border-left-color: #5dade2;
-  font-weight: 500;
-  color: #5dade2;
+  background-color: #e6e6e6;
+  border-left-color: var(--main-color);
+  color: var(--main-color);
+  font-weight: 600;
 }
 
+/* CONTENU PRINCIPAL */
 .content {
   flex: 1;
-  padding: 40px;
-}
-
-.section-title {
-  font-size: 1.8em;
-  color: #2c3e50;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.profile-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.profile-card {
-  background: #ffffff;
-  width: 100%;
-  max-width: 400px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
 }
 
-.profile-header {
-  background: linear-gradient(135deg, #9cb6c8ff, #5f6a71ff);
-  color: white;
-  padding: 30px 20px;
-  text-align: center;
+.content-scroll {
+  padding: 40px;
+  overflow-y: auto;
 }
 
-.profile-image-container {
-  position: relative;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 15px auto;
-}
-
-.profile-image {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 3px solid white;
-  object-fit: cover;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-.default-avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #fff;
-  color: #3498db;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 50px;
-  border: 3px solid white;
-  margin: 0 auto;
-}
-
-.file-input {
-  display: none;
-}
-
-.upload-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background-color: #fff;
-  color: #4a4d4fff;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.profile-name {
-  font-size: 22px;
+.page-title-v4 {
+  font-size: 1.8em;
   font-weight: 700;
-}
-
-.profile-email {
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-.profile-body {
-  padding: 20px;
-}
-
-.profile-body h3 {
-  margin-bottom: 15px;
-  font-size: 18px;
-  color: #2c3e50;
-}
-
-.profile-body p {
-  margin-bottom: 10px;
-  font-size: 16px;
-  color: #555;
-}
-
-.profile-footer {
+  color: var(--text-dark);
+  margin-bottom: 30px;
   display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 10px;
+}
+
+/* CARTE DE VISITE */
+.business-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px 30px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.business-card .card-header-v4 {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-image-container-v4 {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--main-color);
+  display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 15px;
-  border-top: 1px solid #eee;
+  background: #f3f4f6;
+  flex-shrink: 0;
 }
 
-.save-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  background-color: #3498db;
-  color: white;
-  font-size: 16px;
+.profile-image-v4 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.default-avatar-v4 {
+  font-size: 70px;
+  color: var(--main-color);
+}
+
+.profile-text-v4 {
+  flex: 1;
+}
+
+.profile-name-v4 {
+  font-size: 1.6em;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--text-dark);
+}
+
+.profile-text-v4 p {
+  margin: 5px 0;
+  color: var(--text-muted);
+  font-size: 0.95em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* FORMULAIRE */
+.details-grid-v4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.detail-item-v4 label {
+  display: block;
+  font-size: 0.9em;
   font-weight: 500;
-  cursor: pointer;
-  transition: 0.3s;
+  color: var(--text-muted);
+  margin-bottom: 5px;
 }
 
-.save-btn:hover {
-  background-color: #2e86c1;
+.profile-input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1em;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-dark);
+  background-color: white;
+  transition: box-shadow 0.2s;
+}
+
+.profile-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #c7d2fe;
+}
+
+.full-width-v4 {
+  grid-column: 1 / -1;
+}
+
+/* BOUTONS */
+.action-btn-v4 {
+  padding: 10px 25px;
+  border: none;
+  border-radius: 30px;
+  background-color: var(--main-color);
+  color: #facc15; /* texte jaune */
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px;
+}
+
+.action-btn-v4:hover,
+.action-btn-v4:active {
+  transform: scale(0.97);
+}
+
+/* bouton annuler gris avec texte blanc */
+.cancel-btn-v4 {
+  background-color: #6b7280;
+  color: white;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px;
+}
+
+.cancel-btn-v4:hover,
+.cancel-btn-v4:active {
+  transform: scale(0.97);
 }
 </style>
