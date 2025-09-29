@@ -26,7 +26,7 @@
     <div v-else class="main-content">
       <!-- Tendances -->
       <section class="content-section" v-if="tendances.length">
-        
+
           <div class="section-header">
             <div class="section-title-group">
               <h2 class="section-title">
@@ -44,12 +44,12 @@
           <div class="section-content">
             <TendancesThematique :thematiques="tendances" />
           </div>
-        
+
       </section>
 
       <!-- Catégories -->
       <section class="content-section" v-if="categories.length">
-        
+
           <div class="section-header">
             <div class="section-title-group">
               <h2 class="section-title">
@@ -66,12 +66,12 @@
           <div class="section-content">
             <CategoriesList :categories="categories" />
           </div>
-        
+
       </section>
 
       <!-- Nouveautés -->
       <section class="content-section" v-if="nouveautes.length">
-        
+
           <div class="section-header">
             <div class="section-title-group">
               <h2 class="section-title">
@@ -89,12 +89,12 @@
           <div class="section-content">
             <NouveautesProduits :produits="nouveautes" />
           </div>
-        
+
       </section>
 
       <!-- Découvrir -->
       <section class="content-section" v-if="thematiques.length">
-        
+
           <div class="section-header">
             <div class="section-title-group">
               <h2 class="section-title">
@@ -111,7 +111,7 @@
           <div class="section-content">
             <DecouvrirSection :thematiques="thematiques" />
           </div>
-       
+
       </section>
     </div>
 
@@ -194,7 +194,7 @@ onMounted(() => {
 
 .hero-section {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  padding: 15px 20px 150px 0px;
+  padding: 50px 20px 150px 0px;
   text-align: center;
   max-height: 500px;
 }
@@ -251,11 +251,11 @@ onMounted(() => {
 .main-content {
   background: #ffffff;
   padding-top: 50px;
-  
+
 }
 
 .content-section {
-  background: #eff1f4; 
+  background: #eff1f4;
   border-radius: 12px;
   margin-bottom: 50px;
   margin-left: 100px;
@@ -266,7 +266,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   padding-right: 20px;
 }
 
@@ -279,7 +279,7 @@ onMounted(() => {
 .section-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #1f2937; 
+  color: #1f2937;
   display: flex;
   align-items: center;
   margin-left: 20px;
@@ -294,7 +294,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 5px;
-  background: #1b3f5f; 
+  background: #1b3f5f;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -305,7 +305,7 @@ onMounted(() => {
 }
 
 .see-all-btn:hover {
-  background: #2563eb; 
+  background: #2563eb;
   transform: translateY(-2px);
 }
 
@@ -315,7 +315,7 @@ onMounted(() => {
   margin-right: 10px;
   margin-left: 10px;
   gap: 15px;
-  
+
 }
 
 .loading-container,
