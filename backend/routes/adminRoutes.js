@@ -1,6 +1,7 @@
 import express from "express";
 import { authMiddleware,isAdmin, isModeratorOrAdmin } from "../middleware/auth.js";
 import upload from "../middleware/uploadThematique.js";
+import uploadPub from "../middleware/uploadPublicite.js";
 import { getAllUsers, updateUserRole, deleteUser, getStats } from "../controllers/adminController.js";
 import { getReportedProducts, validateProduct, deleteProduct, getProducts } from "../controllers/moderationController.js";
 import { getCategories, addCategory, updateCategory, deleteCategory } from "../controllers/categoryController.js";
@@ -10,6 +11,13 @@ import { addThematique,
   getThematiqueById,
   updateThematique,
   deleteThematique, } from "../controllers/thematiqueController.js";
+import {
+  getAllPublicites,
+  createPublicite,
+  getPubliciteById,
+  updatePublicite,
+  deletePublicite,
+} from "../controllers/publiciteController.js";
 
 const router = express.Router();
 
@@ -37,4 +45,11 @@ router.delete("/thematiques/:id", deleteThematique);
 
 router.get("/notifications", getNotificationsSentByModerator);
 router.post("/notifications", sendNotification);
+
+router.get("/publicites", getAllPublicites);
+router.post("/publicites", uploadPub.single("image"), createPublicite);
+router.get("/publicites/:id", getPubliciteById);
+router.put("/publicites/:id", uploadPub.single("image"), updatePublicite);
+router.delete("/publicites/:id", deletePublicite);
+
 export default router;
