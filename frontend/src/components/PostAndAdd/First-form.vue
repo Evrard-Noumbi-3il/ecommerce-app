@@ -89,8 +89,8 @@
     top: -9%;
     left: -5px;
     font-size: 30px;
-    background-color:  rgba(34, 52, 74, 0.366);
-    color: #0d1b2a;
+    background-color:  #0d1c2b;
+    color: white;
     border-radius: 5px;
     padding: 0 0 0 31px;
   }

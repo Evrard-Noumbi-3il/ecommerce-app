@@ -5,6 +5,7 @@ import Thematique from "../models/Thematique.js";
 export const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
+    console.log(req.params);
     if (!product) return res.status(404).json({ error: "Produit non trouvé" });
     res.json(product);
   } catch (err) {
@@ -16,7 +17,7 @@ export const getProductById = async (req, res) => {
 export const getProducts = async (req, res) => {
   try {
     const {
-      category,   
+      category,
       theme,
       priceMin,
       priceMax,
@@ -34,7 +35,7 @@ export const getProducts = async (req, res) => {
 
     // 🔹 Catégorie
     if (category) {
-      query.id_categorie = category; 
+      query.id_categorie = category;
     }
 
     // 🔹 Thématique

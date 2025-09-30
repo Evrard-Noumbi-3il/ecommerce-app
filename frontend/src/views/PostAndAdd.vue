@@ -52,7 +52,7 @@
       </form>
     </div>
 
-    <div style="padding: 110px 0 0 0;width: 100%; max-width:100%; display: flex; justify-content: center; align-content: center; ">
+    <div style="padding: 20% 0 0 0;width: 100%; max-width:100%; display: flex; justify-content: center; align-content: center; ">
       <ProductCard
         style="width: 100%; justify-content: center; align-content: center;"
         :product="product"
@@ -123,7 +123,7 @@
     try {
       const res = await axios.post(
         `${process.env.VUE_APP_API_URL}/products/addProduct`,
-        { titre: titre.value, description: description.value, prix: prix.value, id_categorie: id_categorie.value, theme: theme.value, location: location.value, state: state.value, sellerType: sellerType.value }
+        { titre: product.value.titre, description: product.value.description, prix: product.value.prix, id_categorie: product.value.id_categorie, theme: product.value.theme, location: product.value.location, state: product.value.state, sellerType: product.value.sellerType }
       );
       alert("Connexion réussie ");
       this.$router.push("/");
