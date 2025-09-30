@@ -6,18 +6,8 @@ import { getAllUsers, updateUserRole, deleteUser, getStats } from "../controller
 import { getReportedProducts, validateProduct, deleteProduct, getProducts } from "../controllers/moderationController.js";
 import { getCategories, addCategory, updateCategory, deleteCategory } from "../controllers/categoryController.js";
 import { getNotificationsSentByModerator, sendNotification} from "../controllers/notificationController.js";
-import { addThematique,
-  getThematiques,
-  getThematiqueById,
-  updateThematique,
-  deleteThematique, } from "../controllers/thematiqueController.js";
-import {
-  getAllPublicites,
-  createPublicite,
-  getPubliciteById,
-  updatePublicite,
-  deletePublicite,
-} from "../controllers/publiciteController.js";
+import { addThematique, getThematiques, getThematiqueById, updateThematique, deleteThematique, } from "../controllers/thematiqueController.js";
+import {  getAllPublicites,  createPublicite, getPubliciteById, updatePublicite,  deletePublicite,} from "../controllers/publiciteController.js";
 
 const router = express.Router();
 
@@ -51,5 +41,6 @@ router.post("/publicites", uploadPub.single("image"), createPublicite);
 router.get("/publicites/:id", getPubliciteById);
 router.put("/publicites/:id", uploadPub.single("image"), updatePublicite);
 router.delete("/publicites/:id", deletePublicite);
+
 
 export default router;
