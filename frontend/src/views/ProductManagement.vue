@@ -53,7 +53,7 @@ const toggleProduct = async (id) => {
 
 // 🗑️ Supprimer un produit
 const deleteProduct = async (id) => {
-  const confirmDelete = window.confirm("Confirmer la suppression du produit ?");
+  const confirmDelete = window.confirm("Confirmer la suppression du produit ?",id);
   if (!confirmDelete) return;
 
   try {
@@ -61,12 +61,14 @@ const deleteProduct = async (id) => {
       method: "DELETE"
     });
 
+    if (response.ok) throw new Error("succès de la suppression");
     if (!response.ok) throw new Error("Échec de la suppression");
 
     // Mise à jour locale
     products.value = products.value.filter(p => p.id !== id);
     console.log("Produit supprimé avec succès");
   } catch (error) {
+    console.log("Échec de la suppression", error);
     console.error("Erreur lors de la suppression du produit:", error);
   }
 };

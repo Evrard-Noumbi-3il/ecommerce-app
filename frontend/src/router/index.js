@@ -22,60 +22,59 @@ const routes = [
   { path: "/post-ad", name: "PostAndAdd", component: PostAndAdd },
   { path: "/product/:id", name: "Product", component: ProductView, props: true },
 
-  // ✅ Chaque page admin utilise AdminLayout comme wrapper
   {
     path: "/admin/dashboard",
     name: "Dashboard",
     component: Dashboard,
-    meta: { layout: AdminLayout, requiresAuth: true, role: ["admin", "moderator"] },
+    meta: { layout: AdminLayout},
   },
   {
     path: "/admin/users",
     name: "UserManagement",
     component: UserManagement,
-    meta: { layout: AdminLayout, requiresAuth: true, role: ["admin"] },
+    meta: { layout: AdminLayout},
   },
   {
     path: "/admin/categories",
     name: "CategoryManagement",
     component: CategoryManagement,
-    meta: { layout: AdminLayout, requiresAuth: true, role: ["admin", "moderator"] },
+    meta: { layout: AdminLayout},
   },
   {
     path: "/admin/reported-products",
     name: "ReportedProducts",
     component: ReportedProducts,
-    meta: { layout: AdminLayout, requiresAuth: true, role: ["admin", "moderator"] },
+    meta: { layout: AdminLayout},
   },
   {
     path: "/admin/products",
     name: "Products",
     component: Products,
-    meta: { layout: AdminLayout, requiresAuth: true, role: ["admin", "moderator"] },
+    meta: { layout: AdminLayout },
   },
   {
     path: "/admin/orders",
     name: "Orders",
     component: Orders,
-    meta: { layout: AdminLayout, requiresAuth: true, role: ["admin"] },
+    meta: { layout: AdminLayout },
   },
   {
     path: "/admin/ads",
     name: "Ads",
     component: Ads,
-    meta: { layout: AdminLayout, requiresAuth: true, role: ["admin"] },
+    meta: { layout: AdminLayout},
   },
   {
     path: "/admin/notifications",
     name: "Notifications",
     component: Notifications,
-    meta: { layout: AdminLayout, requiresAuth: true, role: ["admin"] },
+    meta: { layout: AdminLayout},
   },
   {
     path: "/admin/themes",
     name: "Themes",
     component: Themes,
-    meta: { layout: AdminLayout, requiresAuth: true, role: ["admin", "moderator"] },
+    meta: { layout: AdminLayout },
   },
 ];
 
