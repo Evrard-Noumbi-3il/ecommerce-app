@@ -9,7 +9,11 @@
           :src="product.images[0]"
           alt="Produit"
         />
-        <button class="fav">♥</button>
+        <button class="fav" @click.stop="toggleFavorite(product._id)" >
+            <svg viewBox="0 0 24 19" width="20" height="20">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
+            </svg>
+        </button>
       </div>
 
       <div class="info-box">
@@ -94,6 +98,10 @@ defineProps({
     required: true,
   },
 })
+
+  const toggleFavorite = (id) => {
+    console.log("Toggle favorite for:", id);
+  };
 </script>
 
 <style scoped>
@@ -227,6 +235,8 @@ defineProps({
   }
 }
 
+
+
 /* Partie image */
 .image-box {
   position: relative;
@@ -256,11 +266,17 @@ defineProps({
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #FDBF37;
+  background: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
   padding: 5;
   cursor: pointer;
+}
+
+.fav:hover{
+  background: white;
+  color: #FDBF37;
+  transform: scale(1.1);
 }
 
 /* Partie jaune */
