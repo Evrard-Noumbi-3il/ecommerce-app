@@ -1,9 +1,13 @@
 import express from "express";
-import { getMe, updateMe } from "../controllers/userController.js";
+import { updateMe, getMe } from "../controllers/UserController.js";
 
 const router = express.Router();
 
-router.get("/me/:id", getMe);           // user connecté
-router.put("/me", updateMe);        // user connecté peut modifier
+// Middleware JSON global ou sur cette route
+router.use(express.json());
+
+// Exemple de route update
+router.put("/me", updateMe);
+router.get("/me/:id", getMe);
 
 export default router;
