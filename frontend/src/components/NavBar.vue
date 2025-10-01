@@ -28,7 +28,7 @@
         <li><RouterLink to="/" @click="display=true">Accueil</RouterLink></li>
         <li><RouterLink to="/search" @click="display=true">Catégories</RouterLink></li>
         <li><RouterLink to="/favorites" v-if="isLoggedIn && ! isAdminOrModerator" @click="display=true">Favoris</RouterLink></li>
-        <li><RouterLink to="/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
+        <li><RouterLink to="/admin/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
         <li><RouterLink  to="/profile" v-if="isLoggedIn && !isAdminOrModerator" @click="display=true">Mon compte</RouterLink></li>
         <li>
           <RouterLink v-if="isLoggedIn && !isAdminOrModerator" @click="display=false" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
@@ -107,14 +107,14 @@ li{
 }
 
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   width: 96%;
   z-index: 1000;
   background-color: #0d1b2a;
   color: white;
-  padding: 20px 30px;
+  padding: 30px 40px;
   border-bottom: 2px solid #e5e5e5;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }

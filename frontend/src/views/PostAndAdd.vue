@@ -6,19 +6,19 @@
       <form @submit.prevent="addproduct" class="form">
         <div v-if="displayForm == 1">
           <FirstForm
-            v-model:titre="titre"
-            v-model:theme="theme"
-            v-model:id_categorie="id_categorie"
+            v-model:titre="product.titre"
+            v-model:theme="product.theme"
+            v-model:id_categorie="product.id_categorie"
           />
           <button type="button" @click="displayForm = 2" class="btn-first">suivant</button>
         </div>
 
         <div v-if="displayForm == 2">
           <SecondForm
-            v-model:titre="titre"
-            v-model:description="description"
-            v-model:state="state"
-            v-model:image="image"
+            v-model:titre="product.titre"
+            v-model:description="product.description"
+            v-model:state="product.state"
+            v-model:image="product.image"
           />
           <div class="div-btn">
             <button type="button" @click="displayForm = 1" class="btn-back">retour</button>
@@ -28,7 +28,7 @@
 
         <div v-if="displayForm == 3">
           <ThirdForm
-            v-model:prix="prix"
+            v-model:prix="product.prix"
           />
           <div class="div-btn">
             <button type="button" @click="displayForm = 2" class="btn-back">retour</button>
@@ -39,8 +39,8 @@
 
         <div v-if="displayForm == 4">
           <FinalForm
-            v-model:sellerType="sellerType"
-            v-model:location="location"
+            v-model:sellerType="product.sellerType"
+            v-model:location="product.location"
           />
           <div class="div-btn">
             <button type="button" @click="displayForm = 3" class="btn-back">retour</button>
@@ -51,9 +51,15 @@
 
       </form>
     </div>
-    <div>
-      <ProductCard :product="product"/>
+
+    <div style="padding: 20% 0 0 0;width: 100%; max-width:100%; display: flex; justify-content: center; align-content: center; ">
+      <ProductCard
+        style="width: 100%; justify-content: center; align-content: center;"
+        :product="product"
+      ></ProductCard>
     </div>
+
+
 
   </div>
 </template>
@@ -79,15 +85,7 @@
     sellerType: "",
     location: ""
   })
-  const titre = ref("");
-  const theme = ref("");
-  const id_categorie = ref("");
-  const description = ref("");
-  const image = ref("");
-  const state = ref("");
-  const prix = ref("");
-  const sellerType = ref("");
-  const location = ref("");
+
   const categories = ref([]);
   const thematiques = ref([]);
   const communes = ref([]);
@@ -125,7 +123,7 @@
     try {
       const res = await axios.post(
         `${process.env.VUE_APP_API_URL}/products/addProduct`,
-        { titre: titre.value, description: description.value, prix: prix.value, id_categorie: id_categorie.value, theme: theme.value, location: location.value, state: state.value, sellerType: sellerType.value }
+        { titre: product.value.titre, description: product.value.description, prix: product.value.prix, id_categorie: product.value.id_categorie, theme: product.value.theme, location: product.value.location, state: product.value.state, sellerType: product.value.sellerType }
       );
       alert("Connexion réussie ");
       this.$router.push("/");
@@ -143,16 +141,20 @@
 <style>
 
   .containerPostAndAdd{
+    width: 100%;
+    max-width: 100%;
     height: 680px;
     display: grid;
-    grid-template-columns: 60% 40% ;
+    grid-template-columns: 45% 55% ;
   }
 
   .form{
     padding: 0% 5% 5% 5%;
     width: 60%;
+    max-width: 100%;
     display: grid;
-    box-shadow: 5px 10px 10px rgba(0,0,0,0.1);
+    /* box-shadow: 5px 10px 10px rgba(0,0,0,0.1); */
+    border: 1px solid rgba(34, 52, 74, 0.366);
     border-radius: 16px;
     border-top: none;
   }
@@ -160,11 +162,11 @@
   .containerPostAndAdd::after {
     content: "";
     position: absolute;
-    top: 300px;
-    bottom: 100px;
-    left: 55%;
+    top: 350px;
+    bottom: 150px;
+    left: 40%;
     width: 1px;
-    background-color: gray;
+    background-color: rgba(0, 0, 0, 0.237);
   }
 
   .div-btn{
@@ -217,12 +219,11 @@
   }
 
   .form-container{
-
-    padding: 3% 0 0 10%;
-    width: 80%;
+    padding: 3% 0 0 5%;
+    width: 100%;
     height: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
   }
 

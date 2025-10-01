@@ -2,7 +2,7 @@
   <div class="search-page">
     <!-- Barre de recherche principale -->
     <div class="top-search-bar">
-      
+
         <div class="search-section">
           <h1 class="page-title">Rechercher des annonces</h1>
           <div class="main-search-bar">
@@ -10,8 +10,8 @@
               <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20">
                 <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/>
               </svg>
-              <input 
-                placeholder="Que recherchez-vous ? (voiture, appartement, téléphone...)" 
+              <input
+                placeholder="Que recherchez-vous ? (voiture, appartement, téléphone...)"
                 class="main-search-input"
                 v-model="searchTerm"
               />
@@ -21,7 +21,7 @@
             </div>
           </div>
         </div>
-      
+
     </div>
 
     <div class="main-container">
@@ -51,7 +51,7 @@
           <!-- Thématique -->
           <div class="filter-group">
             <label class="filter-label">Thématique</label>
-            <select 
+            <select
             :value="filters.theme"
             @change="onThemeChange($event)"
             class="filter-select"
@@ -65,17 +65,17 @@
           <div class="filter-group">
             <label class="filter-label">Prix (€)</label>
             <div class="price-inputs">
-              <input 
-                type="number" 
-                v-model="filters.priceMin" 
-                placeholder="Min" 
+              <input
+                type="number"
+                v-model="filters.priceMin"
+                placeholder="Min"
                 class="price-input"
               />
               <span class="price-separator">à</span>
-              <input 
-                type="number" 
-                v-model="filters.priceMax" 
-                placeholder="Max" 
+              <input
+                type="number"
+                v-model="filters.priceMax"
+                placeholder="Max"
                 class="price-input"
               />
             </div>
@@ -85,10 +85,10 @@
           <div class="filter-group">
             <label class="filter-label">Localisation</label>
             <div class="location-input">
-              <input 
-                type="text" 
-                v-model="filters.location" 
-                placeholder="Ville, code postal..." 
+              <input
+                type="text"
+                v-model="filters.location"
+                placeholder="Ville, code postal..."
                 class="filter-input"
               />
               <div class="radius-input">
@@ -168,7 +168,7 @@
             <h1 class="results-title">Résultats de recherche</h1>
             <p class="results-count">{{ resultsCount }} annonces trouvées</p>
           </div>
-          
+
           <div class="sort-options">
             <label class="sort-label">Trier par :</label>
             <select v-model="filters.sortBy" class="sort-select" @change="applyFilters">
@@ -225,12 +225,12 @@
                 </svg>
               </button>
             </div>
-            
+
             <div class="card-content">
               <h3 class="card-title">{{ item.titre }}</h3>
               <p class="card-price">{{ formatPrice(item.prix) }}</p>
               <p class="card-location">{{ item.location }}</p>
-              
+
               <div class="card-meta">
                 <span class="card-date">{{ formatDate(item.date) }}</span>
                 <span class="seller-type" :class="item.sellerType">
@@ -251,9 +251,9 @@
 
         <!-- Pagination -->
         <div v-if="filteredResults.length > 0" class="pagination">
-          <button 
-            v-for="page in totalPages" 
-            :key="page" 
+          <button
+            v-for="page in totalPages"
+            :key="page"
             :class="['page-btn', { active: currentPage === page }]"
             @click="currentPage = page"
           >
@@ -304,7 +304,7 @@ const filters = ref({
 const fetchCategories = async () => {
   try {
     const response = await axios.get('http://localhost:3000/api/products/categories')
-    categories.value = response.data 
+    categories.value = response.data
   } catch (error) {
 
     console.error('Erreur lors du chargement des catégories :', error)
@@ -314,7 +314,7 @@ const fetchCategories = async () => {
 const fetchThemes = async () => {
   try {
     const response = await axios.get('http://localhost:3000/api/products/thematiques')
-    themes.value = response.data 
+    themes.value = response.data
   } catch (error) {
     console.error('Erreur lors du chargement des thématiques :', error)
   }
@@ -496,7 +496,7 @@ watch(
 /* Barre de recherche principale */
 .top-search-bar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 40px 0 60px;
+  padding: 100px 0 60px;
   color: white;
 }
 

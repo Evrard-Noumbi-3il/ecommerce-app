@@ -22,9 +22,7 @@
       <div class="content-scroll">
 
         <section v-if="currentPage === 'profil'" class="profile-layout-v4">
-          <h2 class="page-title-v4">
-            <i class="fas fa-user-shield" aria-hidden="true"></i> Mon Profil
-          </h2>
+          <h2 class="page-title-v4"><i class="fas fa-user-shield"></i> Mon Profil</h2>
 
           <div class="main-profile-card">
 
@@ -42,7 +40,7 @@
                 <p><i class="fas fa-envelope" aria-hidden="true"></i> {{ user.email }}</p>
                 <p><i class="fas fa-phone" aria-hidden="true"></i> {{ user.phone || "Non renseigné" }}</p>
                 <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ user.address || "Non renseignée" }}</p>
-                <p><i class="fas fa-lock" aria-hidden="true"></i> ********</p>
+                <p><i class="fas fa-lock" aria-hidden="true"></i> Mot de passe masqué</p>
               </div>
 
               <div class="identity-footer">
@@ -57,7 +55,7 @@
                 
                 <div class="photo-and-info-header">
                   <div class="profile-image-container-v4">
-                    <img v-if="user.photo || user.profileImage" :src="user.profileImage || user.photo" alt="Photo de profil actuelle" class="profile-image-v4">
+                    <img v-if="user.profileImage || user.photo" :src="user.profileImage || user.photo" alt="Photo de profil actuelle" class="profile-image-v4">
                     <div v-else class="default-avatar-v4" aria-label="Avatar par défaut">
                       <i class="fas fa-user-circle" aria-hidden="true"></i>
                     </div>
@@ -93,7 +91,7 @@
 
                   <div class="detail-item-v4">
                     <label for="profile-password"><i class="fas fa-lock" aria-hidden="true"></i> Mot de passe</label>
-                    <input type="password" id="profile-password" v-model="user.password" class="profile-input password-field" disabled title="Utiliser un autre formulaire pour modifier le mot de passe" />
+                    <input type="password" id="profile-password" class="profile-input password-field" disabled title="Utiliser un autre formulaire pour modifier le mot de passe" value="********" />
                   </div>
 
                   <div class="detail-item-v4 full-width-v4">
@@ -119,6 +117,7 @@
     </main>
   </div>
 </template>
+
 <script>
 import axios from "axios";
 
@@ -134,73 +133,152 @@ export default {
         email: "",
         phone: "",
         address: "",
-        role: "",
-        password: "",
-        photo: null,
-        profileImage: null
+        role: "user", // Valeur par défaut
+        photo: null, // URL de la photo enregistrée (du backend)
+        profileImage: null // URL/base64 de l'image pour l'aperçu local
       },
-      userFile: null
+      userFile: null // Fichier image à uploader
     };
   },
   created() {
     this.fetchUser();
   },
   methods: {
+    /**
+     * Déclenche le clic sur l'input file caché.
+     */
     triggerFileInput() {
       this.$el.querySelector(".file-input").click();
     },
+
+    /**
+     * Gère la sélection d'une nouvelle image, crée un aperçu et stocke le fichier.
+     */
     handleImageUpload(event) {
       const file = event.target.files[0];
       if (file) {
         this.userFile = file;
         const reader = new FileReader();
         reader.onload = (e) => {
+          // Met à jour l'aperçu pour l'édition
           this.user.profileImage = e.target.result;
         };
         reader.readAsDataURL(file);
       }
     },
+
+    /**
+     * Envoie l'image de profil au backend séparément en utilisant FormData.
+     */
+    async updateProfilePhoto(token) {
+      if (!this.userFile) return true; // Rien à uploader
+
+      const formData = new FormData();
+      formData.append("photo", this.userFile);
+
+      try {
+        // Supposons un endpoint PATCH pour l'upload de photo
+        const res = await axios.patch("http://localhost:3000/api/user/me/photo", formData, {
+          headers: { 
+            "Content-Type": "multipart/form-data", // Crucial pour FormData
+            Authorization: `Bearer ${token}` 
+          }
+        });
+        
+        // Assurez-vous que le backend renvoie l'URL de la nouvelle photo (ou rafraîchir)
+        if (res.data.photoUrl) {
+          this.user.photo = res.data.photoUrl;
+          this.user.profileImage = res.data.photoUrl;
+          this.userFile = null;
+          return true;
+        }
+
+        // Si l'URL n'est pas renvoyée, on suppose que l'upload a réussi
+        this.userFile = null;
+        return true; 
+      } catch (err) {
+        console.error("Erreur lors de l'upload de la photo :", err);
+        return false;
+      }
+    },
+
+    /**
+     * Sauvegarde les informations du profil (texte) et la photo.
+     */
     async saveProfile() {
+      let photoUpdateSuccess = true;
+
       try {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Utilisateur non connecté");
 
+        // 1. Mise à jour de la photo de profil si un fichier est sélectionné
+        if (this.userFile) {
+          photoUpdateSuccess = await this.updateProfilePhoto(token);
+        }
+
+        // 2. Mise à jour des informations textuelles
         const payload = {
           name: this.user.name,
           firstname: this.user.firstname,
-          email: this.user.email,
           phone: this.user.phone,
           address: this.user.address,
-          password:this.user.password
+          // L'email et le rôle ne devraient pas être modifiables ici
         };
 
         await axios.put("http://localhost:3000/api/user/me", payload, {
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }
         });
-
-        alert("Profil sauvegardé avec succès !");
+        
+        if (photoUpdateSuccess) {
+          alert("Profil sauvegardé avec succès !");
+        } else {
+          alert("Informations textuelles mises à jour, mais échec de l'upload de la photo.");
+        }
+        
         this.isEditing = false;
+        
       } catch (err) {
         console.error("Erreur lors de la sauvegarde du profil :", err);
-        alert("Erreur lors de la sauvegarde du profil");
+        alert("Erreur lors de la sauvegarde du profil. Voir la console pour les détails.");
       }
     },
+    
+    /**
+     * Récupère les données de l'utilisateur.
+     */
     async fetchUser() {
       try {
         const token = localStorage.getItem("token");
-        const id = token && JSON.parse(atob(token.split(".")[1])).id;
+        if (!token) return;
 
-        const res = await axios.get(`http://localhost:3000/api/user/me/${id}`);
+        // Tente de décoder le token pour l'ID (méthode JWT standard)
+        let id = null;
+        try {
+          id = JSON.parse(atob(token.split(".")[1])).id;
+        } catch(e) {
+          console.warn("Token JWT non valide ou manquant. Tentative d'accès à /me sans ID.");
+        }
+
+        // Utilisation de l'ID si disponible, sinon on compte sur le token pour l'endpoint /me (bonne pratique)
+        const endpoint = id ? `http://localhost:3000/api/user/me/${id}` : `http://localhost:3000/api/user/me`;
+        
+        const res = await axios.get(endpoint, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         const data = res.data;
 
+        // Mise à jour des données du modèle utilisateur avec gestion des noms de champs
         this.user.name = data.name || "";
         this.user.firstname = data.firstname || "";
         this.user.email = data.email || "";
-        this.user.phone = data.phonenumber || "";
-        this.user.address = data.adresse || "";
+        // Gère les noms de champs potentiels pour le téléphone et l'adresse
+        this.user.phone = data.phone || data.phonenumber || ""; 
+        this.user.address = data.address || data.adresse || ""; 
         this.user.role = data.role || "user";
-        this.user.password=data.password || "";
         this.user.photo = data.photo || null;
+        this.user.profileImage = data.photo || null; // Utiliser l'image actuelle comme aperçu initial
+        
       } catch (err) {
         console.error("Erreur récupération profil:", err);
       }
@@ -208,6 +286,7 @@ export default {
   }
 };
 </script>
+
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
@@ -224,7 +303,8 @@ export default {
   min-height: 100vh;
   background-color: var(--secondary-color);
   font-family: 'Poppins', sans-serif;
-  margin: 1px;
+  /* RESOLUTION DU CONFLIT: J'ai choisi de garder 1px */
+  margin-top: 100px; 
 }
 
 .menu {

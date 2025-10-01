@@ -3,7 +3,13 @@
   <div class="form-content">
     <div style="position: relative;top: -9%;display: grid; grid-template-rows:38px 30px; margin-bottom: 30px;">
       <label>Type de vente* :</label>
-      <input v-model="sellerType" list="seller-list" placeholder="Choisissez un type" class="input-postad-text">
+      <input
+        @input="$emit('update:sellerType', $event.target.value)"
+        :value="sellerType"
+        list="seller-list"
+        placeholder="Choisissez un type"
+        class="input-postad-text"
+      />
       <datalist id="seller-list" >
         <option value="particulier">Particulier</option>
         <option value="professionnel">Professionnel</option>
@@ -12,7 +18,12 @@
 
     <div style="position: relative;top: -9%;display: grid; grid-template-rows:38px 30px; margin-bottom: 30px;">
       <label>Localisation* :</label>
-      <input list="communes-list" v-model="location" placeholder="Commencez à taper..." class="input-postad-text">
+      <input
+        @input="$emit('update:location', $event.target.value)"
+        :value="location"
+        list="communes-list"
+        placeholder="Commencez à taper..."
+        class="input-postad-text">
       <datalist id="communes-list">
         <option v-for="localisation in communes" :key="localisation" :value="localisation"></option>
       </datalist>
@@ -24,11 +35,21 @@
 <script setup>
 
 import { ref } from "vue";
+import { onMounted } from "vue";
 
-const sellerType = ref("");
-const location = ref("");
+  const props = defineProps({
+    sellerType: String,
+    location: String
+  })
+  const emit = defineEmits(['update:sellerType', 'update:location'])
 
-const fetchCommunes = async () => {
+  const communes = ref([]);
+
+  onMounted(() => {
+    fetchCommunes();
+  });
+
+  const fetchCommunes = async () => {
     try {
       const response = await fetch('https://geo.api.gouv.fr/communes?fields=nom&format=json&geometry=centre');
       const data = await response.json();
@@ -37,6 +58,11 @@ const fetchCommunes = async () => {
       console.error('Erreur lors de la récupération des communes:', error);
     }
   };
+
+  onMounted(() => {
+    fetchCommunes();
+  });
+
 
 
 </script>
@@ -96,7 +122,7 @@ const fetchCommunes = async () => {
     top: -12%;
     left: -8px;
     font-size: 30px;
-    background-color:  rgba(0,0,0,0.1);
+    background-color:  rgba(34, 52, 74, 0.366);
     color: #0d1b2a;
     border-radius: 5px;
     padding: 0 0 0 90px;

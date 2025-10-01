@@ -6,8 +6,10 @@
       <div style="display: flex;">
         <input
           type="number"
-          v-model="prix"
-          style="flex: 1; border: 1px solid rgba(0,0,0,0.1); border-radius: 16px 0 0 16px; border-right: none; padding: 12px; width: 100%;"
+          @input="emit('update:prix', $event.target.value)"
+          :value="prix"
+          placeholder="0.00"
+          class="input-postad-number"
           required
         />
         <span
@@ -22,9 +24,13 @@
 
 </template>
 <script setup>
+
   import { ref } from "vue";
 
-  const prix = ref("");
+  const props = defineProps({
+    prix: String
+  })
+  const emit = defineEmits(['update:prix'])
 </script>
 
 <style scoped>
@@ -38,7 +44,7 @@
     top: -20%;
     left: -8px;
     font-size: 30px;
-    background-color:  rgba(0,0,0,0.1);
+    background-color:  rgba(34, 52, 74, 0.366);
     color: #0d1b2a;
     border-radius: 5px;
     padding: 0 0 0 110px;
@@ -60,9 +66,12 @@
   }
 
   .input-postad-number {
-    width: 80%;
-    border: none;
-    border-bottom: 1px solid gray;
+    flex: 1;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 16px 0 0 16px;
+    border-right: none;
+    padding: 12px;
+    width: 100%;
   }
 
   .btn-back{
