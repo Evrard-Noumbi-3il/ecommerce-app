@@ -4,7 +4,7 @@
     <div class="product-card">
 
       <div class="image-box">
-        <span class="badge">NEUF</span>
+        <span class="badge"> <strong> {{ product.state }}</strong></span>
         <img v-if="product.images && product.images.length > 0"
           :src="product.images[0]"
           alt="Produit"
@@ -18,8 +18,8 @@
 
       <div class="info-box">
         <div>
-          Levendeur
-        <br><small>Particulier</small>
+          {{userSeller.name}} {{ userSeller.firstname }}
+        <br><small>{{ product.sellerType }}</small>
         </div>
         
         <p>Note</p>
@@ -97,11 +97,17 @@ defineProps({
     type: Object,
     required: true,
   },
+  userSeller: {
+    type: Object,
+    required: true,
+  }
 })
 
   const toggleFavorite = (id) => {
     console.log("Toggle favorite for:", id);
   };
+
+
 </script>
 
 <style scoped>
@@ -234,7 +240,6 @@ defineProps({
     color :#777777;
   }
 }
-
 
 
 /* Partie image */

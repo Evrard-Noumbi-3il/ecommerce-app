@@ -1,6 +1,7 @@
 import Product from "../models/Produits.js";
 import Category from "../models/Categorie.js";
 import Thematique from "../models/Thematique.js";
+import User from "../models/Users.js"; 
 
 export const getProductById = async (req, res) => {
   try {
@@ -119,5 +120,17 @@ export const getThematiques = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Erreur serveur" });
+  }
+};
+
+
+export const getUserByIdProduct = async (req, res) => {
+  try {
+    const user = await User.findOne({ misEnVente: { $in: [req.params.id] } }).select("-password");
+    res.json(user);
+    console.log(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur serveur" });
   }
 };
