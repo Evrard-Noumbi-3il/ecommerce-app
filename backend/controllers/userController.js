@@ -19,6 +19,7 @@ export const getMe = async (req, res) => {
   }
 };
 
+
 // Modifier les infos de l'utilisateur connecté
 export const updateMe = async (req, res) => {
   try {
