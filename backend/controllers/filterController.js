@@ -13,7 +13,7 @@ export const getProductById = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Erreur serveur" });
   }
-}
+};
 
 export const getProducts = async (req, res) => {
   try {
@@ -123,14 +123,26 @@ export const getThematiques = async (req, res) => {
   }
 };
 
-
 export const getUserByIdProduct = async (req, res) => {
   try {
     const user = await User.findOne({ misEnVente: { $in: [req.params.id] } }).select("-password");
     res.json(user);
-    console.log(user);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+export const getProductCategory = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ error: "Produit non trouvé" });
+
+    const category = await Category.findById(product.id_categorie);
+    if (!category) return res.status(404).json({ error: "Catégorie non trouvée" });
+    res.json(category);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erreur serveur" });
   }
 };

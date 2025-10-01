@@ -1,5 +1,5 @@
 <template>
-  <div class="product-info">
+  <div v-if="product" class="product-info">
 
     <div class="product-card">
 
@@ -17,7 +17,7 @@
       </div>
 
       <div class="info-box">
-        <div>
+        <div v-if="userSeller">
           {{userSeller.name}} {{ userSeller.firstname }}
         <br><small>{{ product.sellerType }}</small>
         </div>
@@ -37,9 +37,9 @@
     <div class="product-info-details">
 
       <div class="product-info-without-comments">
-        <div class="product-title-theme">
+        <div v-if="category" class="product-title-theme">
           <h1>{{ product.titre }}</h1>
-          <p>{{ product.theme }} -> test</p>
+          <p>{{ product.theme }} ->  {{ category.nom }}</p>
         </div>
         <div class="product-buy-row">
           <div class="product-direct-buy-row">
@@ -100,7 +100,12 @@ defineProps({
   userSeller: {
     type: Object,
     required: true,
+  },
+  category: {
+    type: Object,
+    required: true,
   }
+
 })
 
   const toggleFavorite = (id) => {
