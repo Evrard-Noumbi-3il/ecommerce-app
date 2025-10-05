@@ -71,9 +71,12 @@ import { onMounted } from "vue";
 </script>
 
 <style scoped>
-  .form-content{
-    position: relative;
-    top: -9%;
+  .form-content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 50px;
+    margin-bottom: 50px;
   }
 
   .btn-next{
@@ -107,15 +110,15 @@ import { onMounted } from "vue";
   }
 
   .label-input{
-    display: grid;
-    grid-template-rows: 38px 30px;
-    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 
   .input-postad-text{
     border-radius: 6px;
     width: 100%;
-    padding: 20px ;
+    padding: 15px;
     border: 1px solid rgba(0,0,0,0.1);
     box-sizing: border-box;
   }
@@ -128,28 +131,20 @@ import { onMounted } from "vue";
     background-color:  #0d1c2b;
     color: white;
     border-radius: 5px;
-    padding: 0 0 0 90px;
+    text-align: center;
   }
 
-  label{
-    display: block;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    unicode-bidi: isolate;
-  }
 
   .label-select{
-    display: grid;
-    grid-template-rows: 38px 45px;
-    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 
   .input-postad-select{
     border-radius: 6px;
     width: 100%;
-    padding: 0 10px 0 10px;
+    padding: 15px 10px 15px 10px;
     border: 1px solid rgba(0,0,0,0.1);
     box-sizing: border-box;
   }
