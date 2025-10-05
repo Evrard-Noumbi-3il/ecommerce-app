@@ -18,6 +18,7 @@ export const getMe = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+
 export const updateMe = async (req, res) => {
   try {
     // 🔹 Debug : pour voir ce que le frontend envoie
@@ -31,7 +32,7 @@ export const updateMe = async (req, res) => {
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { 
+      {
         ...(name && { name }),
         ...(email && { email }),
         ...(phone && { phonenumber: phone }),
@@ -45,7 +46,6 @@ export const updateMe = async (req, res) => {
     console.error("Erreur updateMe :", err);
     res.status(500).json({ message: "Erreur serveur" });
   }
-<<<<<<< HEAD
 };
 
 export const addMiseEnVente = async (req, res) => {
@@ -57,6 +57,3 @@ export const addMiseEnVente = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 }
-=======
-};
->>>>>>> 0f45ce1c9998699205b46a0f3b3ceef7ff93264b
