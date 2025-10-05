@@ -5,9 +5,21 @@
 
   <div class="form-content">
 
-      <span @click="choosePath" class="btn-upload">+</span>
+    <div class="btn-upload-container">
 
-      <input type="file" ref="fileInputRef" style="display: none;">
+      <span
+      v-for="(btn, i) in btns"
+      :key="i"
+      class="btn-upload"
+      @click="choosePath(i)"
+      >
+        +
+      </span>
+
+    </div>
+
+
+      <input type="file" ref="fileInputRef" style="display: none;" @change="handleChange"  />
 
 
 
@@ -27,19 +39,46 @@
   const fileInputRef = ref(null);
   const fileInput = ref([]);
 
+  const btns = ref([{}]);
 
-  const choosePath = () => {
+  const choosePath = (index) => {
     fileInputRef.value.click();
-    fileInput.value.push(fileInputRef.value.files[0]);
-    emit('update:image', fileInput);
+    console.log("Bouton + cliqué");
   };
+
+
+  const handleChange = () => {
+    onFileChange();
+    addBtnUpload();
+  };
+
+  const onFileChange = () => {
+    const files = fileInputRef.value.files;
+    console.log("Fichiers sélectionnés :", files);
+
+    if (files.length > 0) {
+      fileInput.value.push(files[0]);
+      console.log("fileInput maintenant :", fileInput.value);
+
+      emit('update:image', fileInput.value);
+    }
+  };
+
+  const addBtnUpload = () => {
+    btns.value.push({});
+  };
+
+
 </script>
 
 <style scoped>
 
-  .form-content{
-    position: relative;
-    top: -9%;
+  .form-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    align-items: center;
+    margin-bottom: 50px;
   }
 
   .btn-next{
@@ -75,7 +114,6 @@
   .label-input{
     display: grid;
     grid-template-rows: 38px 30px;
-    margin-bottom: 30px;
   }
 
   .input-postad-text, select{
@@ -101,16 +139,15 @@
     background-color:  #0d1c2b;
     color: white;
     border-radius: 5px;
-    padding: 0 0 0 82px;
+    text-align: center;
   }
 
-  label{
-    display: block;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    unicode-bidi: isolate;
+  .btn-upload-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+
   }
 
   .btn-upload{

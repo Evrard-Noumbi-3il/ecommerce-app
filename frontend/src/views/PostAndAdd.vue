@@ -9,7 +9,7 @@
     </div>
     <div class="form-container">
       <form @submit.prevent="addproduct" class="form">
-        <div v-if="displayForm == 1">
+        <div v-if="displayForm == 1" class="form-element">
           <FirstForm
             v-model:titre="product.titre"
             v-model:theme="product.theme"
@@ -165,13 +165,13 @@
 
 <style>
 
-  .containerPostAndAdd{
-    padding: 15% 0 0 0;
+  .containerPostAndAdd {
+    padding: 15% 0 15% 0;
     width: 100%;
     max-width: 100%;
-    height: 680px;
-    display: grid;
-    grid-template-columns: 55% 45% ;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
 
   .form{
@@ -179,7 +179,6 @@
     width: 60%;
     max-width: 100%;
     display: grid;
-    /* box-shadow: 5px 10px 10px rgba(0,0,0,0.1); */
     border: 1px solid rgba(34, 52, 74, 0.366);
     border-radius: 16px;
     border-top: none;
@@ -256,6 +255,11 @@
     padding: 0 5% 0 5%;
     width: 100%;
   }
+
+
+
+
+
 
 
 </style>

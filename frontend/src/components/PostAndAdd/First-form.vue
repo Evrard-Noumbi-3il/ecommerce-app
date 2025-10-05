@@ -1,6 +1,6 @@
 <template>
 
-    <p class="p-first">Commençons par l’essentiel !</p>
+    <p>Commençons par l’essentiel !</p>
 
     <div class="form-content">
 
@@ -119,35 +119,38 @@
   p{
     position: relative;
     top: -9%;
-    left: -5px;
     font-size: 30px;
     background-color:  #0d1c2b;
     color: white;
     border-radius: 5px;
-    padding: 0 0 0 31px;
+    text-align: center;
   }
 
   .form-content{
-    position: relative;
-    top: -9%;
+    display: flex;
+    flex-direction: column;
+    text-wrap: wrap;
+    gap: 50px;
+    margin-bottom: 50px;
   }
 
+
   .label-input{
-    display: grid;
-    grid-template-rows: 38px 30px;
-    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 
   .label-select{
-    display: grid;
-    grid-template-rows: 38px 45px;
-    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 
   .input-postad-select{
     border-radius: 6px;
     width: 100%;
-    padding: 0 10px 0 10px;
+    padding: 15px 10px 15px 10px;
     border: 1px solid rgba(0,0,0,0.1);
     box-sizing: border-box;
   }
@@ -155,19 +158,12 @@
   .input-postad-text{
     border-radius: 6px;
     width: 100%;
-    padding: 20px;
+    padding: 15px;
     border: 1px solid rgba(0,0,0,0.1);
     box-sizing: border-box;
   }
 
-  label{
-    display: block;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    unicode-bidi: isolate;
-  }
+
 
 
 
