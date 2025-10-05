@@ -18,20 +18,34 @@ export const getMe = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
-
-// Modifier les infos de l'utilisateur connecté
 export const updateMe = async (req, res) => {
   try {
+    // 🔹 Debug : pour voir ce que le frontend envoie
+    console.log("Body reçu :", req.body);
+
     const { name, email, phone, address } = req.body;
-    const user = await User.findByIdAndUpdate(
+
+    if (!name && !email && !phone && !address) {
+      return res.status(400).json({ message: "Aucune donnée reçue pour mise à jour" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { name, email, phonenumber: phone, adresse: { rue: address } },
+      { 
+        ...(name && { name }),
+        ...(email && { email }),
+        ...(phone && { phonenumber: phone }),
+        ...(address && { adresse: address })
+      },
       { new: true }
     ).select("-password");
-    res.json(user);
+
+    res.json(updatedUser);
   } catch (err) {
+    console.error("Erreur updateMe :", err);
     res.status(500).json({ message: "Erreur serveur" });
   }
+<<<<<<< HEAD
 };
 
 export const addMiseEnVente = async (req, res) => {
@@ -43,3 +57,6 @@ export const addMiseEnVente = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 }
+=======
+};
+>>>>>>> 0f45ce1c9998699205b46a0f3b3ceef7ff93264b

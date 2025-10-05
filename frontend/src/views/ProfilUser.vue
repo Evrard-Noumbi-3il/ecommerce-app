@@ -1,192 +1,286 @@
 <template>
   <div class="app-container">
-    <!-- Menu latéral -->
-    <div class="menu">
+    <nav class="menu">
       <button :class="{'active': currentPage === 'profil'}" @click="currentPage = 'profil'">
-        <i class="fas fa-id-card"></i> Mon Profil
+        <i class="fas fa-id-card" aria-hidden="true"></i> Mon Profil
       </button>
       <button :class="{'active': currentPage === 'messages'}" @click="currentPage = 'messages'">
-        <i class="fas fa-comment-dots"></i> Messages
+        <i class="fas fa-comment-dots" aria-hidden="true"></i> Messages
       </button>
       <button :class="{'active': currentPage === 'notifications'}" @click="currentPage = 'notifications'">
-        <i class="fas fa-exclamation-circle"></i> Alertes
+        <i class="fas fa-bell" aria-hidden="true"></i> Notifications
       </button>
-    </div>
+      <button :class="{'active': currentPage === 'annonces'}" @click="currentPage = 'annonces'">
+        <i class="fas fa-bullhorn" aria-hidden="true"></i> Annonces
+      </button>
+      <button :class="{'active': currentPage === 'produitEnVente'}" @click="currentPage = 'produitEnVente'">
+        <i class="fas fa-tag" aria-hidden="true"></i> Produits
+      </button>
+    </nav>
 
-    <!-- Contenu principal -->
-    <div class="content">
+    <main class="content">
       <div class="content-scroll">
 
-        <!-- Page Profil -->
-        <div v-if="currentPage === 'profil'" class="profile-layout-v4">
+        <section v-if="currentPage === 'profil'" class="profile-layout-v4">
           <h2 class="page-title-v4"><i class="fas fa-user-shield"></i> Mon Profil</h2>
 
           <div class="main-profile-card">
-            <div class="card-content-v4">
 
-              <!-- Mode Carte de Visite -->
-              <div v-if="!isEditing" class="business-card">
-                <div class="card-header-v4">
-                  <div class="profile-image-container-v4">
-                    <img v-if="user.profileImage" :src="user.profileImage" alt="Photo de profil" class="profile-image-v4">
-                    <div v-else class="default-avatar-v4">
-                      <i class="fas fa-user-circle"></i>
-                    </div>
-                  </div>
-                  <div class="profile-text-v4">
-                    <h1 class="profile-name-v4">{{ user.name }}</h1>
-                    <p><i class="fas fa-phone"></i> {{ user.phone || 'Non renseigné' }}</p>
-                    <p><i class="fas fa-map-marker-alt"></i> {{ user.address || 'Non renseigné' }}</p>
-                  </div>
+            <div v-if="!isEditing" class="identity-card">
+              <div class="identity-header">
+                <img v-if="user.photo" :src="user.photo" alt="Photo de profil" class="identity-photo">
+                <div v-else class="identity-photo default-avatar" aria-label="Avatar par défaut">
+                  <i class="fas fa-user-circle" aria-hidden="true"></i>
                 </div>
-                <div class="card-footer-v4">
-                  <button @click="isEditing = true" class="action-btn-v4">
-                    <i class="fas fa-edit"></i> Modifier
-                  </button>
-                </div>
+                <h2>{{ user.name }} {{ user.firstname }}</h2>
+                <p class="role-tag">{{ user.role.toUpperCase() }}</p>
               </div>
 
-              <!-- Mode Edition (Formulaire complet) -->
-              <div v-else>
-                <div class="card-header-v4">
+              <div class="identity-details">
+                <p><i class="fas fa-envelope" aria-hidden="true"></i> {{ user.email }}</p>
+                <p><i class="fas fa-phone" aria-hidden="true"></i> {{ user.phone || "Non renseigné" }}</p>
+                <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ user.address || "Non renseignée" }}</p>
+                <p><i class="fas fa-lock" aria-hidden="true"></i> Mot de passe masqué</p>
+              </div>
+
+              <div class="identity-footer">
+                <button @click="isEditing = true" class="btn-edit">
+                  <i class="fas fa-edit" aria-hidden="true"></i> Modifier
+                </button>
+              </div>
+            </div>
+
+            <div v-else class="edit-profile-form-container">
+              <form @submit.prevent="saveProfile" class="form-grid">
+                
+                <div class="photo-and-info-header">
                   <div class="profile-image-container-v4">
-                    <img v-if="user.profileImage" :src="user.profileImage" alt="Photo de profil" class="profile-image-v4">
-                    <div v-else class="default-avatar-v4">
-                      <i class="fas fa-user-circle"></i>
+                    <img v-if="user.profileImage || user.photo" :src="user.profileImage || user.photo" alt="Photo de profil actuelle" class="profile-image-v4">
+                    <div v-else class="default-avatar-v4" aria-label="Avatar par défaut">
+                      <i class="fas fa-user-circle" aria-hidden="true"></i>
                     </div>
-                    <input type="file" @change="handleImageUpload" class="file-input" accept="image/*" />
-                    <button class="upload-btn-v4" @click="triggerFileInput" title="Changer de photo">
-                      <i class="fas fa-camera"></i>
+                    
+                    <input type="file" @change="handleImageUpload" id="file-upload" class="file-input" accept="image/*" hidden />
+                    <button class="upload-btn-v4" @click="triggerFileInput" type="button" title="Changer de photo">
+                      <i class="fas fa-camera" aria-hidden="true"></i>
                     </button>
+                  </div>
+                  
+                  <div class="role-display-v4">
+                    <h3>Statut : **{{ user.role.toUpperCase() }}**</h3>
+                    <p class="email-display"><i class="fas fa-envelope-open-text"></i> {{ user.email }}</p>
                   </div>
                 </div>
 
                 <div class="details-grid-v4">
+                  
                   <div class="detail-item-v4">
-                    <label><i class="fas fa-user"></i> Nom/Pseudo</label>
-                    <input type="text" v-model="user.name" class="profile-input" />
+                    <label for="profile-name"><i class="fas fa-user-tag" aria-hidden="true"></i> Nom</label>
+                    <input type="text" id="profile-name" v-model="user.name" class="profile-input" required />
                   </div>
+
                   <div class="detail-item-v4">
-                    <label><i class="fas fa-envelope"></i> E-mail</label>
-                    <input type="email" v-model="user.email" class="profile-input" />
+                    <label for="profile-firstname"><i class="fas fa-user-edit" aria-hidden="true"></i> Prénom</label>
+                    <input type="text" id="profile-firstname" v-model="user.firstname" class="profile-input" />
                   </div>
+
                   <div class="detail-item-v4">
-                    <label><i class="fas fa-phone"></i> Téléphone</label>
-                    <input type="text" v-model="user.phone" class="profile-input" />
+                    <label for="profile-phone"><i class="fas fa-phone-alt" aria-hidden="true"></i> Téléphone</label>
+                    <input type="tel" id="profile-phone" v-model="user.phone" class="profile-input" />
                   </div>
+
+                  <div class="detail-item-v4">
+                    <label for="profile-password"><i class="fas fa-lock" aria-hidden="true"></i> Mot de passe</label>
+                    <input type="password" id="profile-password" class="profile-input password-field" disabled title="Utiliser un autre formulaire pour modifier le mot de passe" value="********" />
+                  </div>
+
                   <div class="detail-item-v4 full-width-v4">
-                    <label><i class="fas fa-map-marker-alt"></i> Adresse</label>
-                    <input type="text" v-model="user.address" class="profile-input" />
+                    <label for="profile-address"><i class="fas fa-map-marked-alt" aria-hidden="true"></i> Adresse</label>
+                    <input type="text" id="profile-address" v-model="user.address" class="profile-input" />
                   </div>
                 </div>
 
-                <div class="card-footer-v4">
-                  <button @click="saveAndClose" class="action-btn-v4">
-                    <i class="fas fa-save"></i> Sauvegarder
+                <footer class="card-footer-v4 button-group full-width-v4">
+                  <button type="submit" class="action-btn-v4 primary-btn">
+                    <i class="fas fa-save" aria-hidden="true"></i> Sauvegarder
                   </button>
-                  <button @click="isEditing = false" class="cancel-btn-v4">
-                    <i class="fas fa-times"></i> Annuler
+                  <button type="button" @click="isEditing = false" class="cancel-btn-v4 secondary-btn">
+                    <i class="fas fa-times" aria-hidden="true"></i> Annuler
                   </button>
-                </div>
-              </div>
-
+                </footer>
+              </form>
             </div>
           </div>
-        </div>
-
-        <!-- Page Messages -->
-        <div v-if="currentPage === 'messages'">
-          <h2 class="page-title-v4"><i class="fas fa-comment-dots"></i> Mes Messages</h2>
-          <div class="empty-state-v4">
-            <p>Pas de nouveaux messages. Gardez l'œil ouvert !</p>
-          </div>
-        </div>
-
-        <!-- Page Notifications -->
-        <div v-if="currentPage === 'notifications'">
-          <h2 class="page-title-v4"><i class="fas fa-exclamation-circle"></i> Mes Alertes</h2>
-          <div class="empty-state-v4">
-            <p>Vous n'avez aucune alerte importante en attente.</p>
-          </div>
-        </div>
+        </section>
 
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   name: "ProfileUser",
   data() {
     return {
-      currentPage: 'profil',
+      currentPage: "profil",
       isEditing: false,
       user: {
-        name: 'toto',
-        email: '',
-        phone: '',
-        address: '',
-        profileImage: null
+        name: "",
+        firstname: "",
+        email: "",
+        phone: "",
+        address: "",
+        role: "user", // Valeur par défaut
+        photo: null, // URL de la photo enregistrée (du backend)
+        profileImage: null // URL/base64 de l'image pour l'aperçu local
       },
-      userFile: null,
+      userFile: null // Fichier image à uploader
     };
   },
   created() {
     this.fetchUser();
   },
   methods: {
+    /**
+     * Déclenche le clic sur l'input file caché.
+     */
     triggerFileInput() {
-      this.$el.querySelector('.file-input').click();
+      this.$el.querySelector(".file-input").click();
     },
+
+    /**
+     * Gère la sélection d'une nouvelle image, crée un aperçu et stocke le fichier.
+     */
     handleImageUpload(event) {
       const file = event.target.files[0];
       if (file) {
         this.userFile = file;
         const reader = new FileReader();
         reader.onload = (e) => {
+          // Met à jour l'aperçu pour l'édition
           this.user.profileImage = e.target.result;
         };
         reader.readAsDataURL(file);
       }
     },
-    async saveAndClose() {
-      await this.saveProfile();
-      this.isEditing = false;
-    },
-    async saveProfile() {
+
+    /**
+     * Envoie l'image de profil au backend séparément en utilisant FormData.
+     */
+    async updateProfilePhoto(token) {
+      if (!this.userFile) return true; // Rien à uploader
+
+      const formData = new FormData();
+      formData.append("photo", this.userFile);
+
       try {
-        const formData = new FormData();
-        formData.append('name', this.user.name);
-        formData.append('email', this.user.email);
-        formData.append('phone', this.user.phone);
-        formData.append('address', this.user.address);
-        if (this.userFile) {
-          formData.append('profilePhoto', this.userFile);
+        // Supposons un endpoint PATCH pour l'upload de photo
+        const res = await axios.patch("http://localhost:3000/api/user/me/photo", formData, {
+          headers: { 
+            "Content-Type": "multipart/form-data", // Crucial pour FormData
+            Authorization: `Bearer ${token}` 
+          }
+        });
+        
+        // Assurez-vous que le backend renvoie l'URL de la nouvelle photo (ou rafraîchir)
+        if (res.data.photoUrl) {
+          this.user.photo = res.data.photoUrl;
+          this.user.profileImage = res.data.photoUrl;
+          this.userFile = null;
+          return true;
         }
-        await axios.put('http://localhost:3000/api/user/me', formData, {});
-        alert('Profil sauvegardé avec succès !');
+
+        // Si l'URL n'est pas renvoyée, on suppose que l'upload a réussi
         this.userFile = null;
+        return true; 
       } catch (err) {
-        console.error('Erreur lors de la sauvegarde du profil:', err);
-        alert('Erreur lors de la sauvegarde du profil');
+        console.error("Erreur lors de l'upload de la photo :", err);
+        return false;
       }
     },
+
+    /**
+     * Sauvegarde les informations du profil (texte) et la photo.
+     */
+    async saveProfile() {
+      let photoUpdateSuccess = true;
+
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("Utilisateur non connecté");
+
+        // 1. Mise à jour de la photo de profil si un fichier est sélectionné
+        if (this.userFile) {
+          photoUpdateSuccess = await this.updateProfilePhoto(token);
+        }
+
+        // 2. Mise à jour des informations textuelles
+        const payload = {
+          name: this.user.name,
+          firstname: this.user.firstname,
+          phone: this.user.phone,
+          address: this.user.address,
+          // L'email et le rôle ne devraient pas être modifiables ici
+        };
+
+        await axios.put("http://localhost:3000/api/user/me", payload, {
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }
+        });
+        
+        if (photoUpdateSuccess) {
+          alert("Profil sauvegardé avec succès !");
+        } else {
+          alert("Informations textuelles mises à jour, mais échec de l'upload de la photo.");
+        }
+        
+        this.isEditing = false;
+        
+      } catch (err) {
+        console.error("Erreur lors de la sauvegarde du profil :", err);
+        alert("Erreur lors de la sauvegarde du profil. Voir la console pour les détails.");
+      }
+    },
+    
+    /**
+     * Récupère les données de l'utilisateur.
+     */
     async fetchUser() {
       try {
         const token = localStorage.getItem("token");
-        const id = token && (JSON.parse(atob(token.split('.')[1])).id);
-        const res = await axios.get(`http://localhost:3000/api/user/me/${id}`);
+        if (!token) return;
+
+        // Tente de décoder le token pour l'ID (méthode JWT standard)
+        let id = null;
+        try {
+          id = JSON.parse(atob(token.split(".")[1])).id;
+        } catch(e) {
+          console.warn("Token JWT non valide ou manquant. Tentative d'accès à /me sans ID.");
+        }
+
+        // Utilisation de l'ID si disponible, sinon on compte sur le token pour l'endpoint /me (bonne pratique)
+        const endpoint = id ? `http://localhost:3000/api/user/me/${id}` : `http://localhost:3000/api/user/me`;
+        
+        const res = await axios.get(endpoint, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         const data = res.data;
-        this.user.name = data.name || "titi";
-        this.user.email = data.email;
-        this.user.phone = data.phonenumber || '';
-        this.user.address = data.adresse?.rue || '';
-        this.user.profileImage = data.photo || null;
+
+        // Mise à jour des données du modèle utilisateur avec gestion des noms de champs
+        this.user.name = data.name || "";
+        this.user.firstname = data.firstname || "";
+        this.user.email = data.email || "";
+        // Gère les noms de champs potentiels pour le téléphone et l'adresse
+        this.user.phone = data.phone || data.phonenumber || ""; 
+        this.user.address = data.address || data.adresse || ""; 
+        this.user.role = data.role || "user";
+        this.user.photo = data.photo || null;
+        this.user.profileImage = data.photo || null; // Utiliser l'image actuelle comme aperçu initial
+        
       } catch (err) {
-        console.error('Erreur récupération profil:', err);
+        console.error("Erreur récupération profil:", err);
       }
     }
   }
@@ -209,10 +303,10 @@ export default {
   min-height: 100vh;
   background-color: var(--secondary-color);
   font-family: 'Poppins', sans-serif;
-  margin:100px;
+  /* RESOLUTION DU CONFLIT: J'ai choisi de garder 1px */
+  margin-top: 100px; 
 }
 
-/* MENU LATÉRAL */
 .menu {
   width: 250px;
   background-color: white;
@@ -248,7 +342,6 @@ export default {
   font-weight: 600;
 }
 
-/* CONTENU PRINCIPAL */
 .content {
   flex: 1;
   display: flex;
@@ -272,65 +365,167 @@ export default {
   padding-bottom: 10px;
 }
 
-/* CARTE DE VISITE */
-.business-card {
-  background: white;
-  border-radius: 16px;
-  padding: 25px 30px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+.identity-card {
+  max-width: 400px;
+  margin: auto;
+  background: linear-gradient(135deg, #047857, #10b981);
+  color: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  text-align: center;
 }
 
-.business-card .card-header-v4 {
+.identity-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 20px;
 }
 
-.profile-image-container-v4 {
-  width: 90px;
-  height: 90px;
+.identity-photo {
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid var(--main-color);
+  border: 4px solid white;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.default-avatar {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f3f4f6;
-  flex-shrink: 0;
+  font-size: 80px;
+  background: rgba(255,255,255,0.2);
 }
 
-.profile-image-v4 {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.identity-details {
+  margin-top: 15px;
+  text-align: left;
+  background: rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 12px;
 }
 
-.default-avatar-v4 {
-  font-size: 70px;
-  color: var(--main-color);
-}
-
-.profile-text-v4 {
-  flex: 1;
-}
-
-.profile-name-v4 {
-  font-size: 1.6em;
-  font-weight: 600;
-  margin-bottom: 5px;
-  color: var(--text-dark);
-}
-
-.profile-text-v4 p {
-  margin: 5px 0;
-  color: var(--text-muted);
+.identity-details p {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 0.95em;
+}
+
+.role-tag {
+  background: rgba(255,255,255,0.2);
+  padding: 5px 15px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: bold;
+}
+
+.identity-footer {
+  margin-top: 15px;
+}
+
+.btn-edit {
+  background: #facc15;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: bold;
+  color: #1f2937;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-edit:hover {
+  background: #fbbf24;
+}
+
+.edit-profile-form-container {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.photo-and-info-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.role-display-v4 h3 {
+  margin: 0 0 5px 0;
+  color: var(--main-color);
+  font-size: 1.2em;
+}
+
+.email-display {
+  color: var(--text-muted);
+  font-size: 0.9em;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* FORMULAIRE */
+.profile-image-container-v4 {
+  position: relative;
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+}
+
+.profile-image-v4, .default-avatar-v4 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid var(--secondary-color);
+  box-shadow: 0 0 0 2px var(--main-color);
+  object-fit: cover;
+}
+
+.default-avatar-v4 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  color: var(--main-color);
+  background: #e6e6e6;
+}
+
+.upload-btn-v4 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: var(--main-color);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.upload-btn-v4:hover {
+  background-color: #059669;
+}
+
 .details-grid-v4 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -369,13 +564,23 @@ export default {
   grid-column: 1 / -1;
 }
 
-/* BOUTONS */
+.password-field {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.card-footer-v4.button-group {
+  text-align: right;
+  padding-top: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
 .action-btn-v4 {
   padding: 10px 25px;
   border: none;
   border-radius: 30px;
   background-color: var(--main-color);
-  color: #facc15; /* texte jaune */
+  color: #facc15;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -391,7 +596,6 @@ export default {
   transform: scale(0.97);
 }
 
-/* bouton annuler gris avec texte blanc */
 .cancel-btn-v4 {
   background-color: #6b7280;
   color: white;

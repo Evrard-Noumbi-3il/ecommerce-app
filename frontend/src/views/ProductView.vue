@@ -3,7 +3,10 @@
 
     <div v-if="loading">Chargement...</div>
     <div v-else-if="error">{{ error }}</div>
-    <ProductCard v-else :product="product" />
+    <ProductCard v-else 
+     :product="product" 
+     :userSeller="userSeller"
+     :category="category"/>
   </div>
 </template>
 
@@ -17,6 +20,9 @@ const route = useRoute();
 const productId = route.params.id;
 
 const product = ref(null);
+const userSeller = ref(null);
+const category = ref(null);
+ 
 const loading = ref(true);
 const error = ref(null);
 
@@ -31,7 +37,31 @@ const fetchProduct = async (id) => {
     }
 };
 
+const fetchUserProductSeller = async (id) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/api/products/user/${id}`);
+    userSeller.value = response.data;
+    
+  } catch (error) {
+    console.error("Erreur lors de la récupération des utilisateurs :", error);
+  }
+};
+
+const fetchProductCategory = async (id) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/api/products/category/${id}`);
+    category.value = response.data;
+    
+  } catch (error) {
+    console.error("Erreur lors de la récupération des catégories :", error);
+  }
+};
+
+
+
 onMounted(() => {
+  fetchProductCategory(productId);
+  fetchUserProductSeller(productId);
   fetchProduct(productId);
 })
 </script>

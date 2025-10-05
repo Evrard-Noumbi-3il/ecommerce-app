@@ -36,6 +36,7 @@ export const deleteProduct = async (req, res) => {
 
     res.json({ message: "Produit supprimé avec succès" });
   } catch (err) {
+    console.error("Erreur lors de la suppression du produit:", err);
     res.status(500).json({ message: "Erreur serveur", error: err.message });
   }
 };
