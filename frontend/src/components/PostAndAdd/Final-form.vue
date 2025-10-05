@@ -1,22 +1,25 @@
 <template>
   <p >Vous y êtes presque!</p>
   <div class="form-content">
-    <div style="position: relative;top: -9%;display: grid; grid-template-rows:38px 30px; margin-bottom: 30px;">
+    <div class="label-select">
       <label>Type de vente* :</label>
-      <input
+      <select
         @input="$emit('update:sellerType', $event.target.value)"
         :value="sellerType"
         list="seller-list"
         placeholder="Choisissez un type"
-        class="input-postad-text"
-      />
-      <datalist id="seller-list" >
+        class="input-postad-select"
+      >
         <option value="particulier">Particulier</option>
         <option value="professionnel">Professionnel</option>
-      </datalist>
+      </select>
+      <!-- <datalist id="seller-list" >
+        <option value="particulier">Particulier</option>
+        <option value="professionnel">Professionnel</option>
+      </datalist> -->
     </div>
 
-    <div style="position: relative;top: -9%;display: grid; grid-template-rows:38px 30px; margin-bottom: 30px;">
+    <div class="label-input">
       <label>Localisation* :</label>
       <input
         @input="$emit('update:location', $event.target.value)"
@@ -122,8 +125,8 @@ import { onMounted } from "vue";
     top: -12%;
     left: -8px;
     font-size: 30px;
-    background-color:  rgba(34, 52, 74, 0.366);
-    color: #0d1b2a;
+    background-color:  #0d1c2b;
+    color: white;
     border-radius: 5px;
     padding: 0 0 0 90px;
   }
@@ -135,5 +138,19 @@ import { onMounted } from "vue";
     margin-inline-start: 0px;
     margin-inline-end: 0px;
     unicode-bidi: isolate;
+  }
+
+  .label-select{
+    display: grid;
+    grid-template-rows: 38px 45px;
+    margin-bottom: 30px;
+  }
+
+  .input-postad-select{
+    border-radius: 6px;
+    width: 100%;
+    padding: 0 10px 0 10px;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-sizing: border-box;
   }
 </style>

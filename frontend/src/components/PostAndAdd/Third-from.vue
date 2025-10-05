@@ -1,36 +1,38 @@
 <template>
 
-  <p>Fixez votre prix!</p>
-    <div class="form-content">
-      <label>Votre prix de vente* :</label>
-      <div style="display: flex;">
-        <input
-          type="number"
-          @input="emit('update:prix', $event.target.value)"
-          :value="prix"
-          placeholder="0.00"
-          class="input-postad-number"
-          required
-        />
-        <span
-          style="border: 1px solid rgba(0,0,0,0.1); padding: 12px; border-radius: 0 16px 16px 0;"
-        >
-          €
-        </span>
-      </div>
-    </div>
+
+  <p>Insérez des images!</p>
+
+  <div class="form-content">
+
+      <span @click="choosePath" class="btn-upload">+</span>
+
+      <input type="file" ref="fileInputRef" style="display: none;">
 
 
 
+
+
+  </div>
 </template>
-<script setup>
 
+<script setup>
   import { ref } from "vue";
 
   const props = defineProps({
-    prix: String
+    image: String,
   })
-  const emit = defineEmits(['update:prix'])
+  const emit = defineEmits(['update:image']);
+
+  const fileInputRef = ref(null);
+  const fileInput = ref([]);
+
+
+  const choosePath = () => {
+    fileInputRef.value.click();
+    fileInput.value.push(fileInputRef.value.files[0]);
+    emit('update:image', fileInput);
+  };
 </script>
 
 <style scoped>
@@ -38,16 +40,6 @@
   .form-content{
     position: relative;
     top: -9%;
-  }
-  p{
-    position: relative;
-    top: -20%;
-    left: -8px;
-    font-size: 30px;
-    background-color:  rgba(34, 52, 74, 0.366);
-    color: #0d1b2a;
-    border-radius: 5px;
-    padding: 0 0 0 110px;
   }
 
   .btn-next{
@@ -63,15 +55,6 @@
     display: flex;
     align-items: right;
     font-size: 16px;
-  }
-
-  .input-postad-number {
-    flex: 1;
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 16px 0 0 16px;
-    border-right: none;
-    padding: 12px;
-    width: 100%;
   }
 
   .btn-back{
@@ -95,12 +78,30 @@
     margin-bottom: 30px;
   }
 
-  .input-postad-text{
+  .input-postad-text, select{
     border-radius: 6px;
     width: 100%;
     padding: 20px ;
     border: 1px solid rgba(0,0,0,0.1);
     box-sizing: border-box;
+  }
+
+  textarea{
+    border-radius: 6px;
+    width: 100%;
+    border: 1px solid rgba(0,0,0,0.1);
+    height: 200px;
+  }
+
+  p{
+    position: relative;
+    top: -40px;
+    left: -8px;
+    font-size: 30px;
+    background-color:  #0d1c2b;
+    color: white;
+    border-radius: 5px;
+    padding: 0 0 0 82px;
   }
 
   label{
@@ -112,5 +113,13 @@
     unicode-bidi: isolate;
   }
 
+  .btn-upload{
+    font-size: 90px;
+    border: 3px solid rgba(34, 52, 74, 0.2);
+    color:whitesmoke;
+    padding: 0px 20px 0px 20px;
+    border-radius: 8%;
+    cursor: pointer;
+  }
 
 </style>

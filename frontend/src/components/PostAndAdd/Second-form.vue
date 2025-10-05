@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <p >Décrivez votre produit!</p>
+    <p>Décrivez votre produit!</p>
 
       <div class="form-content">
         <div class="label-input">
@@ -129,16 +129,16 @@
 
   p{
     position: relative;
-    top: -15%;
+    top: -40px;
     left: -8px;
     font-size: 30px;
-    background-color:  rgba(34, 52, 74, 0.366);
-    color: #0d1b2a;
+    background-color:  #0d1c2b;
+    color: white;
     border-radius: 5px;
     padding: 0 0 0 70px;
   }
 
-   label{
+  label{
     display: block;
     margin-block-start: 1em;
     margin-block-end: 1em;

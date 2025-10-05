@@ -9,10 +9,10 @@ export const getMe = async (req, res) => {
 
     const user = await User.findById(id).select("-password");
     if (!user) {
-      return res.status(404).json({message: "Erreur serveur"});
+      return res.status(404).json({ message: "Erreur serveur" });
     }
 
-    res.json(user);  
+    res.json(user);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur serveur" });
@@ -33,3 +33,13 @@ export const updateMe = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+
+export const addMiseEnVente = async (req, res) => {
+  try {
+    const { id_produit, id } = req.body;
+    const user = await User.findById(id);
+    user.misEnVente.push(id_produit);
+  } catch (err) {
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+}
