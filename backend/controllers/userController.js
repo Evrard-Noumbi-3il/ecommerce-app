@@ -18,13 +18,10 @@ export const getMe = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
-<<<<<<< HEAD
 //methode pour recuperer les annonces d'un utilisateur connecte 
-export const getAllAnnoncesByUser = async (req, res) => {
-=======
+export const getAllAnnoncesByUser = async (req, res) => {}
 
 export const updateMe = async (req, res) => {
->>>>>>> 638800b24b0ecb158d4d70c114b58abac5abf9e1
   try {
     const { id } = req.params;
 
@@ -33,9 +30,6 @@ export const updateMe = async (req, res) => {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
-<<<<<<< HEAD
-    res.json(user.produits);
-=======
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       {
@@ -48,7 +42,6 @@ export const updateMe = async (req, res) => {
     ).select("-password");
 
     res.json(updatedUser);
->>>>>>> 638800b24b0ecb158d4d70c114b58abac5abf9e1
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Erreur serveur" });
