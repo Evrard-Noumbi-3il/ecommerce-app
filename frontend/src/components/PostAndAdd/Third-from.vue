@@ -13,13 +13,14 @@
       class="btn-upload"
       @click="choosePath(i)"
       >
-        +
+        <span v-if="!imagePreview[i] && i == 0" style="display: flex; justify-content: center; align-items: center; text-align: center; font-size: 12px; color:black">photo de couverture</span>
+        <span v-if="!imagePreview[i] && i != 0">+</span>
+        <img v-if="imagePreview[i]" :src="imagePreview[i]" alt="Aperçu de l'image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"/>
       </span>
 
     </div>
 
-
-      <input type="file" ref="fileInputRef" style="display: none;" @change="handleChange"  />
+    <input type="file" ref="fileInputRef" style="display: none;" @change="handleChange"  accept="image/*"/>
 
 
 
@@ -35,11 +36,12 @@
     image: String,
   })
   const emit = defineEmits(['update:image']);
-
+  const i = ref(0);
   const fileInputRef = ref(null);
   const fileInput = ref([]);
 
-  const btns = ref([{}]);
+  const btns = ref([{},{}]);
+  const imagePreview = ref([]);
 
   const choosePath = (index) => {
     fileInputRef.value.click();
@@ -49,7 +51,10 @@
 
   const handleChange = () => {
     onFileChange();
-    addBtnUpload();
+    if(fileInput.value.length >= 2){
+      addBtnUpload();
+    }
+
   };
 
   const onFileChange = () => {
@@ -62,6 +67,7 @@
 
       emit('update:image', fileInput.value);
     }
+    imagePreview.value.push(URL.createObjectURL(files[0]));
   };
 
   const addBtnUpload = () => {
@@ -146,17 +152,22 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px;
 
   }
 
   .btn-upload{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 90px;
-    border: 3px solid rgba(34, 52, 74, 0.2);
+    border: 1px solid rgba(34, 52, 74, 0.2);
     color:whitesmoke;
-    padding: 0px 20px 0px 20px;
+    width: 112px;
+    height: 112px;
     border-radius: 8%;
     cursor: pointer;
+    overflow: hidden;
   }
 
 </style>

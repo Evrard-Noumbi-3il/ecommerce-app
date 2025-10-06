@@ -8,7 +8,7 @@
       ></ProductCard>
     </div>
     <div class="form-container">
-      <form @submit.prevent="addproduct" class="form">
+      <form @submit.prevent="anouncement" class="form">
         <div v-if="displayForm == 1" class="form-element">
           <FirstForm
             v-model:titre="product.titre"
@@ -62,7 +62,7 @@
           />
           <div class="div-btn">
             <button type="button" @click="displayForm = 4" class="btn-back">retour</button>
-            <button type="submit" class="btn-next" @click="$emit('showdisplay')">terminer</button>
+            <button type="submit" class="btn-next">terminer</button>
           </div>
         </div>
 
@@ -136,25 +136,45 @@
     fetchCommunes();
   });
 
+  const anouncement = async () => {
+    await addproduct();
+    await miseEnVente();
+  };
   const addproduct = async () => {
     try {
-      const res = await axios.post(
-        `${process.env.VUE_APP_API_URL}/products/addProduct`,
-        { titre: product.value.titre,
-          description: product.value.description,
-          prix: product.value.prix,
-          id_categorie: product.value.id_categorie,
-          theme: product.value.theme,
-          location: product.value.location,
-          state: product.value.state,
-          sellerType: product.value.sellerType
-        }
-      );
+      `${process.env.VUE_APP_API_URL}/products/addProduct`,
+      {
+        titre: product.value.titre,
+        description: product.value.description,
+        prix: product.value.prix,
+        id_categorie: product.value.id_categorie,
+        theme: product.value.theme,
+        location: product.value.location,
+        state: product.value.state,
+        sellerType: product.value.sellerType
+      }
       alert("Ajout réussi");
       this.$router.push("/");
       setTimeout(() => window.location.reload(), 500)
     } catch (err) {
       alert(err.response?.data?.message || "Erreur lors de l'ajout ❌");
+    }
+  };
+
+  const miseEnVente = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const id = JSON.parse(atob(token.split('.')[1])).id;
+      `${process.env.VUE_APP_API_URL}/products/miseEnVente`,
+      { id_product: product.value.id,
+        id: id,
+      }
+
+      alert("Mise en vente réussie");
+      this.$router.push("/");
+      setTimeout(() => window.location.reload(), 500)
+    } catch (err) {
+      alert(err.response?.data?.message || "Erreur lors de la mise en vente ❌");
     }
   };
 </script>
