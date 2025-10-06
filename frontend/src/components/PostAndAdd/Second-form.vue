@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <p >Décrivez votre produit!</p>
+    <p>Décrivez votre produit!</p>
 
       <div class="form-content">
         <div class="label-input">
@@ -16,7 +16,7 @@
           />
         </div>
 
-        <div style="display: grid; ;margin-bottom: 30px; grid-template-rows: 38px; ">
+        <div class="label-textarea">
           <label>Description de l'annonce*</label>
           <textarea
             @input="emit('update:description', $event.target.value)"
@@ -72,8 +72,11 @@
 <style scoped>
 
   .form-content{
-    position: relative;
-    top: -9%;
+    display: flex;
+    flex-direction: column;
+    text-wrap: wrap;
+    gap: 50px;
+    margin-bottom: 50px;
   }
 
   .btn-next{
@@ -107,15 +110,21 @@
   }
 
   .label-input{
-    display: grid;
-    grid-template-rows: 38px 30px;
-    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 
-  .input-postad-text, select{
+  .label-textarea{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .input-postad-text{
     border-radius: 6px;
     width: 100%;
-    padding: 20px ;
+    padding: 15px;
     border: 1px solid rgba(0,0,0,0.1);
     box-sizing: border-box;
   }
@@ -125,27 +134,20 @@
     width: 100%;
     border: 1px solid rgba(0,0,0,0.1);
     height: 200px;
+
   }
 
   p{
     position: relative;
-    top: -15%;
-    left: -8px;
+    top: -40px;
+    left: -3px;
     font-size: 30px;
-    background-color:  rgba(34, 52, 74, 0.366);
-    color: #0d1b2a;
+    background-color:  #0d1c2b;
+    color: white;
     border-radius: 5px;
-    padding: 0 0 0 70px;
+    text-align: center;
   }
 
-   label{
-    display: block;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    unicode-bidi: isolate;
-  }
 
 
 </style>

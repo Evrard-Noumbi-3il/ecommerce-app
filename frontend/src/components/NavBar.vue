@@ -8,7 +8,7 @@
       </div>
 
         <!-- Barre de recherche -->
-      <div class="search-bar" v-if="route.name !== 'search' && !isAdminOrModerator">
+      <div class="search-bar" v-if="route.name !== 'search' && route.name !== 'PostAndAdd' && !isAdminOrModerator">
         <input
           type="text"
           v-model="searchQuery"
@@ -25,13 +25,13 @@
 
       <!-- Liens de navigation -->
       <ul class="nav-links" :class="{ active: isMenuOpen }">
-        <li><RouterLink to="/" @click="display=true">Accueil</RouterLink></li>
-        <li><RouterLink to="/search" @click="display=true">Catégories</RouterLink></li>
-        <li><RouterLink to="/favorites" v-if="isLoggedIn && ! isAdminOrModerator" @click="display=true">Favoris</RouterLink></li>
+        <li><RouterLink to="/" >Accueil</RouterLink></li>
+        <li><RouterLink to="/search" >Catégories</RouterLink></li>
+        <li><RouterLink to="/favorites" v-if="isLoggedIn && ! isAdminOrModerator">Favoris</RouterLink></li>
         <li><RouterLink to="/admin/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
-        <li><RouterLink  to="/profile" v-if="isLoggedIn && !isAdminOrModerator" @click="display=true">Mon compte</RouterLink></li>
+        <li><RouterLink  to="/profile" v-if="isLoggedIn && !isAdminOrModerator" >Mon compte</RouterLink></li>
         <li>
-          <RouterLink v-if="isLoggedIn && !isAdminOrModerator" @click="display=false" to="/post-ad" class="btn-poster">+ Déposer une annonce</RouterLink>
+          <RouterLink to="/post-ad" v-if="isLoggedIn && !isAdminOrModerator && route.name !== 'PostAndAdd'" class="btn-poster">+ Déposer une annonce</RouterLink>
         </li>
         <li ><button v-if="!isLoggedIn" @click="$emit('open-Register')" style="border: none; background-color: #0d1b2a; color: white; padding: 0px; font-weight: 500; font-size: 15px; cursor: pointer;">Se connecter/S'inscrire</button></li>
         <li> <RouterLink v-if="isLoggedIn" to="/" @click="logout" class="btn-deconnexion">Déconnexion</RouterLink> </li>
@@ -61,7 +61,6 @@ const searchQuery = ref("");
 
 const isMenuOpen = ref(false);
 const isLoggedIn = ref(false);
-const display = ref(false);
 const isAdminOrModerator = ref(false);
 
 const toggleMenu = () => {
@@ -82,11 +81,6 @@ onMounted(() => {
   const token = localStorage.getItem("token");
   isLoggedIn.value = !!token;
   isAdminOrModerator.value = token && (JSON.parse(atob(token.split('.')[1])).role === 'admin' || JSON.parse(atob(token.split('.')[1])).role === 'moderator');
-
-  if (!sessionStorage.getItem("appStarted")) {
-    display.value = true;
-    sessionStorage.setItem("appStarted", "true");
-  }
 });
 
 function logout() {

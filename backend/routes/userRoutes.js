@@ -1,14 +1,9 @@
 import express from "express";
-//import { updateMe, getMe } from "../controllers/UserController.js";
+import { getMe, updateMe, addMiseEnVente } from "../controllers/userController.js";
 
 const router = express.Router();
 
-// Middleware JSON global ou sur cette route
-router.use(express.json());
-
-// Exemple de route update
-router.put("/me", updateMe);
-router.get("/me/:id", getMe);
-router.get("/me/produits/:id", getAllAnnoncesByUser);
-
+router.get("/me/:id", getMe);           // user connecté
+router.put("/me", updateMe);        // user connecté peut modifier
+router.post("/addMiseEnVente", addMiseEnVente);
 export default router;

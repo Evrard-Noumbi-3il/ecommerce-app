@@ -2,22 +2,25 @@
 
   <p>Fixez votre prix!</p>
     <div class="form-content">
-      <label>Votre prix de vente* :</label>
-      <div style="display: flex;">
-        <input
-          type="number"
-          @input="emit('update:prix', $event.target.value)"
-          :value="prix"
-          placeholder="0.00"
-          class="input-postad-number"
-          required
-        />
-        <span
-          style="border: 1px solid rgba(0,0,0,0.1); padding: 12px; border-radius: 0 16px 16px 0;"
-        >
-          €
-        </span>
+      <div class="label-input">
+        <label>Votre prix de vente* :</label>
+        <div style="display: flex;">
+          <input
+            type="number"
+            @input="emit('update:prix', $event.target.value)"
+            :value="prix"
+            placeholder="0.00"
+            class="input-postad-number"
+            required
+          />
+          <span
+            style="border: 1px solid rgba(0,0,0,0.1); padding: 20px; border-radius: 0 16px 16px 0; display: flex; align-items: center;"
+          >
+            €
+          </span>
+        </div>
       </div>
+
     </div>
 
 
@@ -35,17 +38,28 @@
 
 <style scoped>
 
-  .form-content{
-    position: relative;
-    top: -9%;
+  .form-content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 50px;
+    margin-bottom: 50px;
   }
+
+  .label-input{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+
   p{
     position: relative;
-    top: -20%;
+    top: -15%;
     left: -8px;
     font-size: 30px;
-    background-color:  rgba(34, 52, 74, 0.366);
-    color: #0d1b2a;
+    background-color:  #0d1c2b;
+    color: white;
     border-radius: 5px;
     padding: 0 0 0 110px;
   }
@@ -66,11 +80,10 @@
   }
 
   .input-postad-number {
-    flex: 1;
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 16px 0 0 16px;
     border-right: none;
-    padding: 12px;
+    padding: 20px;
     width: 100%;
   }
 

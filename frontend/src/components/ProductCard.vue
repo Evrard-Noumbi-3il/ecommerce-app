@@ -1,10 +1,10 @@
 <template>
-  <div class="product-info">
+  <div v-if="product" class="product-info">
 
     <div class="product-card">
 
       <div class="image-box">
-        <span class="badge">NEUF</span>
+        <span class="badge"> <strong> {{ product.state }}</strong></span>
         <img v-if="product.images && product.images.length > 0"
           :src="product.images[0]"
           alt="Produit"
@@ -17,9 +17,9 @@
       </div>
 
       <div class="info-box">
-        <div>
-          Levendeur
-        <br><small>Particulier</small>
+        <div v-if="userSeller">
+          {{userSeller.name}} {{ userSeller.firstname }}
+        <br><small>{{ product.sellerType }}</small>
         </div>
         
         <p>Note</p>
@@ -37,9 +37,9 @@
     <div class="product-info-details">
 
       <div class="product-info-without-comments">
-        <div class="product-title-theme">
+        <div v-if="category" class="product-title-theme">
           <h1>{{ product.titre }}</h1>
-          <p>{{ product.theme }} -> test</p>
+          <p>{{ product.theme }} ->  {{ category.nom }}</p>
         </div>
         <div class="product-buy-row">
           <div class="product-direct-buy-row">
@@ -97,11 +97,22 @@ defineProps({
     type: Object,
     required: true,
   },
+  userSeller: {
+    type: Object,
+    required: true,
+  },
+  category: {
+    type: Object,
+    required: true,
+  }
+
 })
 
   const toggleFavorite = (id) => {
     console.log("Toggle favorite for:", id);
   };
+
+
 </script>
 
 <style scoped>
@@ -234,7 +245,6 @@ defineProps({
     color :#777777;
   }
 }
-
 
 
 /* Partie image */
