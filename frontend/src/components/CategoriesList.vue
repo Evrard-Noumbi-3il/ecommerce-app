@@ -86,4 +86,46 @@ const goToSearch = (categorie) => {
   font-weight: 500;
   color: #333;
 }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .categories{
+    gap: 10px;
+    padding: 6px;
+    max-width: 100vw;
+  }
+  .card {
+    min-width: 140px;
+    width: 150px;
+    height: 140px;
+  }
+  .card img {
+    height: 80px;
+  }
+  .card p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .categories {
+    gap: 7px;
+    padding: 4px;
+  }
+  .card {
+    min-width: 110px;
+    width: 120px;
+    height: 110px;
+    border-radius: 7px;
+  }
+  .card img {
+    height: 55px;
+    border-radius: 7px 7px 0 0;
+  }
+  .card p {
+    font-size: 0.85rem;
+    margin-top: 6px;
+  }
+}
+
 </style>
