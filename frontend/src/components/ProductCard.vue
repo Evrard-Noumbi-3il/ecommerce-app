@@ -131,7 +131,7 @@ defineProps({
 }
 .product-card {
   display: grid;
-  grid-template-columns: 75% 25%;
+  grid-template-columns: 75% 35%;
   width: 100%;
   height: auto;
   border-radius:20px ;
