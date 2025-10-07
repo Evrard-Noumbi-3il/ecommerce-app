@@ -1,6 +1,7 @@
 import Produit from "../models/Produits.js";
 import axios from "axios";
 import jwt from "jsonwebtoken";
+import { addMiseEnVente } from "./userController.js";
 
 export const addProduct = async (req, res) => {
   try {
@@ -25,11 +26,13 @@ export const addProduct = async (req, res) => {
     });
 
     await newProduit.save();
-    console.log(newProduit._id);
+    console.log("id du produit ajouté", newProduit._id);
 
-    //Ajouter mise en vente
-    await axios.post(`http://localhost:3000/api/controllers/userController/addMiseEnVente${newProduit._id}`);
-    console.log("Mise en vente ajoutée avec succès");
+    // Ajouter le produit à la mise en vente de l'utilisateur
+    console.log("req.user dans addProduct", req.user);
+    const UserId = req.user._id;
+    console.log("id de l'utilisateur connecté", UserId);
+    await addMiseEnVente(UserId, newProduit._id);
 
     return res.status(201).json({
       message: "Produit ajouté avec succès ✅",

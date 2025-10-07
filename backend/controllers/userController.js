@@ -48,13 +48,10 @@ export const updateMe = async (req, res) => {
   }
 };
 
-export const addMiseEnVente = async (req, res) => {
-  try {
-    const token
-    const { id_produit, id } = req.body;
-    const user = await User.findById(id);
-    user.misEnVente.push(id_produit);
-  } catch (err) {
-    res.status(500).json({ message: "Erreur serveur" });
-  }
-}
+export const addMiseEnVente = async (userId, id_produit) => {
+  const user = await User.findById(userId);
+  if (!user) throw new Error("Utilisateur non trouvé");
+  user.misEnVente.push(id_produit);
+  await user.save();
+  return user;
+};
