@@ -8,14 +8,14 @@
     <div class="btn-upload-container">
 
       <span
-      v-for="(btn, i) in btns"
+      v-for="(btn, i) in btnsLocal"
       :key="i"
       class="btn-upload"
       @click="choosePath(i)"
       >
-        <span v-if="!imagePreview[i] && i == 0" style="display: flex; justify-content: center; align-items: center; text-align: center; font-size: 12px; color:black">photo de couverture</span>
-        <span v-if="!imagePreview[i] && i != 0">+</span>
-        <img v-if="imagePreview[i]" :src="imagePreview[i]" alt="Aperçu de l'image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"/>
+        <span v-if="!imagePreviewLocal[i] && i == 0" style="display: flex; justify-content: center; align-items: center; text-align: center; font-size: 12px; color:black">photo de couverture</span>
+        <span v-if="!imagePreviewLocal[i] && i != 0">+</span>
+        <img v-if="imagePreviewLocal[i]" :src="imagePreviewLocal[i]" alt="Aperçu de l'image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;"/>
       </span>
 
     </div>
@@ -30,18 +30,28 @@
 </template>
 
 <script setup>
-  import { ref } from "vue";
+  import { ref, defineProps, defineEmits } from "vue";
 
   const props = defineProps({
-    image: String,
+    fileInput: {
+      type: Array,
+      required: true
+    },
+    imagePreview: {
+      type: Array,
+      required: true,
+    },
+    btns: {
+      type: Array,
+      required: false,
+      default: () => ([{},{}])
+    }
   })
-  const emit = defineEmits(['update:image']);
-  const i = ref(0);
+  const emit = defineEmits(['update:fileInput', 'update:imagePreview', 'update:btns']);
   const fileInputRef = ref(null);
-  const fileInput = ref([]);
-
-  const btns = ref([{},{}]);
-  const imagePreview = ref([]);
+  const localFileInput = ref([...props.fileInput]);
+  const imagePreviewLocal = ref([...props.imagePreview]);
+  const btnsLocal = ref([...props.btns]);
 
   const choosePath = (index) => {
     fileInputRef.value.click();
@@ -51,10 +61,9 @@
 
   const handleChange = () => {
     onFileChange();
-    if(fileInput.value.length >= 2){
+    if (localFileInput.value.length >= 2) {
       addBtnUpload();
     }
-
   };
 
   const onFileChange = () => {
@@ -62,16 +71,23 @@
     console.log("Fichiers sélectionnés :", files);
 
     if (files.length > 0) {
-      fileInput.value.push(files[0]);
-      console.log("fileInput maintenant :", fileInput.value);
+      localFileInput.value.push(files[0]);
 
-      emit('update:image', fileInput.value);
+      emit('update:fileInput', localFileInput.value);
     }
-    imagePreview.value.push(URL.createObjectURL(files[0]));
+    const preview = URL.createObjectURL(files[0]);
+    imagePreviewLocal.value.push(preview);
+    emit('update:imagePreview', imagePreviewLocal.value);
+    fileInputRef.value.value = null; // Réinitialiser l'input pour permettre la sélection du même fichier à nouveau
+    console.log("Aperçu de l'image :", preview);
+    console.log("Input de fichier local :", localFileInput.value);
+    console.log("Aperçu local de l'image :", imagePreviewLocal.value);
   };
 
   const addBtnUpload = () => {
-    btns.value.push({});
+    btnsLocal.value.push({});
+    emit('update:btns', btnsLocal.value);
+    console.log("Bouton + ajouté");
   };
 
 

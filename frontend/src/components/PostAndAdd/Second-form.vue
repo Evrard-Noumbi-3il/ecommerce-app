@@ -58,9 +58,7 @@
 </template>
 
 <script setup>
-  import { ref } from "vue";
-
-  const props = defineProps({
+  defineProps({
     titre: String,
     description: String,
     state: String,

@@ -3,12 +3,13 @@
   <div class="containerPostAndAdd">
     <div class="preview-product">
       <ProductCard
-        style="width: 100%"
+        style="width: 100%; display: flex;"
         :product="product"
+        :imagePreview="imagePreview"
       ></ProductCard>
     </div>
     <div class="form-container">
-      <form @submit.prevent="anouncement" class="form">
+      <form @submit.prevent="addproduct" class="form">
         <div v-if="displayForm == 1" class="form-element">
           <FirstForm
             v-model:titre="product.titre"
@@ -34,7 +35,9 @@
 
         <div v-if="displayForm == 3">
           <ThirdFrom
-            v-model:prix="product.prix"
+            v-model:fileInput="fileInput"
+            v-model:imagePreview="imagePreview"
+            v-model:btns="btns"
           />
           <div class="div-btn">
             <button type="button" @click="displayForm = 2" class="btn-back">retour</button>
@@ -87,9 +90,9 @@
   import FourthForm from "@/components/PostAndAdd/Fourth-form.vue";
   import FinalForm from "@/components/PostAndAdd/Final-form.vue";
   import ProductCard from "@/components/ProductCard.vue";
+  import { useRouter } from "vue-router";
 
-
-
+  const router = useRouter();
   const product = ref({
     titre: "",
     theme: "",
@@ -101,7 +104,9 @@
     sellerType: "",
     location: ""
   })
-
+  const fileInput = ref([]);
+  const imagePreview = ref([]);
+  const btns = ref([{}, {}]);
   const nom_categorie = ref("");
   const categories = ref([]);
   const thematiques = ref([]);
@@ -136,14 +141,9 @@
     fetchCommunes();
   });
 
-  const anouncement = async () => {
-    await addproduct();
-    await miseEnVente();
-  };
   const addproduct = async () => {
     try {
-      `${process.env.VUE_APP_API_URL}/products/addProduct`,
-      {
+      const response = await axios.post(`${process.env.VUE_APP_API_URL}/products/addProduct`, {
         titre: product.value.titre,
         description: product.value.description,
         prix: product.value.prix,
@@ -152,31 +152,22 @@
         location: product.value.location,
         state: product.value.state,
         sellerType: product.value.sellerType
+      });
+      if (response.status === 201) {
+        console.log("ID du produit ajouté :", product.value._id);
+        product.value._id = response.data.produit._id;
+        console.log("ID du produit ajouté :", product.value._id);
+        router.push("/");
+        window.location.reload();
       }
-      alert("Ajout réussi");
-      this.$router.push("/");
-      setTimeout(() => window.location.reload(), 500)
     } catch (err) {
-      alert(err.response?.data?.message || "Erreur lors de l'ajout ❌");
+      alert(err.response?.data?.message || "Une erreur est survenue lors de l'ajout du produit.");
+      console.error(err);
     }
   };
 
-  const miseEnVente = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const id = JSON.parse(atob(token.split('.')[1])).id;
-      `${process.env.VUE_APP_API_URL}/products/miseEnVente`,
-      { id_product: product.value.id,
-        id: id,
-      }
 
-      alert("Mise en vente réussie");
-      this.$router.push("/");
-      setTimeout(() => window.location.reload(), 500)
-    } catch (err) {
-      alert(err.response?.data?.message || "Erreur lors de la mise en vente ❌");
-    }
-  };
+
 </script>
 
 

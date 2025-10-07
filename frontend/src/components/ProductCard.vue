@@ -9,6 +9,11 @@
           :src="product.images[0]"
           alt="Produit"
         />
+        <img v-else-if="imagePreview && imagePreview.length > 0"
+          :src="imagePreview[0]"
+          alt="Produit preview"
+          class="product-image"
+        />
         <button class="fav" @click.stop="toggleFavorite(product._id)" >
             <svg viewBox="0 0 24 19" width="20" height="20">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
@@ -21,7 +26,7 @@
           {{userSeller.name}} {{ userSeller.firstname }}
         <br><small>{{ product.sellerType }}</small>
         </div>
-        
+
         <p>Note</p>
         <h2>2,9 ★</h2>
 
@@ -33,13 +38,13 @@
       </div>
 
     </div>
-    
+
     <div class="product-info-details">
 
       <div class="product-info-without-comments">
         <div v-if="category" class="product-title-theme">
           <h1>{{ product.titre }}</h1>
-          <p>{{ product.theme }} ->  {{ category.nom }}</p>
+          <p>aaa ->  {{ category.nom }}</p>
         </div>
         <div class="product-buy-row">
           <div class="product-direct-buy-row">
@@ -58,7 +63,7 @@
         <p>{{ product.description }}</p>
       </div>
 
-      <div class="comments-seller">
+      <!-- <div class="comments-seller">
         <div class="content-comments" >
           <h2>Avis</h2>
           <div class="user-comments">
@@ -68,24 +73,24 @@
             </div>
           <div class="message-comments">
               <p>Il m’a vendu une montre de merde.Franchement, je suis très déçu par cette montre connectée.
-                 L’autonomie est catastrophique : je dois la recharger 
-                 presque tous les jours, alors qu’elle était annoncée avec 
+                 L’autonomie est catastrophique : je dois la recharger
+                 presque tous les jours, alors qu’elle était annoncée avec
                  *une semaine de batterie. L’écran manque de luminosité et de
                  *vient pratiquement illisible en plein soleil. Les notifications arrivent
                   parfois avec un retard énorme, ce qui annule totalement l’intérêt
-                   d’une montre censée me tenir informé en temps réel. De plus, 
-                   l’application mobile est lente, mal traduite et plante régulièrement. 
-                   Enfin, le bracelet est inconfortable et a commencé à s’user après 
+                   d’une montre censée me tenir informé en temps réel. De plus,
+                   l’application mobile est lente, mal traduite et plante régulièrement.
+                   Enfin, le bracelet est inconfortable et a commencé à s’user après
                    seulement quelques semaines d’utilisation. Pour le prix, je m’attendais à beaucoup mieux, et honnêtement je regrette cet achat</p>
           </div>
 
           </div>
-          
-          
+
+
         </div>
-       
-      </div>
-      
+
+      </div> -->
+
     </div>
 
   </div>
@@ -96,6 +101,10 @@ defineProps({
   product: {
     type: Object,
     required: true,
+  },
+  imagePreview: {
+    type: Object,
+
   },
   userSeller: {
     type: Object,
@@ -123,11 +132,11 @@ defineProps({
 }
 
 .product-info {
-  display: flex;  
+  display: flex;
   flex-direction: column;
   align-content: center;
   justify-content: center;
-  width: 60%;  
+  width: 60%;
 }
 .product-card {
   display: grid;
@@ -150,18 +159,18 @@ defineProps({
 .product-buy-row{
   display: flex;
   gap : 23%;
-  margin-top: 20px; 
+  margin-top: 20px;
   .product-direct-buy-row{
     display: flex;
-    
+
     border-radius: 45px;
     background-color: #0d1c2b;
 
-  
+
     .product-price{
       color : #0D1B2A;
       background-color: #FABA20;
-      
+
       margin:0;
       border-radius:  45px ;
       padding: 10px 20px;
@@ -178,7 +187,7 @@ defineProps({
       height: 100%;
       align-self: center;
       padding: 10px 20px;
-    
+
     }
 
  }
@@ -253,7 +262,7 @@ defineProps({
   background: #FDBF37;
   border-radius:20px ;
 
-  box-shadow: 0 0 8px rgba(0, 0, 0); 
+  box-shadow: 0 0 8px rgba(0, 0, 0);
   height: 250px;
 }
 .image-box img {
