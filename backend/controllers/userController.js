@@ -18,8 +18,8 @@ export const getMe = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
-//methode pour recuperer les annonces d'un utilisateur connecte 
-export const getAllAnnoncesByUser = async (req, res) => {}
+//methode pour recuperer les annonces d'un utilisateur connecte
+export const getAllAnnoncesByUser = async (req, res) => { }
 
 export const updateMe = async (req, res) => {
   try {
@@ -50,6 +50,7 @@ export const updateMe = async (req, res) => {
 
 export const addMiseEnVente = async (req, res) => {
   try {
+    const token
     const { id_produit, id } = req.body;
     const user = await User.findById(id);
     user.misEnVente.push(id_produit);

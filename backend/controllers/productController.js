@@ -27,7 +27,9 @@ export const addProduct = async (req, res) => {
     await newProduit.save();
     console.log(newProduit._id);
 
-
+    //Ajouter mise en vente
+    await axios.post(`http://localhost:3000/api/controllers/userController/addMiseEnVente${newProduit._id}`);
+    console.log("Mise en vente ajoutée avec succès");
 
     return res.status(201).json({
       message: "Produit ajouté avec succès ✅",
