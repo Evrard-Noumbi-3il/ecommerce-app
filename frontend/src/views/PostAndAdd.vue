@@ -143,7 +143,10 @@
 
   const addproduct = async () => {
     try {
+      const token = localStorage.getItem("token");
+      const id = JSON.parse(atob(token.split('.')[1])).id;
       const response = await axios.post(`${process.env.VUE_APP_API_URL}/products/addProduct`, {
+        userId: id,
         titre: product.value.titre,
         description: product.value.description,
         prix: product.value.prix,

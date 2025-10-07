@@ -5,7 +5,7 @@ import { addMiseEnVente } from "./userController.js";
 
 export const addProduct = async (req, res) => {
   try {
-    const { titre, description, prix, id_categorie, theme, location, state, sellerType } = req.body;
+    const { userId, titre, description, prix, id_categorie, theme, location, state, sellerType } = req.body;
 
     if (!titre || !description || !prix || !id_categorie || !theme || !location || !state || !sellerType) {
       return res.status(400).json({
@@ -26,13 +26,11 @@ export const addProduct = async (req, res) => {
     });
 
     await newProduit.save();
+    console.log("id de l'utilisateur connecté", userId);
     console.log("id du produit ajouté", newProduit._id);
 
     // Ajouter le produit à la mise en vente de l'utilisateur
-    console.log("req.user dans addProduct", req.user);
-    const UserId = req.user._id;
-    console.log("id de l'utilisateur connecté", UserId);
-    await addMiseEnVente(UserId, newProduit._id);
+    await addMiseEnVente(userId, newProduit._id);
 
     return res.status(201).json({
       message: "Produit ajouté avec succès ✅",
