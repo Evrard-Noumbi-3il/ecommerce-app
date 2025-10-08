@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { getUserFromToken, isAuthenticated, isAdmin } from "../auth/auth.js";
 import Home from "../views/HomePage.vue";
 import SearchPage from "../views/SearchPage.vue";
 import ProfilUser from "../views/ProfilUser.vue";
@@ -17,64 +18,64 @@ import Themes from '@/views/ThemeManagement.vue';
 
 const routes = [
   { path: "/", name: "HomePage", component: Home },
-  { path: "/search", name: "search", component: SearchPage },
-  { path: "/profile", name: "ProfilUser", component: ProfilUser },
-  { path: "/post-ad", name: "PostAndAdd", component: PostAndAdd },
+  { path: "/search", name: "search", component: SearchPage},
+  { path: "/profile", name: "ProfilUser", component: ProfilUser , meta: { requiresAuth: true }},
+  { path: "/post-ad", name: "PostAndAdd", component: PostAndAdd , meta: { requiresAuth: true }},
   { path: "/product/:id", name: "Product", component: ProductView, props: true },
 
   {
     path: "/admin/dashboard",
     name: "Dashboard",
     component: Dashboard,
-    meta: { layout: AdminLayout},
+    meta: { layout: AdminLayout, requiresAdmin: true},
   },
   {
     path: "/admin/users",
     name: "UserManagement",
     component: UserManagement,
-    meta: { layout: AdminLayout},
+    meta: { layout: AdminLayout, requiresAdmin: true},
   },
   {
     path: "/admin/categories",
     name: "CategoryManagement",
     component: CategoryManagement,
-    meta: { layout: AdminLayout},
+    meta: { layout: AdminLayout, requiresAdmin: true},
   },
   {
     path: "/admin/reported-products",
     name: "ReportedProducts",
     component: ReportedProducts,
-    meta: { layout: AdminLayout},
+    meta: { layout: AdminLayout, requiresAdmin: true},
   },
   {
     path: "/admin/products",
     name: "Products",
     component: Products,
-    meta: { layout: AdminLayout },
+    meta: { layout: AdminLayout , requiresAdmin: true},
   },
   {
     path: "/admin/orders",
     name: "Orders",
     component: Orders,
-    meta: { layout: AdminLayout },
+    meta: { layout: AdminLayout , requiresAdmin: true},
   },
   {
     path: "/admin/ads",
     name: "Ads",
     component: Ads,
-    meta: { layout: AdminLayout},
+    meta: { layout: AdminLayout, requiresAdmin: true},
   },
   {
     path: "/admin/notifications",
     name: "Notifications",
     component: Notifications,
-    meta: { layout: AdminLayout},
+    meta: { layout: AdminLayout, requiresAdmin: true},
   },
   {
     path: "/admin/themes",
     name: "Themes",
     component: Themes,
-    meta: { layout: AdminLayout },
+    meta: { layout: AdminLayout, requiresAdmin: true},
   },
 ];
 
@@ -83,15 +84,17 @@ const router = createRouter({
   routes,
 });
 
-
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem("token"); 
-  const userRole = JSON.parse(localStorage.getItem("user"))?.role;
-
-  if (to.meta.requiresAuth) {
-    if (!token) return next("/"); 
-    if (to.meta.role && !to.meta.role.includes(userRole)) return next("/"); }
-  next();
+  if (to.meta.requiresAuth && !isAuthenticated()) {
+    alert("vous devez être connecté pour accéder à cette page.");
+    next({ name: "HomePage" });
+  } else if (to.meta.requiresAdmin && !isAdmin()) {
+    alert("Accès refusé. Vous n'avez pas les droits administrateur.");
+    next({ name: "HomePage" });
+  } else {
+    next();
+  }
 });
+
 
 export default router;

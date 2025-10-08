@@ -1,29 +1,28 @@
 import jwt from "jsonwebtoken";
-import User from "../models/Users.js";
 
-export const authMiddleware = async (req, res, next) => {
+export function authMiddleware(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Accès refusé" });
+  if (!token) return res.status(401).json({ message: "Token manquant" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id).select("-password");
+    req.user = decoded;
     next();
   } catch (err) {
-    res.status(401).json({ message: "Token invalide" });
+    return res.status(403).json({ message: "Token invalide ou expiré" });
   }
-};
+}
 
-export const isAdmin = (req, res, next) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ message: "Accès réservé à l’admin" });
+export function isAdmin(req, res, next) {
+  if (req.user?.role !== "admin") {
+    return res.status(403).json({ message: "Accès réservé aux administrateurs" });
   }
   next();
-};
+}
 
-export const isModeratorOrAdmin = (req, res, next) => {
-  if (["admin", "moderator"].includes(req.user.role)) {
-    return next();
+export function isModeratorOrAdmin(req, res, next) {
+  if (!["admin", "moderator"].includes(req.user?.role)) {
+    return res.status(403).json({ message: "Accès réservé aux modérateurs ou administrateurs" });
   }
-  return res.status(403).json({ message: "Accès réservé aux modérateurs/admins" });
-};
+  next();
+}

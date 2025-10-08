@@ -282,7 +282,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import axios from 'axios'
+import api from '../auth/axios.js'
 
 // État réactif
 const categories = ref([])
@@ -378,22 +378,21 @@ const fetchData = async () => {
   try {
     loading.value = true
     const [categoriesResponse, thematiquesResponse] = await Promise.all([
-      axios.get(`${API_BASE}/categories`),
-      axios.get(`${API_BASE}/thematiques`)
+      api.get('/admin/categories'),
+      api.get('/admin/thematiques')
+
     ])
     
-    // Gérer les différents formats de réponse de l'API
     const categoriesData = categoriesResponse.data?.data || categoriesResponse.data || []
     const thematiquesData = thematiquesResponse.data?.data || thematiquesResponse.data || []
     
-    // S'assurer que c'est un tableau
     categories.value = Array.isArray(categoriesData) ? categoriesData : []
     thematiques.value = Array.isArray(thematiquesData) ? thematiquesData : []
     
   } catch (error) {
     showMessage('Erreur lors du chargement des données', 'error')
     console.error('Fetch error:', error)
-    // Initialiser avec des tableaux vides en cas d'erreur
+
     categories.value = []
     thematiques.value = []
   } finally {
@@ -411,7 +410,7 @@ const addCategory = async () => {
     form.append('image', formData.value.image); 
   }
   try {
-    await axios.post(`${API_BASE}/categories`, form, {
+    await api.post('/admin/categories', form, {
       headers: { 'Content-Type': 'multipart/form-data' }
     }); 
     resetForm();
@@ -431,7 +430,7 @@ const addCategory = async () => {
 const deleteCategory = async () => {
   try {
     loading.value = true
-    await axios.delete(`${API_BASE}/categories/${categoryToDelete.value._id}`)
+    await api.delete(`/admin/categories/${categoryToDelete.value._id}`);
     
     categories.value = categories.value.filter(cat => cat._id !== categoryToDelete.value._id)
     showDeleteModal.value = false
