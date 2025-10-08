@@ -23,15 +23,15 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import api from "@/auth/axios";
 
-const API_BASE = "http://localhost:3000/api/admin";
+const API_BASE = "/admin/publicites";
 
 const publicites = ref([]);
 const formData = ref({ titre: "", information: "", image: null });
 
 const fetchPubs = async () => {
-  const { data } = await axios.get(`${API_BASE}/publicites`);
+  const { data } = await api.get(`${API_BASE}`);
   publicites.value = data;
 };
 
@@ -41,7 +41,7 @@ const addPub = async () => {
   form.append("information", formData.value.information);
   if (formData.value.image) form.append("image", formData.value.image);
 
-  const { data } = await axios.post(`${API_BASE}/publicites`, form, {
+  const { data } = await api.post(`${API_BASE}`, form, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 
@@ -50,7 +50,7 @@ const addPub = async () => {
 };
 
 const deletePub = async (id) => {
-  await axios.delete(`${API_BASE}/publicites/${id}`);
+  await api.delete(`${API_BASE}/${id}`);
   publicites.value = publicites.value.filter((p) => p._id !== id);
 };
 

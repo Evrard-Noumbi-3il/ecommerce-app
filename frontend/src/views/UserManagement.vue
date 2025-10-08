@@ -9,57 +9,52 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import UserTable from "@/components/UserTable.vue";
+import api from "@/auth/axios.js"; // ✅ Ton client Axios avec token
 
 const search = ref("");
 const users = ref([]);
 
-
+// 🔄 Récupération des utilisateurs
 const fetchUsers = async () => {
   try {
-    const response = await fetch("http://localhost:3000/api/admin/users");
-    if (!response.ok) throw new Error("Failed to fetch users");
-    users.value = await response.json();
+    const response = await api.get("/admin/users");
+    users.value = response.data?.data || response.data || [];
   } catch (error) {
-    console.error(error);
+    console.error("Erreur lors du chargement des utilisateurs :", error);
   }
 };
+
+// 🔍 Filtrage par nom
 const filteredUsers = computed(() => {
   return users.value.filter(u =>
-    u.name.toLowerCase().includes(search.value.toLowerCase())
+    u.name?.toLowerCase().includes(search.value.toLowerCase())
   );
 });
 
+// 🚫 Bannir un utilisateur
 const banUser = async (id) => {
-  const confirmBan = window.confirm('Confirmer le bannissement de cet utilisateur ?');
+  const confirmBan = window.confirm("Confirmer le bannissement de cet utilisateur ?");
   if (!confirmBan) return;
 
   try {
-    const response = await fetch(`http://localhost:3000/api/admin/users/${id}/ban`, {
-      method: 'PATCH'
-    });
-    if (!response.ok) throw new Error('Erreur bannissement');
-
-    users.value = users.value.filter(u => u.id !== id); // ou mettre un statut "banni"
+    await api.delete(`/admin/users/${id}`);
+    //users.value = users.value.filter(u => u.id !== id); // ou mettre un flag "banni"
   } catch (error) {
-    console.error('Erreur lors du bannissement:', error);
+    console.error("Erreur lors du bannissement :", error);
   }
 };
 
+// ⬆️ Promouvoir un utilisateur
 const promoteUser = async (id) => {
   try {
-    const response = await fetch(`http://localhost:3000/api/admin/users/${id}/promote`, {
-      method: 'PATCH'
-    });
-    if (!response.ok) throw new Error('Erreur promotion');
-
-    const updatedUser = await response.json();
-    const index = users.value.findIndex(u => u.id === id);
-    if (index !== -1) users.value[index].role = updatedUser.role;
+    const response = await api.put(`/admin/users/${id}/role`);
+    // const updatedUser = response.data;
+    // const index = users.value.findIndex(u => u.id === id);
+    // if (index !== -1) users.value[index].role = updatedUser.role;
   } catch (error) {
-    console.error('Erreur lors de la promotion:', error);
+    console.error("Erreur lors de la promotion :", error);
   }
 };
-
 
 onMounted(fetchUsers);
 </script>

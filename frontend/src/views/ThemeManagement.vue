@@ -65,8 +65,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
+import api from '../auth/axios.js'
 
-const API_BASE = "http://localhost:3000/api/admin/thematiques";
+const API_BASE = "/admin/thematiques";
 
 const thematiques = ref([]);
 const formData = ref({ nom: "", image: null, preview: null });
@@ -88,14 +89,14 @@ const closeDeleteModal = () => {
 
 const confirmDelete = async () => {
   if (!themeToDelete.value) return;
-  await axios.delete(`${API_BASE}/${themeToDelete.value._id}`);
+  await api.delete(`/admin/thematiques/${themeToDelete.value._id}`);
   closeDeleteModal();
   fetchThematiques();
 };
 
 // Charger toutes les thématiques
 const fetchThematiques = async () => {
-  const { data } = await axios.get(API_BASE);
+  const { data } = await api.get(API_BASE);
   thematiques.value = data.map((t) => ({
     ...t,
     image: t.image ? `${window.location.origin}${t.image}` : null,
@@ -108,7 +109,7 @@ const addThematique = async () => {
   form.append("nom", formData.value.nom);
   if (formData.value.image) form.append("image", formData.value.image);
 
-  await axios.post(`${API_BASE}`, form, {
+  await api.post(`${API_BASE}`, form, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   resetForm();
@@ -121,7 +122,7 @@ const updateThematique = async () => {
   form.append("nom", formData.value.nom);
   if (formData.value.image) form.append("image", formData.value.image);
 
-  await axios.put(`${API_BASE}/${editing.value._id}`, form, {
+  await api.put(`${API_BASE}/${editing.value._id}`, form, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   resetForm();
