@@ -63,7 +63,7 @@
         <p>{{ product.description }}</p>
       </div>
 
-      <div class="comments-seller">
+      <!-- <div class="comments-seller">
         <div class="content-comments" >
           <h2>Avis</h2>
           <div class="user-comments">
@@ -89,7 +89,7 @@
 
         </div>
 
-      </div>
+      </div> -->
 
     </div>
 
