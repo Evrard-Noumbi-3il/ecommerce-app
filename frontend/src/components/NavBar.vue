@@ -2,7 +2,7 @@
   <nav class="navbar">
     <div class="navbar-container">
 
-      <div style="display: flex; flex-direction: row; gap: 80px; background-color:#0d1b2a; padding: 50px 30px 50px 30px;">
+      <div class="nav-header" >
             <!-- Logo -->
         <div class="logo">
           <RouterLink to="/">Kanope</RouterLink>
@@ -24,10 +24,16 @@
         </div>
       </div>
 
+      <!-- Burger menu pour mobile -->
+      <div class="burger" @click="toggleMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
 
       <!-- Liens de navigation -->
-      <ul class="nav-links" :class="{ active: isMenuOpen }" style="margin: 0; justify-content: space-between; align-items:center; padding: 20px 20px 10px 20px; width: 98%;">
-        <div style="display: flex; flex-direction: row; width: 100%; gap: 20px;">
+      <ul class="nav-links" :class="{ active: isMenuOpen }">
+        <div class="menu">
           <li><RouterLink to="/" >Accueil</RouterLink></li>
           <li><RouterLink to="/search" >Catégories</RouterLink></li>
           <li><RouterLink to="/favorites" v-if="isLoggedIn && ! isAdminOrModerator">Favoris</RouterLink></li>
@@ -37,7 +43,7 @@
           </li>
         </div>
 
-        <div style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%; gap: 20px; ">
+        <div class="user-access">
           <li><RouterLink  to="/profile" v-if="isLoggedIn && !isAdminOrModerator" >Mon compte</RouterLink></li>
           <li ><span v-if="!isLoggedIn" @click="$emit('open-Register')" style="color: black;font-size: 15px; cursor: pointer;">Se connecter/S'inscrire</span></li>
           <li> <RouterLink v-if="isLoggedIn" to="/" @click="logout" class="btn-deconnexion">Déconnexion</RouterLink> </li>
@@ -46,12 +52,7 @@
 
       </ul>
 
-      <!-- Burger menu pour mobile -->
-      <div class="burger" @click="toggleMenu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+
 
 
     </div>
@@ -165,6 +166,12 @@ li{
   list-style: none;
   display: flex;
   gap: 20px;
+  margin: 0;
+  justify-content: space-between;
+  align-items:center;
+  padding: 20px 20px 10px 20px;
+  width: 98%;
+  z-index: 1000;
 }
 
 .nav-links li a {
@@ -175,6 +182,21 @@ li{
 
 .nav-links li a:hover {
   color: #e69100;
+}
+
+.menu{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+}
+
+.user-access{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+  gap: 20px;
 }
 
 .btn-poster {
@@ -205,15 +227,24 @@ li{
 
 .burger {
   display: none;
+  padding: 20px;
   flex-direction: column;
   cursor: pointer;
   gap: 5px;
 }
 
+.nav-header{
+  display: flex;
+  flex-direction: row;
+  gap: 80px;
+  background-color:#0d1b2a;
+  padding: 50px 30px 50px 30px;
+}
+
 .burger span {
   width: 25px;
   height: 3px;
-  background: white;
+  background: black;
 }
 
 
@@ -223,11 +254,19 @@ li{
     display: none;
     flex-direction: column;
     background: #0d1b2a;
-    position: absolute;
-    top: 60px;
-    right: 0;
-    width: 200px;
     padding: 15px;
+    width: 25%;
+
+  }
+
+  .menu{
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .user-access{
+    flex-direction: column;
+    gap: 10px;
   }
 
   .nav-links.active {
@@ -237,5 +276,7 @@ li{
   .burger {
     display: flex;
   }
+
+
 }
 </style>
