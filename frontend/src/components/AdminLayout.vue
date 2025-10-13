@@ -58,6 +58,7 @@ onMounted(() => {
 .admin-layout {
   display: flex;
   min-height: 100vh;
+  margin-top: 80px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f8fafc;
 }

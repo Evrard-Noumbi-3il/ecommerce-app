@@ -251,15 +251,32 @@
 
         <!-- Pagination -->
         <div v-if="filteredResults.length > 0" class="pagination">
-          <button
-            v-for="page in totalPages"
-            :key="page"
-            :class="['page-btn', { active: currentPage === page }]"
-            @click="currentPage = page"
-          >
-            {{ page }}
-          </button>
-        </div>
+  <button
+    class="page-btn"
+    :disabled="currentPage === 1"
+    @click="currentPage--"
+  >
+    « Précédent
+  </button>
+
+  <button
+    v-for="page in totalPages"
+    :key="page"
+    :class="['page-btn', { active: currentPage === page }]"
+    @click="currentPage = page"
+  >
+    {{ page }}
+  </button>
+
+  <button
+    class="page-btn"
+    :disabled="currentPage === totalPages"
+    @click="currentPage++"
+  >
+    Suivant »
+  </button>
+</div>
+
       </main>
     </div>
   </div>
@@ -483,6 +500,16 @@ watch(
     fetchResults();
   }
 );
+watch(currentPage, () => {
+  fetchResults();
+});
+
+watch(() => filters.value, () => {
+  currentPage.value = 1;
+  fetchResults();
+}, { deep: true });
+
+
 </script>
 
 

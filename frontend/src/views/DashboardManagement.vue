@@ -37,7 +37,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import axios from "axios";
+import api from '../auth/axios.js'
 import Chart from "chart.js/auto";
 
 const stats = ref({
@@ -51,7 +51,7 @@ const error = ref(false);
 
 onMounted(async () => {
   try {
-    const { data } = await axios.get("http://localhost:3000/api/admin/stats");
+    const { data } = await api.get('/admin/stats');
     stats.value = data;
 
     // Affichage du graphique
