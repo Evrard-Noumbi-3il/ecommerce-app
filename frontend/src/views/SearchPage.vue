@@ -498,6 +498,7 @@ watch(
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 100px 0 60px;
   color: white;
+
 }
 
 .search-section {
@@ -580,8 +581,8 @@ watch(
   border-radius: 12px;
   padding: 24px;
   height: fit-content;
-  position: static;
-  top: 24px;
+  position: sticky;
+  top: 50px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 

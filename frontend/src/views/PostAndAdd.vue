@@ -1,8 +1,8 @@
 <template>
 
   <div class="containerPostAndAdd">
-    <div class="header">
-      <h1>Ajouter une annonce</h1>
+    <div class="header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);;">
+      <h1 style="position: sticky; top: 35px">Ajouter une annonce</h1>
       <p>Publiez vos produits à vendre, louez ou échangez avec des acheteurs de confiance. Suivez les étapes simples pour créer une annonce complète et attractive.</p>
     </div>
 
@@ -27,7 +27,7 @@
             <button type="button" @click="displayForm = 2" class="btn-first">suivant</button>
           </div>
 
-          <div v-if="displayForm == 2">
+          <div v-if="displayForm == 2" class="slide-in-right">
             <SecondForm
               v-model:titre="product.titre"
               v-model:description="product.description"
@@ -40,7 +40,7 @@
             </div>
           </div>
 
-          <div v-if="displayForm == 3">
+          <div v-if="displayForm == 3" class="slide-in-right">
             <ThirdFrom
               class="slide-in-top"
               v-model:fileInput="fileInput"
@@ -53,7 +53,7 @@
             </div>
           </div>
 
-          <div v-if="displayForm == 4">
+          <div v-if="displayForm == 4" class="slide-in-right">
             <FourthForm
               class="slide-in-top"
               v-model:prix="product.prix"
@@ -174,7 +174,7 @@
         product.value._id = response.data.produit._id;
         console.log("ID du produit ajouté :", product.value._id);
         router.push("/");
-        window.location.reload();
+
       }
     } catch (err) {
       alert(err.response?.data?.message || "Une erreur est survenue lors de l'ajout du produit.");
@@ -211,7 +211,7 @@
     height: auto;
     max-width: 100%;
     display: grid;
-    border: 1px solid rgba(34, 52, 74, 0.366);
+
     border-radius: 16px;
     border-top: none;
   }
@@ -222,10 +222,10 @@
     padding: 1% 5% 1% 10%;
     width: 100%;
     max-width: 100%;
-    border: 3px solid rgba(34, 52, 74, 0.366);
+    /* border: 3px solid rgba(34, 52, 74, 0.366); */
     border-radius: 16px;
     align-self: center;
-    color: black;
+    color: white;
     font-size: 20px;
     text-align: center;
   }
@@ -357,7 +357,31 @@
     align-items: self-start;
   }
 
+  @media screen and (max-width: 768px) {
 
+    .announce{
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 120px;
+    }
+    .containerPostAndAdd::after {
+      content: none;
+    }
+    .form-container{
+      padding: 5% 5% 0 5%;
+      display: flex;
+      width: 100%;
+      justify-content: start;
+      align-items: start;
+    }
+    .preview-product{
+      padding: 0 5% 5% 5%;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 
 
 

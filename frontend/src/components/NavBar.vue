@@ -119,8 +119,8 @@ li{
   z-index: 1000;
   /* background-color: #0d1b2a; */
   color: white;
-
-  border-bottom: 1px solid rgba(7, 7, 7, 0.111);
+  position: sticky;
+  top: -140px;
   /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
 }
 
@@ -171,7 +171,8 @@ li{
   align-items:center;
   padding: 20px 20px 10px 20px;
   width: 98%;
-  z-index: 1000;
+  background-color: white;
+  border-bottom: 1px solid #06060654;
 }
 
 .nav-links li a {
@@ -253,9 +254,10 @@ li{
   .nav-links {
     display: none;
     flex-direction: column;
-    background: #0d1b2a;
+    background: white;
     padding: 15px;
     width: 25%;
+    align-content: space-between;
 
   }
 
@@ -275,6 +277,7 @@ li{
 
   .burger {
     display: flex;
+    background-color: white;
   }
 
 
