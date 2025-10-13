@@ -177,9 +177,12 @@
 
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Une erreur est survenue lors de l'ajout du produit.");
-      console.error(err);
-    }
+      if (err.response) {
+        console.error("Erreur réponse", err.response);
+        window.location.href = `https://http.cat/${err.response.status}`;
+      }
+      alert(err.response?.data?.message || "Une erreur est survenue.");
+  }
   };
 
 
