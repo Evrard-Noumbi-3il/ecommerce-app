@@ -13,6 +13,7 @@ import Orders from '@/views/OrderManagement.vue';
 import Ads from '@/views/AdManagement.vue';
 import Notifications from '@/views/NotificationManagement.vue';
 import Themes from '@/views/ThemeManagement.vue';
+import FavorisView from '@/views/FavorisView.vue'
 
 const routes = [
   { path: "/", name: "HomePage", component: Home },
@@ -44,6 +45,11 @@ const routes = [
       { path: "reported-products", name: "ReportedProducts", component: ReportedProducts },
     ]
   },
+  {
+    path: "/Favoris",
+    component: FavorisView,
+    name: "Favoris"
+  }
 ];
 
 const router = createRouter({

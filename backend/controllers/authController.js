@@ -24,6 +24,7 @@ export const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
+    console.log(token); 
 
     return res.status(200).json({
       message: "Connexion réussie 🎉",

@@ -27,7 +27,7 @@
       <ul class="nav-links" :class="{ active: isMenuOpen }">
         <li><RouterLink to="/">Accueil</RouterLink></li>
         <li><RouterLink to="/search">Catégories</RouterLink></li>
-        <li><RouterLink to="/favorites" v-if="isLoggedIn && ! isAdminOrModerator">Favoris</RouterLink></li>
+        <li><RouterLink to="/Favoris" v-if="isLoggedIn">Favoris</RouterLink></li>
         <li><RouterLink to="/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
         <li><RouterLink  to="/profile" v-if="isLoggedIn && !isAdminOrModerator">Mon compte</RouterLink></li>
         <li>
