@@ -38,6 +38,8 @@ export const addFavori = async (req, res) => {
   try {
     const { id_produit, id } = req.body;
     const user = await User.findById(id);
+    console.log("id de l'utilisateur connecté", id);
+    console.log("id du produit ajouté aux favoris", id_produit);
     user.favoris.push(id_produit);
     await user.save();
     res.status(200).json({ message: "Produit ajouté aux favoris" });
@@ -45,4 +47,4 @@ export const addFavori = async (req, res) => {
   catch (err) {
     res.status(500).json({ message: "Erreur serveur" })
   }
-}
+};

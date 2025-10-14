@@ -289,7 +289,7 @@ import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
 import {useFavoritesStore} from "@/stores/favoris"
 
-const favorisStore = useFavoritesStore(); 
+const favorisStore = useFavoritesStore();
 const route = useRoute();
 const router = useRouter();
 
@@ -472,19 +472,19 @@ const goToProduct = (id) => {
 
 // Favoris
 const toggleFavorite = async (idProduit) => {
-  try { 
+  try {
     const token = localStorage.getItem("token");
     const id = JSON.parse(atob(token.split('.')[1])).id;
     const response = await axios.post(
-      `${process.env.VUE_APP_API_URL}/favoris/addFavori`, 
-      { idProduit: idProduit, id: id }
+      `${process.env.VUE_APP_API_URL}/favoris/addFavori`,
+      { id_produit: idProduit, id: id }
     );
     console.log("Favori ajouté avec succès :", response.data);
   } catch (err) {
     console.error("Erreur lors de l’ajout du favori :", err);
   }
 };
- 
+
 
 const onCategoryChange = (event) => {
   const selectedId = event.target.value;
