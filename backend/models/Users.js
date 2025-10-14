@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema(
     adresse: {
       type: String,
     },
+    isBan: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
