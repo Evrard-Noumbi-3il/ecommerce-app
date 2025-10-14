@@ -3,17 +3,18 @@
     <aside class="sidebar">
       <h2 class="sidebar-title">🛠️ Admin Panel</h2>
       <nav class="nav-links">
-        <router-link to="/dashboard">📊 Dashboard</router-link>
-        <router-link to="/reported-products">🚩 Produits signalés</router-link>
-        <router-link to="/products">🛒 Produits</router-link>
-        <router-link to="/orders">📦 Commandes</router-link>
-        <router-link to="/ads">📢 Publicités</router-link>
-        <router-link to="/notifications">🔔 Notifications</router-link>
-        <router-link to="/themes">🎨 Thématiques</router-link>
-        <router-link to="/categories">📂 Catégories</router-link>
-        <router-link to="/users" v-if="isAdmin">👥 Utilisateurs</router-link>
+        <router-link to="/admin/dashboard">📊 Dashboard</router-link>
+        <router-link to="/admin/reported-products">🚩 Produits signalés</router-link>
+        <router-link to="/admin/products">🛒 Produits</router-link>
+        <router-link to="/admin/orders">📦 Commandes</router-link>
+        <router-link to="/admin/ads">📢 Publicités</router-link>
+        <router-link to="/admin/notifications">🔔 Notifications</router-link>
+        <router-link to="/admin/themes">🎨 Thématiques</router-link>
+        <router-link to="/admin/categories">📂 Catégories</router-link>
+        <router-link to="/admin/users" v-if="isAdmin">👥 Utilisateurs</router-link>
         <router-link to="/">⬅ Retour au site</router-link>
       </nav>
+
 
       <div class="admin-actions">
         <h3>⚙️ Actions rapides</h3>
@@ -57,7 +58,7 @@ onMounted(() => {
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  margin-top: 50px;
+  margin-top: 80px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f8fafc;
 }

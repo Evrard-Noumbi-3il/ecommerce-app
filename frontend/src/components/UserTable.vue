@@ -12,8 +12,8 @@
         <td>{{ user.name }}</td>
         <td>{{ user.role }}</td>
         <td>
-          <button @click="$emit('ban', user.id)">🚫 Bannir</button>
-          <button @click="$emit('promote', user.id)" v-if="user.role !== 'admin'">⬆️ Promouvoir</button>
+          <button @click="$emit('ban', user._id)">🚫 Bannir</button>
+          <button @click="$emit('promote', user._id)" v-if="user.role !== 'admin'">⬆️ Promouvoir</button>
         </td>
       </tr>
     </tbody>

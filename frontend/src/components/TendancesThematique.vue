@@ -53,10 +53,11 @@ const goToSearch = (tendance) => {
   overflow-x: auto;
   padding: 10px;
   max-width: 1200px;
- 
+  
 }
 
 .card {
+  min-width: 180px;
   width: 220px;
   height: 200px;
   background: white;
@@ -67,6 +68,9 @@ const goToSearch = (tendance) => {
   flex-shrink: 0;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .card:hover {
@@ -76,9 +80,56 @@ const goToSearch = (tendance) => {
 
 .card img {
   width: 100%;
-  height: 150px;
+  height: 140px;
   object-fit: cover;
   border-radius: 10px 10px 0 0;
+}
 
+.card p {
+  margin: 10px 0 0 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .tendances {
+    gap: 10px;
+    padding: 6px;
+    max-width: 100vw;
+  }
+  .card {
+    min-width: 140px;
+    width: 150px;
+    height: 140px;
+  }
+  .card img {
+    height: 80px;
+  }
+  .card p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .tendances {
+    gap: 7px;
+    padding: 4px;
+  }
+  .card {
+    min-width: 110px;
+    width: 120px;
+    height: 110px;
+    border-radius: 7px;
+  }
+  .card img {
+    height: 55px;
+    border-radius: 7px 7px 0 0;
+  }
+  .card p {
+    font-size: 0.85rem;
+    margin-top: 6px;
+  }
 }
 </style>

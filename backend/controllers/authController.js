@@ -18,9 +18,13 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Mot de passe incorrect ❌" });
     }
 
+    if (user.isBan) {
+      return res.status(403).json({ message: "Votre compte a été banni. Veuillez contacter le support pour plus d'informations." });
+    }
+
     // Générer un token JWT
     const token = jwt.sign(
-      { id: user._id , role: user.role},
+      { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -44,10 +48,18 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Email et mot de passe requis" });
     }
 
-    // Vérifier si l’utilisateur existe déjà
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    // Vérifier si l’émail est déjà utilisé
+    const existingUserEmail = await User.findOne({ email });
+    if (existingUserEmail) {
       return res.status(400).json({ message: "Cet email est déjà utilisé" });
+    }
+
+    // Vérifier si le numéro de téléphone est déjà utilisé
+    if (phonenumber) {
+      const existingUserNum = await User.findOne({ phonenumber });
+      if (existingUserNum) {
+        return res.status(400).json({ message: "Ce numéro de téléphone est déjà utilisé" });
+      }
     }
 
     if (password !== confirmpassword) {

@@ -1,132 +1,286 @@
 <template>
   <div class="app-container">
-    <!-- Menu latéral -->
-    <div class="menu">
+    <nav class="menu">
       <button :class="{'active': currentPage === 'profil'}" @click="currentPage = 'profil'">
-        <i class="fas fa-user"></i> Mon Profil
+        <i class="fas fa-id-card" aria-hidden="true"></i> Mon Profil
       </button>
       <button :class="{'active': currentPage === 'messages'}" @click="currentPage = 'messages'">
-        <i class="fas fa-envelope"></i> Mes Messages
+        <i class="fas fa-comment-dots" aria-hidden="true"></i> Messages
       </button>
       <button :class="{'active': currentPage === 'notifications'}" @click="currentPage = 'notifications'">
-        <i class="fas fa-bell"></i> Mes Notifications
+        <i class="fas fa-bell" aria-hidden="true"></i> Notifications
       </button>
-    </div>
+      <button :class="{'active': currentPage === 'annonces'}" @click="currentPage = 'annonces'">
+        <i class="fas fa-bullhorn" aria-hidden="true"></i> Annonces
+      </button>
+      <button :class="{'active': currentPage === 'produitEnVente'}" @click="currentPage = 'produitEnVente'">
+        <i class="fas fa-tag" aria-hidden="true"></i> Produits
+      </button>
+    </nav>
 
-    <!-- Contenu principal -->
-    <div class="content">
-      <!-- Profil -->
-      <div v-if="currentPage === 'profil'" class="profile-wrapper">
-        <div class="profile-card">
-          <!-- En-tête avec photo -->
-          <div class="profile-header">
-            <div class="profile-image-container">
-              <div v-if="!user.profileImage" class="default-avatar">
-                <i class="fas fa-user"></i>
+    <main class="content">
+      <div class="content-scroll">
+
+        <section v-if="currentPage === 'profil'" class="profile-layout-v4">
+          <h2 class="page-title-v4"><i class="fas fa-user-shield"></i> Mon Profil</h2>
+
+          <div class="main-profile-card">
+
+            <div v-if="!isEditing" class="identity-card">
+              <div class="identity-header">
+                <img v-if="user.photo" :src="user.photo" alt="Photo de profil" class="identity-photo">
+                <div v-else class="identity-photo default-avatar" aria-label="Avatar par défaut">
+                  <i class="fas fa-user-circle" aria-hidden="true"></i>
+                </div>
+                <h2>{{ user.name }} {{ user.firstname }}</h2>
+                <p class="role-tag">{{ user.role.toUpperCase() }}</p>
               </div>
-              <img v-else :src="user.profileImage" alt="Photo de profil" class="profile-image">
-              <input type="file" @change="handleImageUpload" class="file-input" accept="image/*" />
-              <button class="upload-btn" @click="triggerFileInput">
-                <i class="fas fa-plus"></i>
-              </button>
+
+              <div class="identity-details">
+                <p><i class="fas fa-envelope" aria-hidden="true"></i> {{ user.email }}</p>
+                <p><i class="fas fa-phone" aria-hidden="true"></i> {{ user.phone || "Non renseigné" }}</p>
+                <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ user.address || "Non renseignée" }}</p>
+                <p><i class="fas fa-lock" aria-hidden="true"></i> Mot de passe masqué</p>
+              </div>
+
+              <div class="identity-footer">
+                <button @click="isEditing = true" class="btn-edit">
+                  <i class="fas fa-edit" aria-hidden="true"></i> Modifier
+                </button>
+              </div>
             </div>
-            <h2 class="profile-name">{{ user.name }}</h2>
-            <p class="profile-email">{{ user.email }}</p>
+
+            <div v-else class="edit-profile-form-container">
+              <form @submit.prevent="saveProfile" class="form-grid">
+                
+                <div class="photo-and-info-header">
+                  <div class="profile-image-container-v4">
+                    <img v-if="user.profileImage || user.photo" :src="user.profileImage || user.photo" alt="Photo de profil actuelle" class="profile-image-v4">
+                    <div v-else class="default-avatar-v4" aria-label="Avatar par défaut">
+                      <i class="fas fa-user-circle" aria-hidden="true"></i>
+                    </div>
+                    
+                    <input type="file" @change="handleImageUpload" id="file-upload" class="file-input" accept="image/*" hidden />
+                    <button class="upload-btn-v4" @click="triggerFileInput" type="button" title="Changer de photo">
+                      <i class="fas fa-camera" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  
+                  <div class="role-display-v4">
+                    <h3>Statut : **{{ user.role.toUpperCase() }}**</h3>
+                    <p class="email-display"><i class="fas fa-envelope-open-text"></i> {{ user.email }}</p>
+                  </div>
+                </div>
+
+                <div class="details-grid-v4">
+                  
+                  <div class="detail-item-v4">
+                    <label for="profile-name"><i class="fas fa-user-tag" aria-hidden="true"></i> Nom</label>
+                    <input type="text" id="profile-name" v-model="user.name" class="profile-input" required />
+                  </div>
+
+                  <div class="detail-item-v4">
+                    <label for="profile-firstname"><i class="fas fa-user-edit" aria-hidden="true"></i> Prénom</label>
+                    <input type="text" id="profile-firstname" v-model="user.firstname" class="profile-input" />
+                  </div>
+
+                  <div class="detail-item-v4">
+                    <label for="profile-phone"><i class="fas fa-phone-alt" aria-hidden="true"></i> Téléphone</label>
+                    <input type="tel" id="profile-phone" v-model="user.phone" class="profile-input" />
+                  </div>
+
+                  <div class="detail-item-v4">
+                    <label for="profile-password"><i class="fas fa-lock" aria-hidden="true"></i> Mot de passe</label>
+                    <input type="password" id="profile-password" class="profile-input password-field" disabled title="Utiliser un autre formulaire pour modifier le mot de passe" value="********" />
+                  </div>
+
+                  <div class="detail-item-v4 full-width-v4">
+                    <label for="profile-address"><i class="fas fa-map-marked-alt" aria-hidden="true"></i> Adresse</label>
+                    <input type="text" id="profile-address" v-model="user.address" class="profile-input" />
+                  </div>
+                </div>
+
+                <footer class="card-footer-v4 button-group full-width-v4">
+                  <button type="submit" class="action-btn-v4 primary-btn">
+                    <i class="fas fa-save" aria-hidden="true"></i> Sauvegarder
+                  </button>
+                  <button type="button" @click="isEditing = false" class="cancel-btn-v4 secondary-btn">
+                    <i class="fas fa-times" aria-hidden="true"></i> Annuler
+                  </button>
+                </footer>
+              </form>
+            </div>
           </div>
+        </section>
 
-          <!-- Infos -->
-          <div class="profile-body">
-            <h3>Informations personnelles</h3>
-            <p><strong>Nom :</strong> {{ user.name }}</p>
-            <p><strong>Email :</strong> {{ user.email }}</p>
-            <p><strong>Numéro :</strong> {{ user.phone }}</p>
-            <p><strong>Adresse :</strong> {{ user.address }}</p>
-          </div>
-
-          <!-- Actions -->
-          <div class="profile-footer">
-            <button @click="saveProfile" class="save-btn"><i class="fas fa-save"></i> Modifier</button>
-          </div>
-        </div>
       </div>
-
-      <!-- Messages -->
-      <div v-if="currentPage === 'messages'">
-        <h2 class="section-title"><i class="fas fa-envelope"></i> Mes Messages</h2>
-        <p>Bienvenue dans votre boîte de réception. Aucun nouveau message.</p>
-      </div>
-
-      <!-- Notifications -->
-      <div v-if="currentPage === 'notifications'">
-        <h2 class="section-title"><i class="fas fa-bell"></i> Mes Notifications</h2>
-        <p>Vous n’avez aucune notification pour l’instant.</p>
-      </div>
-    </div>
+    </main>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   name: "ProfileUser",
   data() {
     return {
-      currentPage: 'profil',
+      currentPage: "profil",
+      isEditing: false,
       user: {
-        name: '',
-        email: '',
-        phone: '',
-        address: '',
-        profileImage: null 
+        name: "",
+        firstname: "",
+        email: "",
+        phone: "",
+        address: "",
+        role: "user", // Valeur par défaut
+        photo: null, // URL de la photo enregistrée (du backend)
+        profileImage: null // URL/base64 de l'image pour l'aperçu local
       },
+      userFile: null // Fichier image à uploader
     };
   },
   created() {
     this.fetchUser();
   },
   methods: {
+    /**
+     * Déclenche le clic sur l'input file caché.
+     */
     triggerFileInput() {
-      this.$el.querySelector('.file-input').click();
+      this.$el.querySelector(".file-input").click();
     },
+
+    /**
+     * Gère la sélection d'une nouvelle image, crée un aperçu et stocke le fichier.
+     */
     handleImageUpload(event) {
       const file = event.target.files[0];
       if (file) {
+        this.userFile = file;
         const reader = new FileReader();
         reader.onload = (e) => {
+          // Met à jour l'aperçu pour l'édition
           this.user.profileImage = e.target.result;
         };
         reader.readAsDataURL(file);
       }
     },
-    async saveProfile() {
+
+    /**
+     * Envoie l'image de profil au backend séparément en utilisant FormData.
+     */
+    async updateProfilePhoto(token) {
+      if (!this.userFile) return true; // Rien à uploader
+
+      const formData = new FormData();
+      formData.append("photo", this.userFile);
+
       try {
-        await axios.put('/api/user/me', {
-          name: this.user.name,
-          email: this.user.email,
-          phone: this.user.phone,
-          address: this.user.address
+        // Supposons un endpoint PATCH pour l'upload de photo
+        const res = await axios.patch("http://localhost:3000/api/user/me/photo", formData, {
+          headers: { 
+            "Content-Type": "multipart/form-data", // Crucial pour FormData
+            Authorization: `Bearer ${token}` 
+          }
         });
-        alert('Profil sauvegardé avec succès !');
+        
+        // Assurez-vous que le backend renvoie l'URL de la nouvelle photo (ou rafraîchir)
+        if (res.data.photoUrl) {
+          this.user.photo = res.data.photoUrl;
+          this.user.profileImage = res.data.photoUrl;
+          this.userFile = null;
+          return true;
+        }
+
+        // Si l'URL n'est pas renvoyée, on suppose que l'upload a réussi
+        this.userFile = null;
+        return true; 
       } catch (err) {
-        alert('Erreur lors de la sauvegarde du profil');
+        console.error("Erreur lors de l'upload de la photo :", err);
+        return false;
       }
     },
+
+    /**
+     * Sauvegarde les informations du profil (texte) et la photo.
+     */
+    async saveProfile() {
+      let photoUpdateSuccess = true;
+
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("Utilisateur non connecté");
+
+        // 1. Mise à jour de la photo de profil si un fichier est sélectionné
+        if (this.userFile) {
+          photoUpdateSuccess = await this.updateProfilePhoto(token);
+        }
+
+        // 2. Mise à jour des informations textuelles
+        const payload = {
+          name: this.user.name,
+          firstname: this.user.firstname,
+          phone: this.user.phone,
+          address: this.user.address,
+          // L'email et le rôle ne devraient pas être modifiables ici
+        };
+
+        await axios.put("http://localhost:3000/api/user/me", payload, {
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }
+        });
+        
+        if (photoUpdateSuccess) {
+          alert("Profil sauvegardé avec succès !");
+        } else {
+          alert("Informations textuelles mises à jour, mais échec de l'upload de la photo.");
+        }
+        
+        this.isEditing = false;
+        
+      } catch (err) {
+        console.error("Erreur lors de la sauvegarde du profil :", err);
+        alert("Erreur lors de la sauvegarde du profil. Voir la console pour les détails.");
+      }
+    },
+    
+    /**
+     * Récupère les données de l'utilisateur.
+     */
     async fetchUser() {
       try {
-
         const token = localStorage.getItem("token");
-        const id = token && (JSON.parse(atob(token.split('.')[1]))._id);
-        const res = await axios.get('/api/user/me');
+        if (!token) return;
+
+        // Tente de décoder le token pour l'ID (méthode JWT standard)
+        let id = null;
+        try {
+          id = JSON.parse(atob(token.split(".")[1])).id;
+        } catch(e) {
+          console.warn("Token JWT non valide ou manquant. Tentative d'accès à /me sans ID.");
+        }
+
+        // Utilisation de l'ID si disponible, sinon on compte sur le token pour l'endpoint /me (bonne pratique)
+        const endpoint = id ? `http://localhost:3000/api/user/me/${id}` : `http://localhost:3000/api/user/me`;
+        
+        const res = await axios.get(endpoint, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         const data = res.data;
 
-        this.user.name = data.name;
-        this.user.email = data.email;
-        this.user.phone = data.phonenumber || '';
-        this.user.address = data.adresse?.rue || '';
-        this.user.profileImage = data.photo || null;
+        // Mise à jour des données du modèle utilisateur avec gestion des noms de champs
+        this.user.name = data.name || "";
+        this.user.firstname = data.firstname || "";
+        this.user.email = data.email || "";
+        // Gère les noms de champs potentiels pour le téléphone et l'adresse
+        this.user.phone = data.phone || data.phonenumber || ""; 
+        this.user.address = data.address || data.adresse || ""; 
+        this.user.role = data.role || "user";
+        this.user.photo = data.photo || null;
+        this.user.profileImage = data.photo || null; // Utiliser l'image actuelle comme aperçu initial
+        
       } catch (err) {
-        console.error('Erreur récupération profil:', err);
+        console.error("Erreur récupération profil:", err);
       }
     }
   }
@@ -134,191 +288,332 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+
+:root {
+  --main-color: #047857;
+  --secondary-color: #f9fafb;
+  --text-dark: #1f2937;
+  --text-muted: #6b7280;
+}
 
 .app-container {
   display: flex;
   min-height: 100vh;
-  font-family: 'Roboto', sans-serif;
-  background-color: #f0f3f7;
-  margin-top: 50px;
+  background-color: var(--secondary-color);
+  font-family: 'Poppins', sans-serif;
+  /* RESOLUTION DU CONFLIT: J'ai choisi de garder 1px */
+  margin-top: 100px; 
 }
 
 .menu {
   width: 250px;
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  display: flex;
-  flex-direction: column;
-  padding: 20px 0;
+  background-color: white;
+  padding: 30px 0;
+  box-shadow: 4px 0 10px rgba(0,0,0,0.05);
+  flex-shrink: 0;
 }
 
 .menu button {
   background: none;
   border: none;
-  color: #ecf0f1;
+  color: var(--text-dark);
   text-align: left;
-  padding: 15px 25px;
-  margin: 5px 0;
-  font-size: 16px;
-  cursor: pointer;
-  border-left: 4px solid transparent;
+  padding: 18px 30px;
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 15px;
-  transition: 0.3s;
+  font-size: 15px;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: all 0.2s;
 }
 
 .menu button:hover {
-  background-color: #34495e;
-  border-left-color: #5dade2;
+  background-color: #f3f4f6;
 }
 
 .menu button.active {
-  background: #34495e;
-  border-left-color: #5dade2;
-  font-weight: 500;
-  color: #5dade2;
+  background-color: #e6e6e6;
+  border-left-color: var(--main-color);
+  color: var(--main-color);
+  font-weight: 600;
 }
 
 .content {
   flex: 1;
-  padding: 40px;
-}
-
-.section-title {
-  font-size: 1.8em;
-  color: #2c3e50;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.profile-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.profile-card {
-  background: #ffffff;
-  width: 100%;
-  max-width: 400px;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
 }
 
-.profile-header {
-  background: linear-gradient(135deg, #9cb6c8ff, #5f6a71ff);
+.content-scroll {
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.page-title-v4 {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 10px;
+}
+
+.identity-card {
+  max-width: 400px;
+  margin: auto;
+  background: linear-gradient(135deg, #047857, #10b981);
   color: white;
-  padding: 30px 20px;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
   text-align: center;
 }
 
-.profile-image-container {
-  position: relative;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 15px auto;
+.identity-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.profile-image {
+.identity-photo {
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  border: 3px solid white;
+  border: 4px solid white;
   object-fit: cover;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  margin-bottom: 15px;
 }
 
 .default-avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #fff;
-  color: #3498db;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 50px;
-  border: 3px solid white;
+  font-size: 80px;
+  background: rgba(255,255,255,0.2);
+}
+
+.identity-details {
+  margin-top: 15px;
+  text-align: left;
+  background: rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.identity-details p {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95em;
+}
+
+.role-tag {
+  background: rgba(255,255,255,0.2);
+  padding: 5px 15px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: bold;
+}
+
+.identity-footer {
+  margin-top: 15px;
+}
+
+.btn-edit {
+  background: #facc15;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: bold;
+  color: #1f2937;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-edit:hover {
+  background: #fbbf24;
+}
+
+.edit-profile-form-container {
+  max-width: 700px;
   margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.file-input {
-  display: none;
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.upload-btn {
+.photo-and-info-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.role-display-v4 h3 {
+  margin: 0 0 5px 0;
+  color: var(--main-color);
+  font-size: 1.2em;
+}
+
+.email-display {
+  color: var(--text-muted);
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-image-container-v4 {
+  position: relative;
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+}
+
+.profile-image-v4, .default-avatar-v4 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid var(--secondary-color);
+  box-shadow: 0 0 0 2px var(--main-color);
+  object-fit: cover;
+}
+
+.default-avatar-v4 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  color: var(--main-color);
+  background: #e6e6e6;
+}
+
+.upload-btn-v4 {
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: #fff;
-  color: #4a4d4fff;
-  border: none;
+  background-color: var(--main-color);
+  color: white;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  font-size: 14px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.profile-name {
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.profile-email {
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-.profile-body {
-  padding: 20px;
-}
-
-.profile-body h3 {
-  margin-bottom: 15px;
-  font-size: 18px;
-  color: #2c3e50;
-}
-
-.profile-body p {
-  margin-bottom: 10px;
-  font-size: 16px;
-  color: #555;
-}
-
-.profile-footer {
-  display: flex;
-  justify-content: center;
-  padding: 15px;
-  border-top: 1px solid #eee;
-}
-
-.save-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  background-color: #3498db;
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
+  border: 3px solid white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   cursor: pointer;
-  transition: 0.3s;
+  transition: background-color 0.2s;
 }
 
-.save-btn:hover {
-  background-color: #2e86c1;
+.upload-btn-v4:hover {
+  background-color: #059669;
+}
+
+.details-grid-v4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.detail-item-v4 label {
+  display: block;
+  font-size: 0.9em;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.profile-input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1em;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-dark);
+  background-color: white;
+  transition: box-shadow 0.2s;
+}
+
+.profile-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #c7d2fe;
+}
+
+.full-width-v4 {
+  grid-column: 1 / -1;
+}
+
+.password-field {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.card-footer-v4.button-group {
+  text-align: right;
+  padding-top: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.action-btn-v4 {
+  padding: 10px 25px;
+  border: none;
+  border-radius: 30px;
+  background-color: var(--main-color);
+  color: #facc15;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px;
+}
+
+.action-btn-v4:hover,
+.action-btn-v4:active {
+  transform: scale(0.97);
+}
+
+.cancel-btn-v4 {
+  background-color: #6b7280;
+  color: white;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px;
+}
+
+.cancel-btn-v4:hover,
+.cancel-btn-v4:active {
+  transform: scale(0.97);
 }
 </style>

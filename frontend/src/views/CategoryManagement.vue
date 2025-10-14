@@ -282,7 +282,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import axios from 'axios'
+import api from '../auth/axios.js'
 
 // État réactif
 const categories = ref([])
@@ -378,22 +378,21 @@ const fetchData = async () => {
   try {
     loading.value = true
     const [categoriesResponse, thematiquesResponse] = await Promise.all([
-      axios.get(`${API_BASE}/categories`),
-      axios.get(`${API_BASE}/thematiques`)
+      api.get('/admin/categories'),
+      api.get('/admin/thematiques')
+
     ])
     
-    // Gérer les différents formats de réponse de l'API
     const categoriesData = categoriesResponse.data?.data || categoriesResponse.data || []
     const thematiquesData = thematiquesResponse.data?.data || thematiquesResponse.data || []
     
-    // S'assurer que c'est un tableau
     categories.value = Array.isArray(categoriesData) ? categoriesData : []
     thematiques.value = Array.isArray(thematiquesData) ? thematiquesData : []
     
   } catch (error) {
     showMessage('Erreur lors du chargement des données', 'error')
     console.error('Fetch error:', error)
-    // Initialiser avec des tableaux vides en cas d'erreur
+
     categories.value = []
     thematiques.value = []
   } finally {
@@ -403,23 +402,24 @@ const fetchData = async () => {
 
 const addCategory = async () => {
   loading.value = true; 
-  isUpdating.value = false
-
+  errors.value = {};
   const form = new FormData();
   form.append('nom', formData.value.nom); 
   form.append('id_thematique', formData.value.id_thematique); 
-
   if (formData.value.image) {
     form.append('image', formData.value.image); 
   }
-
   try {
-     await axios.post(`${API_BASE}/categories`, form, {
+    await api.post('/admin/categories', form, {
       headers: { 'Content-Type': 'multipart/form-data' }
     }); 
     resetForm();
     showMessage('Catégorie ajoutée avec succès', 'success');
+    fetchData(); // <-- Rafraîchir les données sans reload
   } catch (err) {
+    if (err.response && err.response.data && err.response.data.errors) {
+      errors.value = err.response.data.errors;
+    }
     showMessage("Erreur lors de l'ajout de la catégorie", 'error');
     console.error('Add error:', err);
   } finally {
@@ -430,7 +430,7 @@ const addCategory = async () => {
 const deleteCategory = async () => {
   try {
     loading.value = true
-    await axios.delete(`${API_BASE}/categories/${categoryToDelete.value._id}`)
+    await api.delete(`/admin/categories/${categoryToDelete.value._id}`);
     
     categories.value = categories.value.filter(cat => cat._id !== categoryToDelete.value._id)
     showDeleteModal.value = false
@@ -445,6 +445,45 @@ const deleteCategory = async () => {
 }
 
 // Méthodes utilitaires
+const resetForm = () => {
+  formData.value = { 
+    nom: '', 
+    image: null, 
+    imagePreview: null,
+    id_thematique: '' 
+  }
+  editingCategory.value = null
+  errors.value = {}
+  setTimeout(() => {
+    const firstInput = document.querySelector('#nom')
+    if (firstInput) firstInput.focus()
+  }, 100)
+}
+
+const editCategory = (category) => {
+  if (!category || !category._id) {
+    showMessage('Catégorie invalide pour l\'édition', 'error')
+    return
+  }
+  editingCategory.value = category
+  formData.value = {
+    nom: category.nom || '',
+    image: null,
+    imagePreview: category.image || null,
+    id_thematique: category.id_thematique || category.thematique?._id || ''
+  }
+  errors.value = {}
+  const formElement = document.querySelector('.form-section')
+  if (formElement) {
+    formElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
+
+const confirmDelete = (category) => {
+  categoryToDelete.value = category;
+  showDeleteModal.value = true;
+}
+
 function handleFileUpload(event) {
   const file = event.target.files[0]
   if (file) {
@@ -454,73 +493,6 @@ function handleFileUpload(event) {
     formData.value.image = null
     formData.value.imagePreview = null
   }
-}
-
-
-
-const resetForm = () => {
-  console.log('Réinitialisation du formulaire')
-  
-  // Réinitialiser les données du formulaire
-  formData.value = { 
-    nom: '', 
-    image: '', 
-    id_thematique: '' 
-  }
-  
-  // Supprimer la référence de la catégorie en cours d'édition
-  editingCategory.value = null
-  
-  // Supprimer toutes les erreurs
-  errors.value = {}
-  
-  // Focus sur le premier champ (optionnel)
-  setTimeout(() => {
-    const firstInput = document.querySelector('#nom')
-    if (firstInput) {
-      firstInput.focus()
-    }
-  }, 100)
-}
-
-const editCategory = (category) => {
-  console.log('Édition de la catégorie:', category)
-  
-  // Vérifier que la catégorie est valide
-  if (!category || !category._id) {
-    showMessage('Catégorie invalide pour l\'édition', 'error')
-    return
-  }
-  
-  // Définir la catégorie en cours d'édition
-  editingCategory.value = category
-  
-  // Remplir le formulaire avec les données de la catégorie
-  formData.value = {
-    nom: category.nom || '',
-    image: category.image || '',
-    id_thematique: category.id_thematique || category.thematique?._id || ''
-  }
-  
-  // Réinitialiser les erreurs
-  errors.value = {}
-  
-  console.log('Formulaire rempli avec:', formData.value)
-  
-  // Faire défiler vers le formulaire (optionnel)
-  const formElement = document.querySelector('.form-section')
-  if (formElement) {
-    formElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-}
-
-const cancelEdit = () => {
-  resetForm()
-}
-
-const confirmDelete = (category) => {
-  categoryToDelete.value = category
-  showDeleteModal.value = true
 }
 
 const sortBy = (field) => {

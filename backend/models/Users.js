@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema(
     },
     phonenumber: {
       type: String,
-      unique: true,
       trim: true,
     },
     email: {
@@ -25,27 +24,29 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
-    role: { 
-    type: String, 
-    enum: ["user", "moderator", "admin"], 
-    default: "user" 
-  },
-    favoris: [{ 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: "Produits" }],
-    misEnVente: [{ 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: "Produits" 
+    role: {
+      type: String,
+      enum: ["user", "moderator", "admin"],
+      default: "user"
+    },
+    favoris: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Produits"
+    }],
+    misEnVente: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Produits"
     }],
     photo: {
       type: String,
       default: "/images/default-profile.png",
     },
     adresse: {
-      rue : String,
-      ville : String,
-      codePostal : String,
-      pays : String
+      type: String,
+    },
+    isBan: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

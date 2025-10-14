@@ -1,10 +1,18 @@
 import express from "express";
-import { getProducts, getCategories, getThematiques } from "../controllers/filterController.js";
+import { upload } from "../upload/uploadImageProduits.js";
+import { getProducts, getCategories, getProductCategory, getThematiques, getProductById, getUserByIdProduct } from "../controllers/filterController.js";
+
+import { addProduct } from "../controllers/productController.js";
 
 const router = express.Router();
 
-router.get("/", getProducts);
-router.get("/categories", getCategories);
+router.get("/user/:id", getUserByIdProduct);
 router.get("/thematiques", getThematiques);
+router.post("/addProduct", upload.single("image"), addProduct);
+router.post("/addProduct", addProduct);
+router.get("/categories", getCategories);
+router.get("/category/:id", getProductCategory)
+router.get("/:id", getProductById);
+router.get("/", getProducts);
 
 export default router;

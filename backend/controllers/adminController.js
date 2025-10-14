@@ -21,6 +21,7 @@ export const getAdminOrModerators = async (req, res) => {
   }
 };
 
+
 export const updateUserRole = async (req, res) => {
   try {
     const { id } = req.params;
