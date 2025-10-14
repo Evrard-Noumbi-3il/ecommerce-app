@@ -1,6 +1,7 @@
 import Favoris from "../models/Favoris.js";
+import User from "../models/Users.js";
 
-// Récupération des produits mis en favoris 
+// Récupération des produits mis en favoris
 export const getFavorisProduits = async (req, res) => {
   try {
     const produits = await Favoris.find({ type: "produit" });
@@ -33,13 +34,15 @@ export const getCategories = async (req, res) => {
 };
 
 // ajout d'un produit dépuis catégories
-export const addFavori = async(req , res) => {
-    try {
-        const {id_produit, id} = req.body; 
-        const prod = await Favoris.findByID(id); 
-        prod.addProduits.push(id_produit); 
-    }
-    catch(err) {
-        res.status(500).json( {message : "Erreur serveur"})
-    }
+export const addFavori = async (req, res) => {
+  try {
+    const { id_produit, id } = req.body;
+    const user = await User.findById(id);
+    user.favoris.push(id_produit);
+    await user.save();
+    res.status(200).json({ message: "Produit ajouté aux favoris" });
+  }
+  catch (err) {
+    res.status(500).json({ message: "Erreur serveur" })
+  }
 }
