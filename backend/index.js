@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes.js'
 import homeRoutes from "./routes/homeRoutes.js"
 import filterRoutes from "./routes/filterRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
+import favorisRoutes from "./routes/favorisRoutes.js"
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes)
 app.use("/api/home", homeRoutes)
 app.use("/api/products", filterRoutes)
 app.use("/api/admin", adminRoutes)
+app.use("/api/favoris", favorisRoutes)
 
 
 const PORT = process.env.PORT || 3000;

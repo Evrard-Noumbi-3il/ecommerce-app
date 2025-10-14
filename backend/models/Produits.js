@@ -15,7 +15,7 @@ const produitSchema = new mongoose.Schema({
     status: { type: String, enum: ["active", "pending", "rejected"], default: "active"},
     signale: { type: Boolean, default: false}
   },
-  { timestamps: true }
+  { timestamps: true } 
 );
 
 export default mongoose.model("Produit", produitSchema);
