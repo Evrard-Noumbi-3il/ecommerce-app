@@ -49,9 +49,8 @@ const userSchema = new mongoose.Schema(
     },
     isBan: {
       type: Boolean,
-      default: false
-    }
-
+      default: false,
+    },
   },
   { timestamps: true }
 );

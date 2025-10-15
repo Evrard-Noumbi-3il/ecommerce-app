@@ -18,9 +18,8 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Mot de passe incorrect ❌" });
     }
 
-    if(user.isBan ||user.isBan == null){
-      console.log(user.isBan)
-      return res.status(400).json({message: "votre compte a été Banni !!! Merci de contacter le service technique."})
+    if (user.isBan) {
+      return res.status(403).json({ message: "Votre compte a été banni. Veuillez contacter le support pour plus d'informations." });
     }
 
     // Générer un token JWT
@@ -29,6 +28,7 @@ export const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
+    console.log(token); 
 
     return res.status(200).json({
       message: "Connexion réussie 🎉",

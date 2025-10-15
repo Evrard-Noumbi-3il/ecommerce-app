@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes.js'
 import homeRoutes from "./routes/homeRoutes.js"
 import filterRoutes from "./routes/filterRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
+import favorisRoutes from "./routes/favorisRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import categorieRoutes from "./routes/categorieRoutes.js"
 
@@ -26,6 +27,7 @@ app.use('/api/auth', authRoutes)
 app.use("/api/home", homeRoutes)
 app.use("/api/products", filterRoutes)
 app.use("/api/admin", adminRoutes)
+app.use("/api/favoris", favorisRoutes)
 app.use("/api/user", userRoutes)
 app.use("/api/categories", categorieRoutes)
 
