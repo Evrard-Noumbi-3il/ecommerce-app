@@ -18,6 +18,11 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Mot de passe incorrect ❌" });
     }
 
+    if(user.isBan ||user.isBan == null){
+      console.log(user.isBan)
+      return res.status(400).json({message: "votre compte a été Banni !!! Merci de contacter le service technique."})
+    }
+
     // Générer un token JWT
     const token = jwt.sign(
       { id: user._id, role: user.role },

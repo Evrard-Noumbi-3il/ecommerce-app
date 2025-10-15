@@ -2,7 +2,8 @@ import express from "express";
 import { authMiddleware,isAdmin, isModeratorOrAdmin } from "../middleware/auth.js";
 import upload from "../middleware/uploadThematique.js";
 import uploadPub from "../middleware/uploadPublicite.js";
-import { getAllUsers, updateUserRole, deleteUser, getStats } from "../controllers/adminController.js";
+import { toggleBan, deleteBanUser, getUsers, togglePromote } from "../controllers/userController.js";
+import { getAllUsers, deleteUser, getStats } from "../controllers/adminController.js";
 import { getReportedProducts, validateProduct, deleteProduct, getProducts } from "../controllers/moderationController.js";
 import { getCategories, addCategory, updateCategory, deleteCategory } from "../controllers/categoryController.js";
 import { getNotificationsSentByModerator, sendNotification} from "../controllers/notificationController.js";
@@ -13,8 +14,10 @@ const router = express.Router();
 
 // 🔐 Admin only
 router.get("/users", authMiddleware, isAdmin, getAllUsers);
-router.put("/users/:id/role", authMiddleware, isAdmin, updateUserRole);
-router.delete("/users/:id", authMiddleware, isAdmin, deleteUser);
+router.get("/users/users", authMiddleware, isAdmin, getUsers);
+router.put("/users/:id", authMiddleware, isAdmin, togglePromote);
+router.post("/users/:id", authMiddleware,isModeratorOrAdmin, toggleBan);
+router.delete("/users/banned", authMiddleware, isAdmin, deleteBanUser);
 router.get("/stats", authMiddleware, isAdmin, getStats);
 
 // 🔐 Moderator or Admin
