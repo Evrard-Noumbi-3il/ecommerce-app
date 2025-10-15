@@ -51,8 +51,8 @@ const formatDate = (dateStr) => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 20px;
-  padding: 20px;
-  max-width: 1200px;
+  padding: 30px;
+  max-width: 98%;
   margin: auto;
 }
 

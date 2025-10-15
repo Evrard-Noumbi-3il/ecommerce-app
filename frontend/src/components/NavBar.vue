@@ -172,7 +172,8 @@ li{
   padding: 20px 20px 10px 20px;
   width: 98%;
   background-color: white;
-  border-bottom: 1px solid #06060654;
+  /* border-bottom: 1px solid #06060654; */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .nav-links li a {
