@@ -44,7 +44,7 @@
       <div class="product-info-without-comments">
         <div v-if="category" class="product-title-theme">
           <h1>{{ product.titre }}</h1>
-          <p>aaa ->  {{ category.nom }}</p>
+          <p>{{ product.theme }} ->  {{ category.nom }}</p>
         </div>
         <div class="product-buy-row">
           <div class="product-direct-buy-row">
