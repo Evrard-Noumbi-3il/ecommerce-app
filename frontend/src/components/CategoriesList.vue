@@ -52,8 +52,8 @@ const goToSearch = (categorie) => {
   display: flex;
   gap: 15px;
   overflow-x: auto;
-  padding: 10px;
-  max-width: 1200px;
+  padding: 30px;
+  max-width: 98%;
   margin: auto;
 }
 
