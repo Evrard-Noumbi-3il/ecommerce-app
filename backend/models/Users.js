@@ -42,8 +42,16 @@ const userSchema = new mongoose.Schema(
       default: "/images/default-profile.png",
     },
     adresse: {
-      type: String,
+      rue: String,
+      ville: String,
+      codePostal: String,
+      pays: String
     },
+    isBan: {
+      type: Boolean,
+      default: false
+    }
+
   },
   { timestamps: true }
 );

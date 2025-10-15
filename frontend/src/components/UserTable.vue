@@ -4,13 +4,16 @@
       <tr>
         <th>Nom</th>
         <th>Rôle</th>
+        <th>Bani</th>
         <th>Actions</th>
+        
       </tr>
     </thead>
     <tbody>
       <tr v-for="user in users" :key="user.id">
         <td>{{ user.name }}</td>
         <td>{{ user.role }}</td>
+        <td>{{ user.isBan }}</td>
         <td>
           <button @click="$emit('ban', user._id)">🚫 Bannir</button>
           <button @click="$emit('promote', user._id)" v-if="user.role !== 'admin'">⬆️ Promouvoir</button>
