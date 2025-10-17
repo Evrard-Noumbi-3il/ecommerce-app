@@ -6,7 +6,8 @@
     <ProductCard v-else 
      :product="product" 
      :userSeller="userSeller"
-     :category="category"/>
+     :category="category"
+     :avis="avis"/>
   </div>
 </template>
 
@@ -22,6 +23,7 @@ const productId = route.params.id;
 const product = ref(null);
 const userSeller = ref(null);
 const category = ref(null);
+const avis = ref(null);
  
 const loading = ref(true);
 const error = ref(null);
@@ -41,7 +43,8 @@ const fetchUserProductSeller = async (id) => {
   try {
     const response = await axios.get(`http://localhost:3000/api/products/user/${id}`);
     userSeller.value = response.data;
-    
+    const responseAvis = await axios.get(`http://localhost:3000/api/avis/user/${userSeller.value._id}`);
+    avis.value = responseAvis.data;
   } catch (error) {
     console.error("Erreur lors de la récupération des utilisateurs :", error);
   }

@@ -4,6 +4,6 @@ import { createAvis, getAvisByUser } from '../controllers/avisController.js';
 
 const router = express.Router();
 router.post('/create', createAvis);
-router.get('/:id',getAvisByUser);
+router.get('/user/:id',getAvisByUser);
 
 export default router;
