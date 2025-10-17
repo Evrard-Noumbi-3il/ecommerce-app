@@ -13,12 +13,12 @@
       <button :class="{'active': currentPage === 'annonces'}" @click="currentPage = 'annonces'">
         <i class="fas fa-bullhorn" aria-hidden="true"></i> Annonces
       </button>
-     
     </nav>
 
     <main class="content">
       <div class="content-scroll">
 
+        <!-- PROFIL -->
         <section v-if="currentPage === 'profil'" class="profile-layout-v4">
           <h2 class="page-title-v4"><i class="fas fa-user-shield"></i> Mon Profil</h2>
 
@@ -38,7 +38,6 @@
                     <div class="user-titles">
                         <h1>
                             <span class="user-name-highlight">{{ user.firstname }}</span>
-                             
                             <span class="user-name-highlight bold-name">{{ user.name.toUpperCase() }}</span>
                         </h1>
                         <p class="role-tag-v5">{{ user.role.toUpperCase() }}</p>
@@ -72,7 +71,6 @@
                       <p class="detail-value">{{ user.address || "Non renseignée" }}</p>
                     </div>
                   </div>
-                  
                 </div>
 
               </div>
@@ -144,6 +142,54 @@
           </div>
         </section>
 
+        <div v-if="products.length === 0">Aucun produit en vente.</div>
+        <div v-else class="products-grid">
+          <div v-for="product in products" :key="product._id" class="product-card">
+            <div class="product-info">
+              <p class="product-name">{{ product.titre }}</p>
+              <p class="product-desc">{{ product.description || "Pas de description" }}</p>
+              <p class="product-price">{{ product.prix }} €</p>
+              <img :src="product.images?.[0] || 'https://via.placeholder.com/150'" alt="Image produit" class="product-image" />
+
+            </div>
+          </div>
+        </div>
+
+        <section v-if="currentPage === 'notifications'">
+          <h2 class="page-title-v4">
+            <i class="fas fa-bell"></i> Mes Notifications
+          </h2>
+
+          <div v-if="!notifications || notifications.length === 0" class="no-notifications">
+            Vous n'avez aucune nouvelle notification.
+          </div>
+
+          <div v-else class="notifications-list">
+            <div
+              v-for="notification in notifications"
+              :key="notification._id || notification.id"
+              :class="['notification-item', notification.state, notification.type]"
+            >
+              <i :class="getNotificationIcon(notification.type)" aria-hidden="true"></i>
+              <div class="notification-content">
+                <p class="notification-message">{{ notification.message }}</p>
+                <div class="notification-meta">
+                  <span class="notification-from">{{ notification.from.toUpperCase() }}</span>
+                  <span class="notification-time">{{ formatTime(notification.createdAt) }}</span>
+                </div>
+              </div>
+              <button
+                v-if="notification.state === 'unread'"
+                @click="markAsRead(notification)"
+                class="btn-mark-read"
+                title="Marquer comme lu"
+              >
+                <i class="fas fa-check" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+
       </div>
     </main>
   </div>
@@ -168,17 +214,20 @@ export default {
         photo: null,
         profileImage: null
       },
+      products: [],
+      notifications: [],
       userFile: null
     };
   },
   created() {
     this.fetchUser();
+    this.getMyProducts();
+    this.getNotifications();
   },
   methods: {
     triggerFileInput() {
       this.$el.querySelector(".file-input").click();
     },
-
     handleImageUpload(event) {
       const file = event.target.files[0];
       if (file) {
@@ -190,7 +239,6 @@ export default {
         reader.readAsDataURL(file);
       }
     },
-
     async updateProfilePhoto(token) {
       if (!this.userFile) return true;
 
@@ -204,31 +252,42 @@ export default {
             Authorization: `Bearer ${token}`  
           }
         });
-        
         if (res.data.photoUrl) {
           this.user.photo = res.data.photoUrl;
           this.user.profileImage = res.data.photoUrl;
           this.userFile = null;
-          return true;
         }
-
-        this.userFile = null;
-        return true;  
+        return true;
       } catch (err) {
         console.error("Erreur lors de l'upload de la photo :", err);
         return false;
       }
     },
+   
+async getMyProducts() {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Utilisateur non connecté");
 
+    const userId = JSON.parse(atob(token.split(".")[1])).id;
+
+    const res = await axios.get(`http://localhost:3000/api/users/${userId}/products`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    this.products = res.data; // Tableau de produits
+    console.log("Produits récupérés :", this.products);
+  } catch (err) {
+    console.error("Erreur lors du chargement des produits :", err);
+  }
+},
     async saveProfile() {
-      let photoUpdateSuccess = true;
-
       try {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Utilisateur non connecté");
 
         if (this.userFile) {
-          photoUpdateSuccess = await this.updateProfilePhoto(token);
+          await this.updateProfilePhoto(token);
         }
 
         const payload = {
@@ -241,35 +300,49 @@ export default {
         await axios.put("http://localhost:3000/api/user/me", payload, {
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }
         });
-        
-        if (photoUpdateSuccess) {
-          alert("Profil sauvegardé avec succès !");
-        } else {
-          alert("Informations textuelles mises à jour, mais échec de l'upload de la photo.");
-        }
-        
+
+        alert("Profil sauvegardé avec succès !");
         this.isEditing = false;
-        
       } catch (err) {
         console.error("Erreur lors de la sauvegarde du profil :", err);
         alert("Erreur lors de la sauvegarde du profil. Voir la console pour les détails.");
       }
     },
-    
+    async getNotifications() {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) throw new Error("Utilisateur non connecté");
+
+            const userId = JSON.parse(atob(token.split(".")[1])).id;
+
+            // Endpoint basé sur votre structure backend (req.params.userId)
+            const res = await axios.get(`http://localhost:3000/api/notifications/${userId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            this.notifications = res.data;
+        } catch (err) {
+            console.error("Erreur lors du chargement des notifications :", err);
+        }
+    },
+    getNotificationIcon(type) {
+        switch (type) {
+            case 'warning':
+                return 'fas fa-exclamation-triangle';
+            case 'alert':
+                return 'fas fa-shield-alt';
+            case 'info':
+            default:
+                return 'fas fa-info-circle';
+        }
+    },
     async fetchUser() {
       try {
         const token = localStorage.getItem("token");
         if (!token) return;
 
-        let id = null;
-        try {
-          id = JSON.parse(atob(token.split(".")[1])).id;
-        } catch(e) {
-          console.warn("Token JWT non valide ou manquant. Tentative d'accès à /me sans ID.");
-        }
-
-        const endpoint = id ? `http://localhost:3000/api/user/me/${id}` : `http://localhost:3000/api/user/me`;
-        
+        const id = JSON.parse(atob(token.split(".")[1])).id;
+        const endpoint = `http://localhost:3000/api/user/me/${id}`;
         const res = await axios.get(endpoint, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -278,12 +351,12 @@ export default {
         this.user.name = data.name || "";
         this.user.firstname = data.firstname || "";
         this.user.email = data.email || "";
-        this.user.phone = data.phone || data.phonenumber || "";  
-        this.user.address = data.address || data.adresse || "";  
+        this.user.phone = data.phone || data.phonenumber || "";
+        this.user.address = data.address || data.adresse || "";
         this.user.role = data.role || "user";
         this.user.photo = data.photo || null;
         this.user.profileImage = data.photo || null;
-        
+        this.products = Array.isArray(data.misEnVente) ? data.misEnVente : [];
       } catch (err) {
         console.error("Erreur récupération profil:", err);
       }
@@ -719,4 +792,87 @@ export default {
     text-align: center;
   }
 }
+/* --- SECTION PRODUITS --- */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.product-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.product-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background-color: #f3f4f6;
+}
+
+.product-info {
+  padding: 15px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.product-name {
+  font-weight: 700;
+  color: var(--text-dark);
+  font-size: 1em;
+  margin-bottom: 8px;
+}
+
+.product-desc {
+  color: var(--text-muted);
+  font-size: 0.85em;
+  margin-bottom: auto;
+}
+
+.product-price {
+  font-size: 1em;
+  color: var(--main-color);
+  font-weight: 600;
+  margin-top: 10px;
+  text-align: right;
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  .product-image {
+    height: 120px;
+  }
+
+  .product-name {
+    font-size: 0.95em;
+  }
+
+  .product-desc {
+    font-size: 0.8em;
+  }
+
+  .product-price {
+    font-size: 0.9em;
+  }
+}
+
 </style>

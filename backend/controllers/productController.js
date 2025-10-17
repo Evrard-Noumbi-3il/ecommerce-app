@@ -1,6 +1,6 @@
 import Produit from "../models/Produits.js";
-import axios from "axios";
-import jwt from "jsonwebtoken";
+//import axios from "axios";
+//import jwt from "jsonwebtoken";
 import { addMiseEnVente } from "./userController.js";
 
 export const addProduct = async (req, res) => {
