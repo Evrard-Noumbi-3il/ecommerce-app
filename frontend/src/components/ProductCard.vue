@@ -44,7 +44,7 @@
       <div class="product-info-without-comments">
         <div v-if="category" class="product-title-theme">
           <h1>{{ product.titre }}</h1>
-          <p>aaa ->  {{ category.nom }}</p>
+          <p>{{ product.theme }} ->  {{ category.nom }}</p>
         </div>
         <div class="product-buy-row">
           <div class="product-direct-buy-row">
@@ -97,6 +97,8 @@
 </template>
 
 <script setup>
+ import axios from "axios";
+
 defineProps({
   product: {
     type: Object,
@@ -117,8 +119,19 @@ defineProps({
 
 })
 
-  const toggleFavorite = (id) => {
-    console.log("Toggle favorite for:", id);
+  const toggleFavorite = async (id) => {
+    try {
+      
+      const token = localStorage.getItem("token");
+      const idUser = JSON.parse(atob(token.split('.')[1])).id;
+      const response = await axios.post(`${process.env.VUE_APP_API_URL}/favoris/addFavori`, {id_produit: id , id : idUser});
+      console.log(response.data.message);
+      
+    } catch (error) {
+      console.error("Erreur lors de l'ajout aux favoris :", error);
+      
+    }
+    
   };
 
 

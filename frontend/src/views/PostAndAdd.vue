@@ -1,77 +1,90 @@
 <template>
 
   <div class="containerPostAndAdd">
-    <div class="preview-product">
-      <ProductCard
-        style="width: 100%; display: flex;"
-        :product="product"
-        :imagePreview="imagePreview"
-      ></ProductCard>
+    <div class="header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);;">
+      <h1 style="position: sticky; top: 35px">Ajouter une annonce</h1>
+      <p>Publiez vos produits à vendre, louez ou échangez avec des acheteurs de confiance. Suivez les étapes simples pour créer une annonce complète et attractive.</p>
     </div>
-    <div class="form-container">
-      <form @submit.prevent="addproduct" class="form">
-        <div v-if="displayForm == 1" class="form-element">
-          <FirstForm
-            v-model:titre="product.titre"
-            v-model:theme="product.theme"
-            v-model:id_categorie="product.id_categorie"
-            v-model:nom_categorie="nom_categorie"
-          />
-          <button type="button" @click="displayForm = 2" class="btn-first">suivant</button>
-        </div>
 
-        <div v-if="displayForm == 2">
-          <SecondForm
-            v-model:titre="product.titre"
-            v-model:description="product.description"
-            v-model:state="product.state"
-            v-model:image="product.image"
-          />
-          <div class="div-btn">
-            <button type="button" @click="displayForm = 1" class="btn-back">retour</button>
-            <button type="button" @click="displayForm = 3" class="btn-next">suivant</button>
+    <div class="announce">
+      <div class="preview-product">
+        <ProductCard
+          style="width: 100%; display: flex;"
+          class="slide-in-left"
+          :product="product"
+          :imagePreview="imagePreview"
+        ></ProductCard>
+      </div>
+      <div class="form-container slide-in-right">
+        <form @submit.prevent="addproduct" class="form">
+          <div v-if="displayForm == 1" class="form-element">
+            <FirstForm
+              v-model:titre="product.titre"
+              v-model:theme="product.theme"
+              v-model:id_categorie="product.id_categorie"
+              v-model:nom_categorie="nom_categorie"
+            />
+            <button type="button" @click="displayForm = 2" class="btn-first">suivant</button>
           </div>
-        </div>
 
-        <div v-if="displayForm == 3">
-          <ThirdFrom
-            v-model:fileInput="fileInput"
-            v-model:imagePreview="imagePreview"
-            v-model:btns="btns"
-          />
-          <div class="div-btn">
-            <button type="button" @click="displayForm = 2" class="btn-back">retour</button>
-            <button type="button" @click="displayForm = 4" class="btn-next">suivant</button>
+          <div v-if="displayForm == 2" class="slide-in-right">
+            <SecondForm
+              v-model:titre="product.titre"
+              v-model:description="product.description"
+              v-model:state="product.state"
+              v-model:image="product.image"
+            />
+            <div class="div-btn">
+              <button type="button" @click="displayForm = 1" class="btn-back">retour</button>
+              <button type="button" @click="displayForm = 3" class="btn-next">suivant</button>
+            </div>
           </div>
-        </div>
 
-        <div v-if="displayForm == 4">
-          <FourthForm
-            v-model:prix="product.prix"
-          />
-          <div class="div-btn">
-            <button type="button" @click="displayForm = 3" class="btn-back">retour</button>
-            <button type="button" @click="displayForm = 5" class="btn-next">suivant</button>
+          <div v-if="displayForm == 3" class="slide-in-right">
+            <ThirdFrom
+              class="slide-in-top"
+              v-model:fileInput="fileInput"
+              v-model:imagePreview="imagePreview"
+              v-model:btns="btns"
+            />
+            <div class="div-btn">
+              <button type="button" @click="displayForm = 2" class="btn-back">retour</button>
+              <button type="button" @click="displayForm = 4" class="btn-next">suivant</button>
+            </div>
           </div>
-        </div>
 
-
-
-
-        <div v-if="displayForm == 5">
-          <FinalForm
-            v-model:sellerType="product.sellerType"
-            v-model:location="product.location"
-          />
-          <div class="div-btn">
-            <button type="button" @click="displayForm = 4" class="btn-back">retour</button>
-            <button type="submit" class="btn-next">terminer</button>
+          <div v-if="displayForm == 4" class="slide-in-right">
+            <FourthForm
+              class="slide-in-top"
+              v-model:prix="product.prix"
+            />
+            <div class="div-btn">
+              <button type="button" @click="displayForm = 3" class="btn-back">retour</button>
+              <button type="button" @click="displayForm = 5" class="btn-next">suivant</button>
+            </div>
           </div>
-        </div>
 
 
-      </form>
+
+
+          <div v-if="displayForm == 5">
+            <FinalForm
+              class="slide-in-top"
+              v-model:sellerType="product.sellerType"
+              v-model:location="product.location"
+            />
+            <div class="div-btn">
+              <button type="button" @click="displayForm = 4" class="btn-back">retour</button>
+              <button type="submit" class="btn-next">terminer</button>
+            </div>
+          </div>
+
+
+        </form>
+      </div>
     </div>
+
+
 
 
 
@@ -161,12 +174,15 @@
         product.value._id = response.data.produit._id;
         console.log("ID du produit ajouté :", product.value._id);
         router.push("/");
-        window.location.reload();
+
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Une erreur est survenue lors de l'ajout du produit.");
-      console.error(err);
-    }
+      if (err.response) {
+        console.error("Erreur réponse", err.response);
+        window.location.href = `https://http.cat/${err.response.status}`;
+      }
+      alert(err.response?.data?.message || "Une erreur est survenue.");
+  }
   };
 
 
@@ -179,30 +195,100 @@
 
 <style>
 
+
+
   .containerPostAndAdd {
-    padding: 15% 0 15% 0;
+    margin-bottom: 200px;
+    padding: 5% 0 0% 0;
     width: 100%;
+    height: 100%;
     max-width: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: column;
+    position: relative;
   }
 
   .form{
     padding: 0% 5% 5% 5%;
     width: 60%;
+    height: auto;
     max-width: 100%;
     display: grid;
-    border: 1px solid rgba(34, 52, 74, 0.366);
+
     border-radius: 16px;
     border-top: none;
-    align-self: self-start;
+  }
+
+
+
+  .header{
+    padding: 1% 5% 1% 10%;
+    width: 100%;
+    max-width: 100%;
+    /* border: 3px solid rgba(34, 52, 74, 0.366); */
+    border-radius: 16px;
+    align-self: center;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .slide-in-left {
+    animation: slideInFromLeft 1s ease-out;
+  }
+
+  .slide-in-right {
+    animation: slideInFromRight 1s ease-out;
+  }
+
+  @keyframes slideInFromRight {
+    0% {
+      transform: translate3D(30%, 0, 0);
+      opacity: 0;
+    }
+    100% {
+      transform: translate3D(0, 0, 0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInFromLeft {
+    0% {
+      transform: translate3D(-30%, 0, 0);
+      opacity: 0;
+    }
+    100% {
+      transform: translate3D(0, 0, 0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInFromTop {
+    0% {
+      transform: translate3D(0, -10%, 0);
+      opacity: 0;
+    }
+    100% {
+      transform: translate3D(0, 0, 0);
+      opacity: 1;
+    }
+  }
+
+  .slide-in-top {
+    animation: slideInFromTop 0.5s linear ;
+  }
+
+  .announce{
+    display: flex;
+    width: 100%;
+    padding: 10% 0 5% 0;
+    position: relative;
   }
 
   .containerPostAndAdd::after {
     content: "";
     position: absolute;
-    top: 350px;
+    top: 700px;
     bottom: 150px;
     left: 60%;
     width: 1px;
@@ -260,17 +346,45 @@
 
   .form-container{
     padding: 0 0 0 5%;
-    width: 100%;
+    width: 1980px;
     display: flex;
     justify-content: center;
+    align-items: self-start;
   }
 
   .preview-product{
     padding: 0 5% 0 5%;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: self-start;
   }
 
+  @media screen and (max-width: 768px) {
 
+    .announce{
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 120px;
+    }
+    .containerPostAndAdd::after {
+      content: none;
+    }
+    .form-container{
+      padding: 5% 5% 0 5%;
+      display: flex;
+      width: 100%;
+      justify-content: start;
+      align-items: start;
+    }
+    .preview-product{
+      padding: 0 5% 5% 5%;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 
 
 

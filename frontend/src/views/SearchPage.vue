@@ -219,7 +219,8 @@
                 <span v-if="item.state === 'neuf'" class="badge badge-new">Neuf</span>
                 <span v-if="item.urgent" class="badge badge-urgent">Urgent</span>
               </div>
-              <button class="favorite-btn" @click.stop="toggleFavorite(item._id)">
+              <button class="favorite-btn" router-link :to="{ name: 'Favoris' }" @click.stop ="toggleFavorite(item._id)">
+
                 <svg viewBox="0 0 24 24" width="20" height="20">
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
                 </svg>
@@ -286,7 +287,9 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
+import {useFavoritesStore} from "@/stores/favoris"
 
+const favorisStore = useFavoritesStore();
 const route = useRoute();
 const router = useRouter();
 
@@ -468,9 +471,20 @@ const goToProduct = (id) => {
 };
 
 // Favoris
-const toggleFavorite = (id) => {
-  console.log("Toggle favorite for:", id);
+const toggleFavorite = async (idProduit) => {
+  try {
+    const token = localStorage.getItem("token");
+    const id = JSON.parse(atob(token.split('.')[1])).id;
+    const response = await axios.post(
+      `${process.env.VUE_APP_API_URL}/favoris/addFavori`,
+      { id_produit: idProduit, id: id }
+    );
+    console.log("Favori ajouté avec succès :", response.data);
+  } catch (err) {
+    console.error("Erreur lors de l’ajout du favori :", err);
+  }
 };
+
 
 const onCategoryChange = (event) => {
   const selectedId = event.target.value;
@@ -525,6 +539,7 @@ watch(() => filters.value, () => {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 100px 0 60px;
   color: white;
+
 }
 
 .search-section {
@@ -607,8 +622,8 @@ watch(() => filters.value, () => {
   border-radius: 12px;
   padding: 24px;
   height: fit-content;
-  position: static;
-  top: 24px;
+  position: sticky;
+  top: 50px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 

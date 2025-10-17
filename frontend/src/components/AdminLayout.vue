@@ -20,7 +20,7 @@
         <h3>⚙️ Actions rapides</h3>
         <ul>
           <li><button @click="approveAllFlagged">✅ Approuver tous les produits signalés</button></li>
-          <li><button @click="removeInactiveUsers">🧹 Supprimer les utilisateurs inactifs</button></li>
+          <li><button @click="removeBanUsers">🧹 Supprimer les utilisateurs banis</button></li>
           <li><button @click="generateReport">📄 Générer un rapport</button></li>
         </ul>
       </div>
@@ -34,14 +34,23 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import api from "../auth/axios"
 const isAdmin = ref(false);
 // Simulations d'actions admin (à connecter à tes API plus tard)
 const approveAllFlagged = () => {
   console.log("✅ Tous les produits signalés approuvés.");
 };
 
-const removeInactiveUsers = () => {
-  console.log("🧹 Utilisateurs inactifs supprimés.");
+const removeBanUsers = async () => {
+  const confirmDelete = window.confirm("Supprimer tous les utilisateurs bannis ?");
+  if (!confirmDelete) return;
+
+  try {
+    await api.delete("/admin/users/banned");
+  } catch (error) {
+    console.error("Erreur lors de la suppression des bannis :", error);
+  }
+
 };
 
 const generateReport = () => {
