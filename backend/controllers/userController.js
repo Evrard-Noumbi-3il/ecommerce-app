@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
+import Produits from "../models/Produits.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,10 +29,6 @@ export const getMe = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
-
-
-
-
 
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -134,4 +131,21 @@ export const addMiseEnVente = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 }
-//produit par un utilisateur mis en vente
+
+export const getMyProducts = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Chercher l'utilisateur et récupérer ses produits
+    const user = await User.findById(userId).populate("misEnVente");
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    // Retourner les produits
+    res.status(200).json(user.misEnVente);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Erreur serveur", details: error.message });
+  }
+};

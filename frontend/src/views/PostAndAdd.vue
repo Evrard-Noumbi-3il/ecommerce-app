@@ -3,8 +3,9 @@
   <div class="containerPostAndAdd">
     <div class="preview-product">
       <ProductCard
-        style="width: 100%"
+        style="width: 100%; display: flex;"
         :product="product"
+        :imagePreview="imagePreview"
       ></ProductCard>
     </div>
     <div class="form-container">
@@ -34,7 +35,9 @@
 
         <div v-if="displayForm == 3">
           <ThirdFrom
-            v-model:prix="product.prix"
+            v-model:fileInput="fileInput"
+            v-model:imagePreview="imagePreview"
+            v-model:btns="btns"
           />
           <div class="div-btn">
             <button type="button" @click="displayForm = 2" class="btn-back">retour</button>
@@ -62,7 +65,7 @@
           />
           <div class="div-btn">
             <button type="button" @click="displayForm = 4" class="btn-back">retour</button>
-            <button type="submit" class="btn-next" @click="$emit('showdisplay')">terminer</button>
+            <button type="submit" class="btn-next">terminer</button>
           </div>
         </div>
 
@@ -87,9 +90,9 @@
   import FourthForm from "@/components/PostAndAdd/Fourth-form.vue";
   import FinalForm from "@/components/PostAndAdd/Final-form.vue";
   import ProductCard from "@/components/ProductCard.vue";
+  import { useRouter } from "vue-router";
 
-
-
+  const router = useRouter();
   const product = ref({
     titre: "",
     theme: "",
@@ -101,7 +104,9 @@
     sellerType: "",
     location: ""
   })
-
+  const fileInput = ref([]);
+  const imagePreview = ref([]);
+  const btns = ref([{}, {}]);
   const nom_categorie = ref("");
   const categories = ref([]);
   const thematiques = ref([]);
@@ -138,25 +143,34 @@
 
   const addproduct = async () => {
     try {
-      const res = await axios.post(
-        `${process.env.VUE_APP_API_URL}/products/addProduct`,
-        { titre: product.value.titre,
-          description: product.value.description,
-          prix: product.value.prix,
-          id_categorie: product.value.id_categorie,
-          theme: product.value.theme,
-          location: product.value.location,
-          state: product.value.state,
-          sellerType: product.value.sellerType
-        }
-      );
-      alert("Ajout réussi");
-      this.$router.push("/");
-      setTimeout(() => window.location.reload(), 500)
+      const token = localStorage.getItem("token");
+      const id = JSON.parse(atob(token.split('.')[1])).id;
+      const response = await axios.post(`${process.env.VUE_APP_API_URL}/products/addProduct`, {
+        userId: id,
+        titre: product.value.titre,
+        description: product.value.description,
+        prix: product.value.prix,
+        id_categorie: product.value.id_categorie,
+        theme: product.value.theme,
+        location: product.value.location,
+        state: product.value.state,
+        sellerType: product.value.sellerType
+      });
+      if (response.status === 201) {
+        console.log("ID du produit ajouté :", product.value._id);
+        product.value._id = response.data.produit._id;
+        console.log("ID du produit ajouté :", product.value._id);
+        router.push("/");
+        window.location.reload();
+      }
     } catch (err) {
-      alert(err.response?.data?.message || "Erreur lors de l'ajout ❌");
+      alert(err.response?.data?.message || "Une erreur est survenue lors de l'ajout du produit.");
+      console.error(err);
     }
   };
+
+
+
 </script>
 
 

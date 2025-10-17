@@ -38,7 +38,7 @@
         <label>Choisissez une catégories* :</label>
         <select
           :value="nom_categorie"
-          @input="emit('update:nom_categorie', $event.target.value)"
+          @input="emit('update:nom_categorie', $event.target.value), updateCategorie($event)"
           placeholder="Commencez à taper..."
           class="input-postad-select"
         >
@@ -62,7 +62,7 @@
 
   import { ref, onMounted} from "vue";
   import axios from "axios";
-  const props = defineProps({
+  defineProps({
     titre: String,
     theme: String,
     id_categorie: String,
