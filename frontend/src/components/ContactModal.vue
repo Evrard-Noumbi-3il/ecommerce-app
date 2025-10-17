@@ -20,11 +20,9 @@
 
   .container{
     padding-bottom: 50px;
-    position: relative;
-    top: -800px;
+    position: fixed;
+    top: 0px;
     left: 0;
-    width: 100vw;
-    height: 100vh;
     justify-self: center;
     justify-content: center;
     align-items: center;
@@ -39,5 +37,6 @@
     background-color: white;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     width: 25%;
+    height: 600px;
   }
 </style>
