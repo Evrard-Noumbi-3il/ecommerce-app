@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Produits"
     }],
+    avis: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Avis"
+    }],
     photo: {
       type: String,
       default: "/images/default-profile.png",
