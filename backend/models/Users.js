@@ -37,12 +37,19 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Produits"
     }],
+    avis: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Avis"
+    }],
     photo: {
       type: String,
       default: "/images/default-profile.png",
     },
     adresse: {
-      type: String,
+      rue: String,
+      ville: String,
+      codePostal: String,
+      pays: String
     },
     isBan: {
       type: Boolean,

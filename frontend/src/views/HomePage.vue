@@ -276,7 +276,17 @@ onMounted(() => {
   border-radius: 12px;
   margin-bottom: 50px;
   margin-left: 100px;
-  width: 1200px;
+  margin-right: 100px;
+
+
+}
+
+@media screen and (max-width: 768px) {
+  .content-section {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
 }
 
 .section-header {
@@ -328,10 +338,8 @@ onMounted(() => {
 
 .section-content {
   display: flex;
-  overflow-x: auto;
-  margin-right: 10px;
-  margin-left: 10px;
-  gap: 15px;
+  width: 100%;
+  justify-self: center;
 
 }
 

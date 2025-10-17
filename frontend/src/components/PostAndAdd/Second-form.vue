@@ -132,7 +132,9 @@
     width: 100%;
     border: 1px solid rgba(0,0,0,0.1);
     height: 200px;
-
+    padding: 15px;
+    box-sizing: border-box;
+    resize:none;
   }
 
   p{
