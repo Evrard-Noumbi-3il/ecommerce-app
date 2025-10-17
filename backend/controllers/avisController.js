@@ -3,16 +3,17 @@ import User from "../models/Users.js";
 
 export const createAvis= async (req, res) => {
     try{
-        const { userSend, userReceive, note } = req.body;
+        const { userSend, userReceive, note, comments } = req.body;
 
-        if (!userSend || !userReceive || !note) {
+        if (!userSend || !userReceive || !note || !comments) {
             return res.status(400).json({ message: "Tous les champs sont requis ❌" });
         }
 
         const newAvis = new Avis({
             userSend,
             userReceive,
-            note
+            note,
+            comments
         });
 
         await newAvis.save();
