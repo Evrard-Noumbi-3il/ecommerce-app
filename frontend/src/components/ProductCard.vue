@@ -71,7 +71,7 @@
         <div class="content-comments" >
           <h2>Avis</h2>
           <div v-if ="avis !== null && avis.length > 0">
-            <div 
+            <div
               class="user-comments"
               v-for ="avisItem in avis"
               :key="avisItem._id"
@@ -116,14 +116,6 @@ defineProps({
     type: Object,
     required: true,
   },
-<<<<<<< HEAD
-
-})
-
-
-  const toggleFavorite = (id) => {
-    console.log("Toggle favorite for:", id);
-=======
   avis:{
     type : Array,
     required : true,
@@ -133,18 +125,16 @@ defineProps({
 
   const toggleFavorite = async (id) => {
     try {
-      
+
       const token = localStorage.getItem("token");
       const idUser = JSON.parse(atob(token.split('.')[1])).id;
       const response = await axios.post(`${process.env.VUE_APP_API_URL}/favoris/addFavori`, {id_produit: id , id : idUser});
       console.log(response.data.message);
-      
+
     } catch (error) {
       console.error("Erreur lors de l'ajout aux favoris :", error);
-      
+
     }
-    
->>>>>>> ce8299a39dbbcf5fc591b87957b1da59e0a323e3
   };
 
   const formatDateParts = async (dateStr) => {
