@@ -79,9 +79,9 @@ const routes = [
     meta: { layout: AdminLayout, requiresAdmin: true},
   },
   {
-    path: "/Favoris",
+    path: "/favoris",
     component: FavorisView,
-    name: "Favoris"
+    name: "favoris"
   }
 ];
 

@@ -137,6 +137,7 @@ import TendancesThematique from "../components/TendancesThematique.vue";
 import CategoriesList from "../components/CategoriesList.vue";
 import NouveautesProduits from "../components/NouveautesproduitsBar.vue";
 import DecouvrirSection from "../components/DecouvrirSection.vue";
+import {useFavoritesStore} from "@/stores/favoris"; 
 
 const goToPage = () => {
   router.push({ name: 'search' });
@@ -149,6 +150,22 @@ const thematiques = ref([]);
 
 const isLoading = ref(true);
 const hasError = ref(false);
+const favorisStore = useFavoritesStore();
+
+// Favoris
+const toggleFavorite = async (idProduit) => {
+  try {
+    const token = localStorage.getItem("token");
+    const id = JSON.parse(atob(token.split('.')[1])).id;
+    const response = await axios.post(
+      `${process.env.VUE_APP_API_URL}/favoris/addFavori`,
+      { id_produit: idProduit, id: id }
+    );
+    console.log("Favori ajouté avec succès :", response.data);
+  } catch (err) {
+    console.error("Erreur lors de l’ajout du favori :", err);
+  }
+};
 
 const loadData = async () => {
   try {
