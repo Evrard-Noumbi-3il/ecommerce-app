@@ -8,8 +8,12 @@
      :product="product"
      :userSeller="userSeller"
      :category="category"
+<<<<<<< HEAD
      @open-contact="showContact = true"
      />
+=======
+     :avis="avis"/>
+>>>>>>> ce8299a39dbbcf5fc591b87957b1da59e0a323e3
   </div>
 
   <ContactModal  v-if="showContact"  @close-Contact="showContact = false"/>
@@ -28,9 +32,14 @@ const productId = route.params.id;
 const product = ref(null);
 const userSeller = ref(null);
 const category = ref(null);
+<<<<<<< HEAD
 
 const showContact = ref(false);
 
+=======
+const avis = ref(null);
+ 
+>>>>>>> ce8299a39dbbcf5fc591b87957b1da59e0a323e3
 const loading = ref(true);
 const error = ref(null);
 
@@ -49,7 +58,12 @@ const fetchUserProductSeller = async (id) => {
   try {
     const response = await axios.get(`http://localhost:3000/api/products/user/${id}`);
     userSeller.value = response.data;
+<<<<<<< HEAD
 
+=======
+    const responseAvis = await axios.get(`http://localhost:3000/api/avis/user/${userSeller.value._id}`);
+    avis.value = responseAvis.data;
+>>>>>>> ce8299a39dbbcf5fc591b87957b1da59e0a323e3
   } catch (error) {
     console.error("Erreur lors de la récupération des utilisateurs :", error);
   }
