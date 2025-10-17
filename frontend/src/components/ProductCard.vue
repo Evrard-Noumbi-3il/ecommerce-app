@@ -32,7 +32,11 @@
 
         <div class="actions">
           <button>Évaluer</button>
-          <button>Contacter</button>
+          <button
+          @click="$emit('open-contact')"
+          >
+          Contacter
+        </button>
         </div>
 
       </div>
@@ -113,9 +117,10 @@ defineProps({
   category: {
     type: Object,
     required: true,
-  }
+  },
 
 })
+
 
   const toggleFavorite = (id) => {
     console.log("Toggle favorite for:", id);
@@ -240,7 +245,7 @@ defineProps({
       word-wrap: break-word;
       background-color: #D9D9D9;
 
-     }
+    }
 
 
   }
