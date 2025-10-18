@@ -12,6 +12,7 @@ import categorieRoutes from "./routes/categorieRoutes.js";
 import avisRoutes from "./routes/avisRoutes.js";
 import paiementRoutes from "./routes/paiementRoute.js";
 import chatRoutes from "./routes/chatRoutes.js";
+import notificationsRoutes from "./routes/notificationRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -35,6 +36,7 @@ app.use("/api/categories", categorieRoutes);
 app.use("/api/avis", avisRoutes);
 app.use("/api/paiement", paiementRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/notifications", notificationsRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

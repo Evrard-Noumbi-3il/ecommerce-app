@@ -37,7 +37,7 @@
                     </div>
                     <div class="user-titles">
                         <h1>
-                            <span class="user-name-highlight">{{ user.firstname }}</span>
+                            <span class="user-name-highlight">{{ user.firstname }}</span><br>
                             <span class="user-name-highlight bold-name">{{ user.name.toUpperCase() }}</span>
                         </h1>
                         <p class="role-tag-v5">{{ user.role.toUpperCase() }}</p>
@@ -142,53 +142,52 @@
           </div>
         </section>
 
-        <div v-if="products.length === 0">Aucun produit en vente.</div>
-        <div v-else class="products-grid">
+        <section v-if="currentPage === 'annonces'">
+          <h2>Mes Annonces</h2>
+          <div v-if="products.length === 0">Aucun produit en vente.</div>
           <div v-for="product in products" :key="product._id" class="product-card">
-            <div class="product-info">
-              <p class="product-name">{{ product.titre }}</p>
-              <p class="product-desc">{{ product.description || "Pas de description" }}</p>
-              <p class="product-price">{{ product.prix }} €</p>
-              <img :src="product.images?.[0] || 'https://via.placeholder.com/150'" alt="Image produit" class="product-image" />
-
-            </div>
+            <img :src="product.images && product.images.length ? product.images[0] : 'https://via.placeholder.com/150'" alt="Produit" class="product-image"/>
+            <p class="product-name">{{ product.titre || 'Sans titre' }}</p>
+            <p class="product-desc">{{ product.description || 'Pas de description' }}</p>
+            <p class="product-price">{{ product.prix != null ? product.prix + ' €' : 'Prix non défini' }}</p>
           </div>
-        </div>
+
+        </section>
 
         <section v-if="currentPage === 'notifications'">
-          <h2 class="page-title-v4">
-            <i class="fas fa-bell"></i> Mes Notifications
-          </h2>
+  <h2 class="page-title-v4">
+    <i class="fas fa-bell"></i> Mes Notifications
+  </h2>
 
-          <div v-if="!notifications || notifications.length === 0" class="no-notifications">
-            Vous n'avez aucune nouvelle notification.
-          </div>
+  <div v-if="!notifications || notifications.length === 0" class="no-notifications">
+    Vous n'avez aucune nouvelle notification.
+  </div>
 
-          <div v-else class="notifications-list">
-            <div
-              v-for="notification in notifications"
-              :key="notification._id || notification.id"
-              :class="['notification-item', notification.state, notification.type]"
-            >
-              <i :class="getNotificationIcon(notification.type)" aria-hidden="true"></i>
-              <div class="notification-content">
-                <p class="notification-message">{{ notification.message }}</p>
-                <div class="notification-meta">
-                  <span class="notification-from">{{ notification.from.toUpperCase() }}</span>
-                  <span class="notification-time">{{ formatTime(notification.createdAt) }}</span>
-                </div>
-              </div>
-              <button
-                v-if="notification.state === 'unread'"
-                @click="markAsRead(notification)"
-                class="btn-mark-read"
-                title="Marquer comme lu"
-              >
-                <i class="fas fa-check" aria-hidden="true"></i>
-              </button>
-            </div>
-          </div>
-        </section>
+  <div v-else class="notifications-list">
+    <div
+      v-for="notification in notifications"
+      :key="notification._id || notification.id"
+      :class="['notification-item', notification.state, notification.type]"
+    >
+      <i :class="getNotificationIcon(notification.type)" aria-hidden="true"></i>
+      <div class="notification-content">
+        <p class="notification-message">{{ notification.message }}</p>
+        <div class="notification-meta">
+          <span class="notification-from">{{ notification.from.toUpperCase() }}</span>
+          <span class="notification-time">{{ formatTime(notification.createdAt) }}</span>
+        </div>
+      </div>
+      <button v-if="notification.state === 'unread'" 
+        @click="markAsRead(notification)" 
+        class="btn-mark-read" 
+        title="Marquer comme lu">
+  <i class="fas fa-check" aria-hidden="true"></i>
+</button>
+
+    </div>
+  </div>
+</section>
+
 
       </div>
     </main>
@@ -263,7 +262,25 @@ export default {
         return false;
       }
     },
-   
+  async markAsRead(notification) {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Utilisateur non connecté");
+
+      // Appel API pour marquer la notification comme lue
+      await axios.patch(`http://localhost:3000/api/notifications/${notification._id}/read`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Mettre à jour localement l’état de la notification
+      notification.state = "read";
+
+    } catch (err) {
+      console.error("Erreur lors du marquage comme lu :", err);
+      alert("Impossible de marquer la notification comme lue.");
+    }
+  }
+,
 async getMyProducts() {
   try {
     const token = localStorage.getItem("token");
@@ -271,17 +288,17 @@ async getMyProducts() {
 
     const userId = JSON.parse(atob(token.split(".")[1])).id;
 
-    const res = await axios.get(`http://localhost:3000/api/users/${userId}/products`, {
+    const res = await axios.get(`http://localhost:3000/api/user/users/${userId}/products`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    this.products = res.data; // Tableau de produits
+    this.products = res.data; // ← Tableau de produits complet
     console.log("Produits récupérés :", this.products);
   } catch (err) {
     console.error("Erreur lors du chargement des produits :", err);
   }
 },
-    async saveProfile() {
+   async saveProfile() {
       try {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Utilisateur non connecté");
@@ -336,6 +353,24 @@ async getMyProducts() {
                 return 'fas fa-info-circle';
         }
     },
+
+  formatTime(dateString) {
+  const date = new Date(dateString);
+  const maintenant = new Date();
+  const diff = Math.floor((maintenant - date) / 1000);
+
+  if (diff < 60) return "Il y a quelques secondes";
+  if (diff < 3600) return `Il y a ${Math.floor(diff / 60)} min`;
+  if (diff < 86400) return `Il y a ${Math.floor(diff / 3600)} h`;
+  if (diff < 2592000) return `Il y a ${Math.floor(diff / 86400)} j`;
+
+  return date.toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+},
+
     async fetchUser() {
       try {
         const token = localStorage.getItem("token");
@@ -347,6 +382,7 @@ async getMyProducts() {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = res.data;
+        
 
         this.user.name = data.name || "";
         this.user.firstname = data.firstname || "";
@@ -356,7 +392,9 @@ async getMyProducts() {
         this.user.role = data.role || "user";
         this.user.photo = data.photo || null;
         this.user.profileImage = data.photo || null;
-        this.products = Array.isArray(data.misEnVente) ? data.misEnVente : [];
+        //this.products = Array.isArray(data.misEnVente) ? data.misEnVente : [];
+        
+        
       } catch (err) {
         console.error("Erreur récupération profil:", err);
       }
@@ -384,7 +422,6 @@ async getMyProducts() {
   min-height: 100vh;
   background-color: var(--secondary-color);
   font-family: 'Poppins', sans-serif;
-  margin-top: 100px;
 }
 
 .menu {
@@ -874,5 +911,104 @@ async getMyProducts() {
     font-size: 0.9em;
   }
 }
+/* --- SECTION NOTIFICATIONS --- */
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  background: white;
+  border-radius: 12px;
+  padding: 15px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.notification-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.notification-item.info {
+  border-left: 5px solid #3b82f6;
+}
+
+.notification-item.warning {
+  border-left: 5px solid #facc15;
+}
+
+.notification-item.alert {
+  border-left: 5px solid #ef4444;
+}
+
+.notification-item.unread {
+  background-color: #f9fafb;
+}
+
+.notification-item i {
+  font-size: 22px;
+  margin-right: 15px;
+  color: #047857;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-message {
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 5px;
+}
+
+.notification-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85em;
+  color: #6b7280;
+}
+
+.notification-from {
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #047857;
+}
+
+.notification-time {
+  font-style: italic;
+}
+
+.btn-mark-read {
+  background: #047857;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: center;
+}
+
+.btn-mark-read:hover {
+  background: #065f46;
+}
+
+/* Message lorsqu'il n'y a pas de notifications */
+.no-notifications {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1em;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
 
 </style>

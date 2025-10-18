@@ -83,7 +83,8 @@ export const registerUser = async (req, res) => {
 
     const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-    return res.status(201).json({ message: "Utilisateur créé avec succès 🚀", token });
+    return res.status(201).json({ message: "Utilisateur créé avec succès 🚀", token ,
+       user: { id: newUser._id, email: newUser.email }});
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur ❌", error: error.message });

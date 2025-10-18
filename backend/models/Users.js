@@ -61,10 +61,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    chatList: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Chat"
-    }]
+    chatList: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Chat",
+      },
+    ],
   },
   { timestamps: true }
 );
