@@ -10,6 +10,7 @@ import favorisRoutes from "./routes/favorisRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import categorieRoutes from "./routes/categorieRoutes.js"
 import avisRoutes from "./routes/avisRoutes.js"
+import notificationsRoutes from "./routes/notificationRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -31,6 +32,7 @@ app.use("/api/favoris", favorisRoutes)
 app.use("/api/user", userRoutes)
 app.use("/api/categories", categorieRoutes)
 app.use("/api/avis", avisRoutes)
+app.use("/api/notifications", notificationsRoutes);
 
 
 const PORT = process.env.PORT || 3000;

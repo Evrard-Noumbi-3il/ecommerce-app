@@ -16,7 +16,7 @@ import Ads from '@/views/AdManagement.vue';
 import Notifications from '@/views/NotificationManagement.vue';
 import Themes from '@/views/ThemeManagement.vue';
 import FavorisView from '@/views/FavorisView.vue'
-
+//import notificationsRoutes from "./routes/notifications.js";
 const routes = [
   { path: "/", name: "HomePage", component: Home },
   { path: "/search", name: "search", component: SearchPage},
@@ -101,6 +101,9 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
+
+
 
 
 export default router;

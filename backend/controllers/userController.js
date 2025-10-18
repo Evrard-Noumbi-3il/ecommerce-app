@@ -18,7 +18,7 @@ export const getMe = async (req, res) => {
 
     const { id } = req.params;
 
-    const user = await User.findById(id).select("-password");
+    const user = await User.findById(id).select("-password").populate("misEnVente");
     if (!user) {
       return res.status(404).json({ message: "Erreur serveur" });
     }
@@ -136,19 +136,23 @@ export const getMyProducts = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // Chercher l'utilisateur et récupérer ses produits
-    const user = await User.findById(userId).populate("misEnVente");
-    if (!user) {
-      return res.status(404).json({ message: "Utilisateur non trouvé." });
-    }
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "Utilisateur non trouvé." });
 
-    // Retourner les produits
-    res.status(200).json(user.misEnVente);
+    console.log("IDs des produits mis en vente de l'utilisateur :", user.misEnVente);
+
+    const produitsMisEnVente = await Produits.find({ _id: { $in: user.misEnVente } });
+
+    console.log("Produits récupérés :", produitsMisEnVente); // <-- ici on voit les produits complets
+
+    res.status(200).json(produitsMisEnVente);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Erreur serveur", details: error.message });
   }
 };
+
+
 
 export const toggleBan = async (req) => {
   const { id } = req.params
