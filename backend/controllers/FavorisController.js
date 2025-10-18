@@ -11,6 +11,7 @@ export const getFavorisProduits = async (req, res) => {
   }
 };
 
+
 // Récupération des thématiques mis en favoris
 export const getThematiques = async (req, res) => {
   try {

@@ -17,6 +17,10 @@ const avisSchema = new mongoose.Schema(
             required: true,
             min: 1,
             max: 5
+        },
+        comments: {
+            type: String,
+            default: ""
         }
     },
     { timestamps: true }

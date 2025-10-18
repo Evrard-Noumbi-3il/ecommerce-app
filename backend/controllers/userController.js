@@ -1,16 +1,17 @@
-
+// controllers/UserController.js
+import Produits from "../models/Produits.js";
 import User from "../models/Users.js";
 import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
-import Produits from "../models/Produits.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Ajustez ce chemin si nécessaire (exemple : trois niveaux au-dessus)
 const uploadDir = path.resolve(__dirname, '../../../frontend/public/images/user'); 
+
 
 // Récupérer les infos de l'utilisateur connecté
 export const getMe = async (req, res) => {
@@ -29,6 +30,8 @@ export const getMe = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+//methode pour recuperer les annonces d'un utilisateur connecte
+export const getAllAnnoncesByUser = async (req, res) => { }
 
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -51,8 +54,8 @@ export const upload = multer({
 }).single('photo');
 
 export const updateMe = async (req, res) => {
-    try {
-        const userId = req.user.id; 
+  try {
+    const userId = req.user.id; 
         
         const { name, firstname, phone, address } = req.body;
         
@@ -62,14 +65,13 @@ export const updateMe = async (req, res) => {
             phonenumber: phone, // Mappage pour le schéma
             adresse: address,   // Mappage pour le schéma
         };
-        
-        const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true, runValidators: true }).select('-password');
-        
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true, runValidators: true }).select('-password');
         if (!updatedUser) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
 
-        res.status(200).json({ 
+      res.status(200).json({ 
             message: "Profil mis à jour avec succès.",
             user: updatedUser
         });
@@ -81,7 +83,6 @@ export const updateMe = async (req, res) => {
         });
     }
 };
-
 export const updateProfilePhoto = async (req, res) => {
     try {
         const userId = req.user.id; 
@@ -120,18 +121,14 @@ export const updateProfilePhoto = async (req, res) => {
     }
 };
 
-
-
-export const addMiseEnVente = async (req, res) => {
-  try {
-    const { id_produit, id } = req.body;
-    const user = await User.findById(id);
-    user.misEnVente.push(id_produit);
-  } catch (err) {
-    res.status(500).json({ message: "Erreur serveur" });
-  }
+export const addMiseEnVente = async (userId, id_produit) => {
+  const user = await User.findById(userId);
+  if (!user) throw new Error("Utilisateur non trouvé");
+  user.misEnVente.push(id_produit);
+  await user.save();
+  return user;
 }
-
+  
 export const getMyProducts = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -163,7 +160,40 @@ export const toggleBan = async (req) => {
   await user.save()
 }
 
-export const deleteBanUser = async (req, res) => {
+export const getFavoris = async (req, res) => {
+    try {
+      const {id} = req.params; 
+      
+
+      const user = await User.findById(id); 
+      if(!user){
+        return res.status(404).json({message : "Favoris de cet utilisateur non trouvé"}); 
+      }
+
+      const favoris =  user.favoris;
+
+      if (favoris.length == 0){
+        return res.status(200).json({ message : " Aucun produits en favoris pour cet utilisateur "}); 
+      }
+
+      const produits = await Produits.find({ _id: { $in: favoris } })
+
+      console.log(produits)
+      return res.status(200).json({
+        message : "Produits récupérés avec succèss" ,
+        produits : produits
+      }) ; 
+    } catch(err) {
+      console.log(err); 
+      console.error("Erreur lors de la récupération des produits :" , err);
+      res.status(500).json({message: "Erreur serveur"}); 
+    }
+ 
+
+  }
+
+
+  export const deleteBanUser = async (req, res) => {
   try {
     const result = await User.deleteMany({ isBan: true });
     res.status(200).json({ message: 'Utilisateurs bannis supprimés', deletedCount: result.deletedCount });

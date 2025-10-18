@@ -32,7 +32,11 @@
 
         <div class="actions">
           <button>Évaluer</button>
-          <button>Contacter</button>
+          <button
+          @click="$emit('open-contact')"
+          >
+          Contacter
+        </button>
         </div>
 
       </div>
@@ -66,34 +70,30 @@
       <div class="comments-seller">
         <div class="content-comments" >
           <h2>Avis</h2>
-          <div class="user-comments">
-            <div class="username-and-rating">
-              <p>Kun Mbz</p>
-              <p>1★   10/04/2025</p>
+          <div v-if ="avis !== null && avis.length > 0">
+            <div
+              class="user-comments"
+              v-for ="avisItem in avis"
+              :key="avisItem._id"
+              >
+              <div class="username-and-rating">
+                <p>{{avisItem.userSend.name}} {{ avisItem.userSend.firstname }}</p>
+                <p>{{avisItem.note}}★   {{formatDateParts(avisItem.createdAt).date}}</p>
+              </div>
+              <div class="message-comments">
+                  <p>{{ avisItem.comments }}</p>
+              </div>
             </div>
-          <div class="message-comments">
-              <p>Il m’a vendu une montre de merde.Franchement, je suis très déçu par cette montre connectée.
-                 L’autonomie est catastrophique : je dois la recharger
-                 presque tous les jours, alors qu’elle était annoncée avec
-                 *une semaine de batterie. L’écran manque de luminosité et de
-                 *vient pratiquement illisible en plein soleil. Les notifications arrivent
-                  parfois avec un retard énorme, ce qui annule totalement l’intérêt
-                   d’une montre censée me tenir informé en temps réel. De plus,
-                   l’application mobile est lente, mal traduite et plante régulièrement.
-                   Enfin, le bracelet est inconfortable et a commencé à s’user après
-                   seulement quelques semaines d’utilisation. Pour le prix, je m’attendais à beaucoup mieux, et honnêtement je regrette cet achat</p>
           </div>
-
+          <div v-else>
+            <p>Aucun avis pour le moment.</p>
           </div>
-
-
         </div>
-
       </div>
 
-    </div>
-
   </div>
+
+</div>
 </template>
 
 <script setup>
@@ -115,24 +115,38 @@ defineProps({
   category: {
     type: Object,
     required: true,
+  },
+  avis:{
+    type : Array,
+    required : true,
   }
 
 })
 
   const toggleFavorite = async (id) => {
     try {
-      
+
       const token = localStorage.getItem("token");
       const idUser = JSON.parse(atob(token.split('.')[1])).id;
       const response = await axios.post(`${process.env.VUE_APP_API_URL}/favoris/addFavori`, {id_produit: id , id : idUser});
       console.log(response.data.message);
-      
+
     } catch (error) {
       console.error("Erreur lors de l'ajout aux favoris :", error);
-      
+
     }
-    
   };
+
+  const formatDateParts = async (dateStr) => {
+        const date = new Date(dateStr);
+        const optionsDate = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return {
+            date: date.toLocaleDateString('fr-FR', optionsDate)
+        };
+    }
+
+
+
 
 
 </script>
@@ -253,7 +267,7 @@ defineProps({
       word-wrap: break-word;
       background-color: #D9D9D9;
 
-     }
+    }
 
 
   }
