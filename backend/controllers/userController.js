@@ -71,6 +71,7 @@ export const updateMe = async (req, res) => {
       new: true,
       runValidators: true,
     }).select("-password");
+
     if (!updatedUser) {
       return res.status(404).json({ message: "Utilisateur non trouvé." });
     }
@@ -86,6 +87,7 @@ export const updateMe = async (req, res) => {
     });
   }
 };
+
 export const updateProfilePhoto = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -121,10 +123,12 @@ export const updateProfilePhoto = async (req, res) => {
       photoUrl: newPhotoUrl,
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Échec de l'upload de la photo.",
-      details: error.message,
-    });
+    res
+      .status(500)
+      .json({
+        message: "Échec de l'upload de la photo.",
+        details: error.message,
+      });
   }
 };
 

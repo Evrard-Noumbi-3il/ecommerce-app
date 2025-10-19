@@ -9,74 +9,76 @@ import UserManagement from '../views/UserManagement.vue';
 import CategoryManagement from '../views/CategoryManagement.vue';
 import Dashboard from '../views/DashboardManagement.vue';
 import ReportedProducts from '../views/ReportedProducts.vue';
-import ProductView from "@/views/ProductView.vue"; 
+import ProductView from "@/views/ProductView.vue";
 import Products from '../views/ProductManagement.vue';
 import Orders from '@/views/OrderManagement.vue';
 import Ads from '@/views/AdManagement.vue';
 import Notifications from '@/views/NotificationManagement.vue';
 import Themes from '@/views/ThemeManagement.vue';
-import FavorisView from '@/views/FavorisView.vue'
+import FavorisView from '@/views/FavorisView.vue';
+import ChatView from '@/views/ChatView.vue';
 
 const routes = [
   { path: "/", name: "HomePage", component: Home },
-  { path: "/search", name: "search", component: SearchPage},
-  { path: "/profile", name: "ProfilUser", component: ProfilUser , meta: { requiresAuth: true }},
-  { path: "/post-ad", name: "PostAndAdd", component: PostAndAdd , meta: { requiresAuth: true }},
+  { path: "/search", name: "search", component: SearchPage },
+  { path: "/profile", name: "ProfilUser", component: ProfilUser, meta: { requiresAuth: true } },
+  { path: "/post-ad", name: "PostAndAdd", component: PostAndAdd, meta: { requiresAuth: true } },
   { path: "/product/:id", name: "Product", component: ProductView, props: true },
+  { path: "/chat", name: "ChatView", component: ChatView },
 
   {
     path: "/admin/dashboard",
     name: "Dashboard",
     component: Dashboard,
-    meta: { layout: AdminLayout, requiresAdmin: true},
+    meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
     path: "/admin/users",
     name: "UserManagement",
     component: UserManagement,
-    meta: { layout: AdminLayout, requiresAdmin: true},
+    meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
     path: "/admin/categories",
     name: "CategoryManagement",
     component: CategoryManagement,
-    meta: { layout: AdminLayout, requiresAdmin: true},
+    meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
     path: "/admin/reported-products",
     name: "ReportedProducts",
     component: ReportedProducts,
-    meta: { layout: AdminLayout, requiresAdmin: true},
+    meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
     path: "/admin/products",
     name: "Products",
     component: Products,
-    meta: { layout: AdminLayout , requiresAdmin: true},
+    meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
     path: "/admin/orders",
     name: "Orders",
     component: Orders,
-    meta: { layout: AdminLayout , requiresAdmin: true},
+    meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
     path: "/admin/ads",
     name: "Ads",
     component: Ads,
-    meta: { layout: AdminLayout, requiresAdmin: true},
+    meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
     path: "/admin/notifications",
     name: "Notifications",
     component: Notifications,
-    meta: { layout: AdminLayout, requiresAdmin: true},
+    meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
     path: "/admin/themes",
     name: "Themes",
     component: Themes,
-    meta: { layout: AdminLayout, requiresAdmin: true},
+    meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
     path: "/favoris",

@@ -179,7 +179,7 @@
     } catch (err) {
       if (err.response) {
         console.error("Erreur réponse", err.response);
-        window.location.href = `https://http.cat/${err.response.status}`;
+        // window.location.href = `https://http.cat/${err.response.status}`;
       }
       alert(err.response?.data?.message || "Une erreur est survenue.");
   }

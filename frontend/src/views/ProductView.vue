@@ -14,7 +14,6 @@
     />
   </div>
 
-  <ContactModal v-if="showContact" @close-Contact="showContact = false" />
   <EvaluationModal
     v-if="showEvaluation"
     :userSeller="userSeller"
@@ -24,6 +23,11 @@
     v-if="showPaiement"
     :product="product"
     @close-paiement="showPaiement = false"
+  />
+  <ContactModal
+    :userSellerId="userSeller._id"
+    v-if="showContact"
+    @close-Contact="showContact = false"
   />
 </template>
 
