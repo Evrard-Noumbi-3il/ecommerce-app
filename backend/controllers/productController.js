@@ -12,6 +12,11 @@ export const addProduct = async (req, res) => {
       });
     }
 
+    let imagePaths = [];
+    if (req.files && req.files.length > 0) {
+      imagePaths = req.files.map(file => `/images/produits/${file.filename}`);
+    }
+
     const newProduit = new Produit({
       titre,
       description,
@@ -20,7 +25,8 @@ export const addProduct = async (req, res) => {
       theme,
       location,
       state,
-      sellerType
+      sellerType,
+      images: imagePaths,
     });
 
     await newProduit.save();

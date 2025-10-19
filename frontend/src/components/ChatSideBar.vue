@@ -3,19 +3,19 @@
     <div class="headerChatBar">
       <h2>Discussions</h2>
     </div>
-    <input type="text" placeholder="Search..." style="width: 90%; padding: 10px; margin-top: 20px; box-sizing: border-box; margin-left: 20px; border-radius: 8px;"/>
+    <input class="searchChat" type="text" placeholder="Search..." />
 
     <div class="chatList">
-      <div v-if="receivers.length === 0" style="text-align: center; color: #777; margin-top: 20px;">
+      <div v-if="filteredReceivers.length === 0" style="text-align: center; color: #777; margin-top: 20px;">
         Aucune discussion disponible.
       </div>
-      <div class="chatListElement" v-for="receiver in receivers" :key="receiver.id" @click="emit('update:selectedReceiver', receiver); markAsRead(receiver._id, receiver.chat._id)" :style="{ backgroundColor: selectedReceiver && selectedReceiver.id === receiver.id ? '#e6f7ff' : 'white' }">
+      <div class="chatListElement" v-for="receiver in filteredReceivers" :key="receiver.id" @click="emit('update:selectedReceiver', receiver); markAsRead(receiver._id, receiver.chat._id)" :style="{ backgroundColor: selectedReceiver && selectedReceiver.id === receiver.id ? '#e6f7ff' : 'white' }">
         <div class="nameReceiver">
-          <strong>{{ receiver.name }}</strong>
+          <strong>{{ filteredReceivers.name }}</strong>
         </div>
         <div class="lastMessage">
           <div class="message">
-            {{ receiver.chat.messages[receiver.chat.messages.length - 1].content }}
+            {{ filteredReceivers.chat.messages[filteredReceivers.chat.messages.length - 1].content }}
           </div>
           <div class="wasRead" :class="{ inactive: isInactive}" v-if="!receiver.chat.messages[receiver.chat.messages.length - 1].read">
             <p>.</p>
@@ -29,10 +29,10 @@
 </template>
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 
 
-defineProps({
+const props = defineProps({
   receivers: {
     type: Array,
     required: true
@@ -43,7 +43,10 @@ defineProps({
   }
 });
 
+
 const isInactive = ref(false);
+const filteredReceivers = ref([]);
+
 
 const emit = defineEmits(['update: selectedReceiver']);
 
@@ -133,5 +136,13 @@ const markAsRead = async (receiverId, chatId) => {
 
   .wasRead.inactive p{
     display: none;
+  }
+
+  .searchChat{
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
   }
 </style>
