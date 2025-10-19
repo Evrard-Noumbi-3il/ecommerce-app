@@ -2,7 +2,27 @@
   <div class="notifications">
     <h1>🔔 Notifications</h1>
 
-    <NotificationForm @refresh="fetchNotifications" />
+    <div class="form-container">
+      <h2>➕ Nouvelle notification</h2>
+      <form @submit.prevent="sendNotification">
+        <label>Type :</label>
+        <select v-model="notification.type" required>
+          <option value="info">ℹ️ Info</option>
+          <option value="promo">💰 Promo</option>
+          <option value="alerte">⚠️ Alerte</option>
+        </select>
+
+        <label>Message :</label>
+        <textarea v-model="notification.message" required rows="3" />
+
+        <label>Envoyer à (email ou vide pour tous) :</label>
+        <input v-model="notification.target" placeholder="ex: user@example.com" />
+
+        <div class="actions">
+          <button class="btn submit" type="submit">Envoyer</button>
+        </div>
+      </form>
+    </div>
 
     <div v-if="notifications.length === 0" class="empty">
       Aucune notification envoyée.
@@ -35,16 +55,26 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
-import NotificationForm from "@/components/NotificationForm.vue";
+import api from "../auth/axios.js";
 
 const notifications = ref([]);
+const notification = ref({
+  type: "info",
+  message: "",
+  target: "",
+});
+
+const sendNotification = async () => {
+  await api.post("/admin/notifications", notification.value);
+  notification.value = { type: "info", message: "", target: "" };
+  window.location.reload();
+};
 
 const fetchNotifications = async () => {
   try {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No token found");
-    const data = await axios.get("http://localhost:3000/api/admin/notifications", {
+    const data = await api.get("/admin/notifications", {
       headers: { Authorization: `Bearer ${token}` },
     });
   const notificationData = data.data?.data || data.data || []
@@ -58,7 +88,7 @@ const fetchNotifications = async () => {
 };
 
 const deleteNotification = async (id) => {
-  await axios.delete(`http://localhost:3000/api/admin/notifications/${id}`);
+  await api.delete(`/admin/notifications/${id}`);
   fetchNotifications();
 };
 
@@ -71,62 +101,130 @@ onMounted(fetchNotifications);
 
 <style scoped>
 .notifications {
-  padding: 20px;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fdfdfd;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', sans-serif;
 }
+
 h1 {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-  color: #1e293b;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #333;
 }
-.empty {
-  background: #fef3c7;
-  padding: 15px;
+
+.form-container {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f5f7fa;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.form-container h2 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  color: #444;
+}
+
+form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #444;
+}
+
+form select,
+form textarea,
+form input {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
   border-radius: 6px;
-  text-align: center;
-  color: #92400e;
+  font-size: 1rem;
+  background: #fff;
 }
+
+.actions {
+  margin-top: 1.5rem;
+  text-align: right;
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn.submit {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn.submit:hover {
+  background-color: #0056b3;
+}
+
+.btn.delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn.delete:hover {
+  background-color: #a71d2a;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+  margin-top: 2rem;
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-top: 1rem;
 }
+
 .admin-table th,
 .admin-table td {
-  padding: 14px;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 0.8rem;
+  border-bottom: 1px solid #ddd;
   text-align: left;
 }
+
 .admin-table th {
-  background: #f1f5f9;
-  font-weight: 600;
-  color: #334155;
+  background-color: #f0f0f0;
+  color: #333;
 }
-.btn.delete {
-  background: #ef4444;
-  color: white;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
+
 .badge {
-  padding: 5px 10px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 500;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
   text-transform: capitalize;
   color: white;
 }
+
 .badge.info {
-  background: #3b82f6;
+  background-color: #17a2b8;
 }
+
 .badge.promo {
-  background: #10b981;
+  background-color: #28a745;
 }
+
 .badge.alerte {
-  background: #ef4444;
+  background-color: #ffc107;
+  color: #333;
 }
 </style>

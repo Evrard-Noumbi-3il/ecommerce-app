@@ -12,7 +12,7 @@ const produitSchema = new mongoose.Schema({
     images: [{ type: String }],
     vues: { type: Number, default: 0 },
     date: { type: Date, default: Date.now },
-    status: { type: String, enum: ["active", "pending", "rejected"], default: "active"},
+    status: { type: String, enum: ["active", "pending", "rejected"], default: "pending"},
     signale: { type: Boolean, default: false}
   },
   { timestamps: true } 

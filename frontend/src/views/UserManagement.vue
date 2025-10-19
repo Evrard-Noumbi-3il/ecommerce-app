@@ -99,6 +99,7 @@ const toggleBan = async (id ,isBan) => {
     await api.post(`/admin/users/${id}`);
     await fetchAdmins(); 
     await fetchUsers(); 
+    window.location.reload();
   } catch (error) {
     console.error("Erreur lors du bannissement :", error);
   }

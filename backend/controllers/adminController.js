@@ -2,6 +2,8 @@ import User from "../models/Users.js";
 import Produit from "../models/Produits.js";
 import Categorie from "../models/Categorie.js";
 import Thematique from "../models/Thematique.js";
+import mongoose from "mongoose";
+import Notification from "../models/Notifications.js";
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -58,37 +60,134 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-export const getStats = async (req, res) => {
+// Controller pour récupérer toutes les stats du dashboard
+export const getDashboardStats = async (req, res) => {
   try {
-    // Comptage général
-    const usersCount = await User.countDocuments();
-    const productsCount = await Produit.countDocuments();
-    const reportedCount = await Produit.countDocuments({ reported: true }); // si tu as un champ reported
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    // Pour le graphique : nombre de produits publiés par jour sur 7 jours
-    const today = new Date();
-    const chart = { labels: [], values: [] };
-    for (let i = 6; i >= 0; i--) {
-      const day = new Date();
-      day.setDate(today.getDate() - i);
-      const start = new Date(day.setHours(0,0,0,0));
-      const end = new Date(day.setHours(23,59,59,999));
-      const count = await Produit.countDocuments({ date: { $gte: start, $lte: end } });
-      chart.labels.push(start.toLocaleDateString('fr-FR'));
-      chart.values.push(count);
-    }
+    /** 1️⃣ Chiffre d'affaires total (CA) */
+    const totalRevenueAgg = await Produit.aggregate([
+      { $match: { status: "active" } },
+      { $group: { _id: null, totalRevenue: { $sum: "$prix" } } }
+    ]);
+    const totalRevenue = totalRevenueAgg[0]?.totalRevenue || 0;
+
+    /** 2️⃣ Ventes du jour / semaine / mois */
+    const ventesJour = await Produit.countDocuments({ status: "active", createdAt: { $gte: startOfToday } });
+    const ventesSemaine = await Produit.countDocuments({ status: "active", createdAt: { $gte: startOfWeek } });
+    const ventesMois = await Produit.countDocuments({ status: "active", createdAt: { $gte: startOfMonth } });
+
+    /** 3️⃣ Nouveaux utilisateurs aujourd’hui / semaine */
+    const newUsersToday = await User.countDocuments({ createdAt: { $gte: startOfToday } });
+    const newUsersWeek = await User.countDocuments({ createdAt: { $gte: startOfWeek } });
+
+    /** 4️⃣ Évolution des ventes (graphique par mois) */
+    const salesByMonth = await Produit.aggregate([
+      { $match: { status: "active" } },
+      {
+        $group: {
+          _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
+          totalVentes: { $sum: 1 }
+        }
+      },
+      { $sort: { "_id.year": 1, "_id.month": 1 } }
+    ]);
+
+    /** 5️⃣ Catégories les plus populaires (nombre de produits) */
+    const topCategories = await Produit.aggregate([
+      { $match: { status: "active", id_categorie: { $ne: null } } },
+      {
+        $group: {
+          _id: "$id_categorie",
+          totalProduits: { $sum: 1 }
+        }
+      },
+      { $sort: { totalProduits: -1 } },
+      { $limit: 5 },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+          foreignField: "_id",
+          as: "categorie"
+        }
+      },
+      { $unwind: "$categorie" },
+      { $project: { _id: 1, totalProduits: 1, nom: "$categorie.nom" } }
+    ]);
+
+    /** 6️⃣ Heures de trafic élevé (produits les plus vus par heure) */
+    const trafficByHour = await Produit.aggregate([
+      { $match: { status: "active" } },
+      {
+        $group: {
+          _id: { $hour: "$createdAt" },
+          vues: { $sum: "$vues" }
+        }
+      },
+      { $sort: { vues: -1 } },
+      { $limit: 5 } // top 5 heures
+    ]);
+
+    /** 7️⃣ Top vendeurs (utilisateurs avec le plus d'annonces actives) */
+    const topSellers = await Produit.aggregate([
+      { $match: { status: "active", sellerType: "particulier" } },
+      { $group: { _id: "$seller", totalProduits: { $sum: 1 } } },
+      { $sort: { totalProduits: -1 } },
+      { $limit: 5 },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "user"
+        }
+      },
+      { $unwind: "$user" },
+      { $project: { _id: 1, totalProduits: 1, name: "$user.name", email: "$user.email" } }
+    ]);
+
+    /** 8️⃣ Taux d’abandon d’annonce */
+    const totalProducts = await Produit.countDocuments();
+    const pendingProducts = await Produit.countDocuments({ status: "pending" });
+    const abandonmentRate = totalProducts > 0 ? (pendingProducts / totalProducts) * 100 : 0;
+
+    /** 9️⃣ Étude des notifications */
+    const notificationsStats = await Notification.aggregate([
+      {
+        $group: {
+          _id: "$type",
+          total: { $sum: 1 },
+          unread: { $sum: { $cond: [{ $eq: ["$state", "unread"] }, 1, 0] } },
+          read: { $sum: { $cond: [{ $eq: ["$state", "read"] }, 1, 0] } }
+        }
+      }
+    ]);
 
     res.json({
-      users: usersCount,
-      products: productsCount,
-      reported: reportedCount,
-      chart
+      success: true,
+      data: {
+        totalRevenue,
+        ventes: { jour: ventesJour, semaine: ventesSemaine, mois: ventesMois },
+        newUsers: { today: newUsersToday, week: newUsersWeek },
+        salesByMonth,
+        topCategories,
+        trafficByHour,
+        topSellers,
+        abandonmentRate,
+        notificationsStats
+      }
     });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Erreur serveur" });
+    console.error("Erreur dashboard:", err);
+    res.status(500).json({ success: false, error: "Erreur serveur lors de la récupération des statistiques" });
   }
 };
+
 
 // Récupérer toutes les catégories
 export const getCategories = async (req, res) => {
