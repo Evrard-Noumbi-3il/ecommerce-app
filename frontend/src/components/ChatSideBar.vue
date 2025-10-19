@@ -6,16 +6,16 @@
     <input class="searchChat" type="text" placeholder="Search..." />
 
     <div class="chatList">
-      <div v-if="filteredReceivers.length === 0" style="text-align: center; color: #777; margin-top: 20px;">
+      <div v-if="receivers.length === 0" style="text-align: center; color: #777; margin-top: 20px;">
         Aucune discussion disponible.
       </div>
-      <div class="chatListElement" v-for="receiver in filteredReceivers" :key="receiver.id" @click="emit('update:selectedReceiver', receiver); markAsRead(receiver._id, receiver.chat._id)" :style="{ backgroundColor: selectedReceiver && selectedReceiver.id === receiver.id ? '#e6f7ff' : 'white' }">
+      <div class="chatListElement" v-for="receiver in receivers" :key="receiver.id" @click="emit('update:selectedReceiver', receiver); markAsRead(receiver._id, receiver.chat._id)" :style="{ backgroundColor: selectedReceiver && selectedReceiver.id === receiver.id ? '#e6f7ff' : 'white' }">
         <div class="nameReceiver">
-          <strong>{{ filteredReceivers.name }}</strong>
+          <strong>{{ receiver.name }}</strong>
         </div>
         <div class="lastMessage">
           <div class="message">
-            {{ filteredReceivers.chat.messages[filteredReceivers.chat.messages.length - 1].content }}
+            {{ receiver.chat.messages[receiver.chat.messages.length - 1].content }}
           </div>
           <div class="wasRead" :class="{ inactive: isInactive}" v-if="!receiver.chat.messages[receiver.chat.messages.length - 1].read">
             <p>.</p>
@@ -45,7 +45,6 @@ const props = defineProps({
 
 
 const isInactive = ref(false);
-const filteredReceivers = ref([]);
 
 
 const emit = defineEmits(['update: selectedReceiver']);
