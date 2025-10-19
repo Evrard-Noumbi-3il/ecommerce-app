@@ -2,8 +2,8 @@
   <div class="containerChatMessages">
     <div v-if="selectedReceiver">
       <div v-for="message in selectedReceiver.chat.messages" :key="message.id" class="messages">
-        <p style="margin: 0; display: flex; justify-self: flex-start; background-color: #667eea; color: white;" v-if="message.sender === userId">{{ message.content }}</p>
-        <p style="margin: 0; display: flex; justify-self: flex-end;background-color: #764ba2; color: white;" v-else>{{ message.content }}</p>
+        <p class="message" style="margin: 0; display: flex; justify-self: flex-start; background-color: #667eea; color: white;" v-if="message.sender === userId">{{ message.content }}</p>
+        <p class="message" style="margin: 0; display: flex; justify-self: flex-end;background-color: #764ba2; color: white;" v-else>{{ message.content }}</p>
       </div>
     </div>
     <div v-else>
@@ -43,9 +43,16 @@ const userId = JSON.parse(atob(token.split('.')[1])).id;
     border-radius: 8px;
     text-wrap: wrap;
   }
-  p{
+  .message{
     background-color: #f1f0f0;
     padding: 10px;
     border-radius: 8px;
+    color: white;
+    margin: 0;
+    display: flex;
   }
+  p{
+    text-align: center;
+  }
+
 </style>
