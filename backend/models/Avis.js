@@ -4,12 +4,12 @@ const avisSchema = new mongoose.Schema(
     {
         userSend:{
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Users",
+            ref: "User",
             required: true
         },
         userReceive:{
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Users",
+            ref: "User",
             required: true
         },
         note: {

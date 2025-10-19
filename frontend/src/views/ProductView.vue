@@ -1,27 +1,40 @@
 <template>
-
   <div class="product-view">
-
     <div v-if="loading">Chargement...</div>
     <div v-else-if="error">{{ error }}</div>
-    <ProductCard v-else
-     :product="product"
-     :userSeller="userSeller"
-     :category="category"
-     :avis="avis"
-     @open-contact="showContact = true"
+    <ProductCard
+      v-else
+      :product="product"
+      :userSeller="userSeller"
+      :category="category"
+      :avis="avis"
+      @open-contact="showContact = true"
+      @open-evaluation="showEvaluation = true"
+      @open-paiement="showPaiement = true"
     />
   </div>
 
-  <ContactModal  v-if="showContact"  @close-Contact="showContact = false"/>
+  <ContactModal v-if="showContact" @close-Contact="showContact = false" />
+  <EvaluationModal
+    v-if="showEvaluation"
+    :userSeller="userSeller"
+    @close-evaluation="showEvaluation = false"
+  />
+  <PaiementModal
+    v-if="showPaiement"
+    :product="product"
+    @close-paiement="showPaiement = false"
+  />
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { useRoute } from "vue-router";
 import ProductCard from "../components/ProductCard.vue";
 import ContactModal from "../components/ContactModal.vue";
+import EvaluationModal from "@/components/EvaluationModal.vue";
+import PaiementModal from "@/components/PaiementModal.vue";
 
 const route = useRoute();
 const productId = route.params.id;
@@ -29,27 +42,41 @@ const productId = route.params.id;
 const product = ref(null);
 const userSeller = ref(null);
 const category = ref(null);
+const avis = ref([]);
+
 const showContact = ref(false);
-const avis = ref(null);
+const showEvaluation = ref(false);
+const showPaiement = ref(false);
+
 const loading = ref(true);
 const error = ref(null);
 
 const fetchProduct = async (id) => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/products/${id}`);
-    product.value = response.data
+    const response = await axios.get(
+      `http://localhost:3000/api/products/${id}`
+    );
+    console.log("Réponse product :", response.data);
+    product.value = response.data;
   } catch (error) {
-    console.error("Produit introuvable : ", error)
-  }finally {
-        loading.value = false;
-    }
+    console.error("Produit introuvable : ", error);
+  } finally {
+    loading.value = false;
+  }
 };
 
 const fetchUserProductSeller = async (id) => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/products/user/${id}`);
+    const response = await axios.get(
+      `http://localhost:3000/api/products/user/${id}`
+    );
+    console.log("Réponse userSeller :", response.data);
     userSeller.value = response.data;
-    const responseAvis = await axios.get(`http://localhost:3000/api/avis/user/${userSeller.value._id}`);
+    console.log("ID du vendeur :", userSeller.value._id);
+
+    const responseAvis = await axios.get(
+      `http://localhost:3000/api/avis/user/${userSeller.value._id}`
+    );
     avis.value = responseAvis.data;
   } catch (error) {
     console.error("Erreur lors de la récupération des utilisateurs :", error);
@@ -58,21 +85,20 @@ const fetchUserProductSeller = async (id) => {
 
 const fetchProductCategory = async (id) => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/products/category/${id}`);
+    const response = await axios.get(
+      `http://localhost:3000/api/products/category/${id}`
+    );
+    console.log("Réponse cate :", response.data);
     category.value = response.data;
-
   } catch (error) {
     console.error("Erreur lors de la récupération des catégories :", error);
   }
 };
 
-
-
-onMounted(() => {
-  fetchProductCategory(productId);
-  fetchUserProductSeller(productId);
-  fetchProduct(productId);
-})
+onMounted(async () => {
+  await Promise.all([fetchProductCategory(productId), fetchProduct(productId)]);
+  await fetchUserProductSeller(productId);
+});
 </script>
 
 <style scoped>
