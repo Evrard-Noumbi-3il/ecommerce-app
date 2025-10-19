@@ -10,16 +10,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Ajustez ce chemin si nécessaire (exemple : trois niveaux au-dessus)
-const uploadDir = path.resolve(__dirname, '../../../frontend/public/images/user');
+const uploadDir = path.resolve(
+  __dirname,
+  "../../../frontend/public/images/user"
+);
 
-import Notifications from "../models/Notifications.js"
+import Notifications from "../models/Notifications.js";
 
 // Récupérer les infos de l'utilisateur connecté
 export const getMe = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findById(id).select("-password").populate("misEnVente");
+    const user = await User.findById(id)
+      .select("-password")
+      .populate("misEnVente");
     if (!user) {
       return res.status(404).json({ message: "Erreur serveur" });
     }
@@ -50,8 +55,8 @@ const storage = multer.diskStorage({
 
 export const upload = multer({
   storage: storage,
-  limits: { fileSize: 2 * 1024 * 1024 }
-}).single('photo');
+  limits: { fileSize: 2 * 1024 * 1024 },
+}).single("photo");
 
 export const updateMe = async (req, res) => {
   try {
@@ -63,26 +68,32 @@ export const updateMe = async (req, res) => {
       name,
       firstname,
       phonenumber: phone, // Mappage pour le schéma
-      adresse: address,   // Mappage pour le schéma
+      adresse: address, // Mappage pour le schéma
     };
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true, runValidators: true }).select('-password');
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
     if (!updatedUser) {
       return res.status(404).json({ message: "Utilisateur non trouvé." });
     }
-    const message = (" Vos informations ont été mises à jour avec succès ")
-    const newNotification = new Notifications({ message: message, target: updatedUser._id, from: "moderator" });
+    const message = " Vos informations ont été mises à jour avec succès ";
+    const newNotification = new Notifications({
+      message: message,
+      target: updatedUser._id,
+      from: "moderator",
+    });
     await newNotification.save();
 
     res.status(200).json({
       message: "Profil mis à jour avec succès.",
-      user: updatedUser
+      user: updatedUser,
     });
-
   } catch (error) {
     res.status(400).json({
       message: "Échec de la mise à jour du profil.",
-      details: error.message
+      details: error.message,
     });
   }
 };
@@ -93,7 +104,9 @@ export const updateProfilePhoto = async (req, res) => {
     const file = req.file;
 
     if (!file) {
-      return res.status(400).json({ message: "Aucun fichier d'image n'a été uploadé." });
+      return res
+        .status(400)
+        .json({ message: "Aucun fichier d'image n'a été uploadé." });
     }
 
     const user = await User.findById(userId);
@@ -101,7 +114,7 @@ export const updateProfilePhoto = async (req, res) => {
       return res.status(404).json({ message: "Utilisateur non trouvé." });
     }
 
-    const defaultPath = '/images/default-profile.png';
+    const defaultPath = "/images/default-profile.png";
     if (user.photo && user.photo !== defaultPath) {
       const oldFilename = path.basename(user.photo);
       const oldFilePath = path.join(uploadDir, oldFilename);
@@ -117,11 +130,15 @@ export const updateProfilePhoto = async (req, res) => {
 
     res.status(200).json({
       message: "Photo de profil mise à jour avec succès.",
-      photoUrl: newPhotoUrl
+      photoUrl: newPhotoUrl,
     });
-
   } catch (error) {
-    res.status(500).json({ message: "Échec de l'upload de la photo.", details: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Échec de l'upload de la photo.",
+        details: error.message,
+      });
   }
 };
 
@@ -130,21 +147,30 @@ export const addMiseEnVente = async (userId, produit) => {
   if (!user) throw new Error("Utilisateur non trouvé");
   user.misEnVente.push(produit._id);
   await user.save();
-  const newNotification = new Notifications({ message: `Votre produit "${produit.titre}" a été mis en ligne avec succès ! 🛒  Il est désormais visible par les autres utilisateurs.`, target: user._id });
+  const newNotification = new Notifications({
+    message: `Votre produit "${produit.titre}" a été mis en ligne avec succès ! 🛒  Il est désormais visible par les autres utilisateurs.`,
+    target: user._id,
+  });
   await newNotification.save();
   return user;
-}
+};
 
 export const getMyProducts = async (req, res) => {
   try {
     const { userId } = req.params;
 
     const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "Utilisateur non trouvé." });
+    if (!user)
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
 
-    console.log("IDs des produits mis en vente de l'utilisateur :", user.misEnVente);
+    console.log(
+      "IDs des produits mis en vente de l'utilisateur :",
+      user.misEnVente
+    );
 
-    const produitsMisEnVente = await Produits.find({ _id: { $in: user.misEnVente } });
+    const produitsMisEnVente = await Produits.find({
+      _id: { $in: user.misEnVente },
+    });
 
     console.log("Produits récupérés :", produitsMisEnVente); // <-- ici on voit les produits complets
 
@@ -155,39 +181,40 @@ export const getMyProducts = async (req, res) => {
   }
 };
 
-
-
 export const toggleBan = async (req) => {
   const { id } = req.params;
   const user = await User.findById(id);
   if (!user) throw new Error("Utilisateur non trouvé");
-  user.isBan = !user.isBan
+  user.isBan = !user.isBan;
 
-  await user.save()
-}
+  await user.save();
+};
 
 export const getFavoris = async (req, res) => {
   try {
     const { id } = req.params;
 
-
     const user = await User.findById(id);
     if (!user) {
-      return res.status(404).json({ message: "Favoris de cet utilisateur non trouvé" });
+      return res
+        .status(404)
+        .json({ message: "Favoris de cet utilisateur non trouvé" });
     }
 
     const favoris = user.favoris;
 
     if (favoris.length == 0) {
-      return res.status(200).json({ message: " Aucun produits en favoris pour cet utilisateur " });
+      return res
+        .status(200)
+        .json({ message: " Aucun produits en favoris pour cet utilisateur " });
     }
 
-    const produits = await Produits.find({ _id: { $in: favoris } })
+    const produits = await Produits.find({ _id: { $in: favoris } });
 
-    console.log(produits)
+    console.log(produits);
     return res.status(200).json({
       message: "Produits récupérés avec succèss",
-      produits: produits
+      produits: produits,
     });
   } catch (err) {
     console.log(err);
@@ -221,7 +248,7 @@ export const togglePromote = async (req) => {
   const { id } = req.params;
   const user = await User.findById(id);
   if (!user) throw new Error("Utilisateur non trouvé");
-  user.role = user.role == 'admin' ? 'moderator' : 'admin'
+  user.role = user.role == "admin" ? "moderator" : "admin";
 
-  await user.save()
-}
+  await user.save();
+};

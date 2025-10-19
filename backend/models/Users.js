@@ -29,18 +29,24 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "moderator", "admin"],
       default: "user",
     },
-    favoris: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Produit"
-    }],
-    misEnVente: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Produit"
-    }],
-    avis: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Avis"
-    }],
+    favoris: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Produit",
+      },
+    ],
+    misEnVente: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Produit",
+      },
+    ],
+    avis: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Avis",
+      },
+    ],
     photo: {
       type: String,
       default: "/images/default-profile.png",
@@ -55,10 +61,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    chatList: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Chat"
-    }]
+    chatList: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Chat",
+      },
+    ],
   },
   { timestamps: true }
 );
