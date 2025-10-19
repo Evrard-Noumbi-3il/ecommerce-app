@@ -1,4 +1,6 @@
 import Product from "../models/Produits.js";
+import Notifications from "../models/Notifications.js";
+import User from "../models/Users.js";
 
 export const getReportedProducts = async (req, res) => {
   try {
@@ -9,21 +11,24 @@ export const getReportedProducts = async (req, res) => {
   }
 };
 
-export const validateProduct = async (req, res) => {
+export const toggleStateProduct = async (req, res) => {
   try {
-    const { id } = req.params;
+    const produit = await Product.findByIdAndUpdate(
+      req.params.id,
+      { status: req.body.status },
+      { new: true, runValidators: true }
+    )
+    if(produit.status == 'rejected'){
+      const message = (`Votre produit "${produit.titre}" a été rejeté par un modérateur. Veuillez vérifier les raisons du rejet et apporter les modifications nécessaires avant de le soumettre à nouveau.`)
+      const user = await User.findOne({misEnVente: produit._id});
+      const newNotification = new Notifications({ message : message, target : user._id , from : "moderator"});
+      await newNotification.save();
+    }
 
-    const updatedProduct = await Product.findByIdAndUpdate(
-      id,
-      { signale: false, status: "active" },
-      { new: true }
-    );
-
-    if (!updatedProduct) return res.status(404).json({ message: "Produit non trouvé" });
-
-    res.json(updatedProduct);
+    res.json(produit)
   } catch (err) {
-    res.status(500).json({ message: "Erreur serveur", error: err.message });
+    console.error(err);
+    res.status(400).json({ error: 'Erreur de mise à jour' })
   }
 };
 
