@@ -61,19 +61,19 @@ export const registerUser = async (req, res) => {
       }
     }
 
-    if (password !== confirmpassword) {
-      return res.status(400).json({ message: "les mots de passe ne coïncides pas" });
-    }
+    // if (password !== confirmpassword) {
+    //   return res.status(400).json({ message: "les mots de passe ne coïncides pas" });
+    // }
 
     // Hasher le mot de passe
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
 
     // Créer l’utilisateur
-    const newUser = new User({ name, firstname, phonenumber, email, password: hashedPassword });
+    const newUser = new User({ name, firstname, phonenumber, email, password });
     await newUser.save();
     const message = ("Bienvenue sur notre plateforme," + newUser.name + " " + newUser.firstname + " ! 🎉 Nous sommes ravis de vous compter parmi nos membres. Découvrez dès maintenant nos meilleures offres ou commencez à vendre vos produits."
-)
-    
+    )
+
     // Créer une notification de bienvenue
     const welcomeNotification = new Notifications({
       type: "info",
@@ -84,8 +84,10 @@ export const registerUser = async (req, res) => {
 
     const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-    return res.status(201).json({ message: "Utilisateur créé avec succès 🚀", token ,
-       user: { id: newUser._id, email: newUser.email }});
+    return res.status(201).json({
+      message: "Utilisateur créé avec succès 🚀", token,
+      user: { id: newUser._id, email: newUser.email }
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Erreur serveur ❌", error: error.message });

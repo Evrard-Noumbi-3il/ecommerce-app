@@ -83,6 +83,7 @@
 <script>
 import { ref } from "vue";
 import axios from "axios";
+import bcrypt from "bcryptjs";
 const showConfirmPassword = ref(false);
 
 export default {
@@ -102,6 +103,12 @@ export default {
     async registerUser() {
       this.message = { text: "", type: "" };
       try {
+        if(this.password !== this.confirmpassword) {
+          this.message = { text: "Les mots de passe ne correspondent pas ❌", type: "error" };
+          return;
+        }
+        const hashedPassword = await bcrypt.hash(this.password, 10);
+        const hashedConfirmPassword = await bcrypt.hash(this.confirmpassword, 10);
         const res = await axios.post(
           `${process.env.VUE_APP_API_URL}/auth/register`,
           {
@@ -109,8 +116,8 @@ export default {
             firstname: this.firstname,
             phonenumber: this.phonenumber,
             email: this.email,
-            password: this.password,
-            confirmpassword: this.confirmpassword
+            password: hashedPassword,
+            confirmpassword: hashedConfirmPassword,
           }
         );
         this.message = { text: "Inscription réussie ✅", type: "success" };

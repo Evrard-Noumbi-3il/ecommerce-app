@@ -3,6 +3,10 @@
     <div class="headerChatBar">
       <h2>Discussions</h2>
     </div>
+    <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20">
+      <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/>
+    </svg>
+
     <input class="searchChat" type="text" placeholder="Search..." />
 
     <div class="chatList">
@@ -11,6 +15,7 @@
       </div>
       <div class="chatListElement" v-for="receiver in receivers" :key="receiver.id" @click="emit('update:selectedReceiver', receiver); markAsRead(receiver._id, receiver.chat._id)" :style="{ backgroundColor: selectedReceiver && selectedReceiver.id === receiver.id ? '#e6f7ff' : 'white' }">
         <div class="nameReceiver">
+          <img :src="receiver.photo" class="profilImage">
           <strong>{{ receiver.name }}</strong>
         </div>
         <div class="lastMessage">
@@ -68,6 +73,8 @@ const markAsRead = async (receiverId, chatId) => {
     display: flex;
     flex-direction: column;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: rgb(8, 1, 36);
+    padding: 20px;
   }
 
   .headerChatBar{
@@ -81,7 +88,7 @@ const markAsRead = async (receiverId, chatId) => {
   h2{
     margin: 0;
     font-size: 24px;
-    color: #333;
+    color: white;
     text-align: center;
   }
 
@@ -143,5 +150,21 @@ const markAsRead = async (receiverId, chatId) => {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+    padding-left: 30px;
+  }
+
+  .profilImage{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    margin-right:10px;
+    vertical-align: middle;
+  }
+
+  .search-icon{
+    position: relative;
+    top: 50px;
+    left: 30px;
+    color: black;
   }
 </style>

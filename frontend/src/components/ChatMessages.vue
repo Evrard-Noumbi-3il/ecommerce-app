@@ -32,8 +32,9 @@ const userId = JSON.parse(atob(token.split('.')[1])).id;
     padding: 50px 70px 20px 50px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid #ccc;
+    background-color: whitesmoke;
 
-    max-height: 550px;
+    max-height: 700px;
     overflow-y: auto;
     overflow-x: hidden;
 
