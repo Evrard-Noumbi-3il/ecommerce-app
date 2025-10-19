@@ -71,7 +71,7 @@ const routes = [
     component: FavorisView,
     name: "favoris",
     meta: { requiresAuth: true },
-  }
+  },
 ];
 
 const router = createRouter({
@@ -90,9 +90,5 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-
-
-
-
 
 export default router;

@@ -6,7 +6,6 @@ import User from "../models/Users.js";
 export const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    console.log(req.params);
     if (!product) return res.status(404).json({ error: "Produit non trouvé" });
     res.json(product);
   } catch (err) {

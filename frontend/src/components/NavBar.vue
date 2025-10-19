@@ -1,15 +1,21 @@
 <template>
   <nav class="navbar">
     <div class="navbar-container">
-
-      <div class="nav-header" >
-            <!-- Logo -->
+      <div class="nav-header">
+        <!-- Logo -->
         <div class="logo">
           <RouterLink to="/">Kanope</RouterLink>
         </div>
 
-          <!-- Barre de recherche -->
-        <div class="search-bar" v-if="route.name !== 'search' && route.name !== 'PostAndAdd' && !isAdminOrModerator">
+        <!-- Barre de recherche -->
+        <div
+          class="search-bar"
+          v-if="
+            route.name !== 'search' &&
+            route.name !== 'PostAndAdd' &&
+            !isAdminOrModerator
+          "
+        >
           <input
             type="text"
             v-model="searchQuery"
@@ -18,13 +24,16 @@
           />
           <button @click="goToSearch">
             <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20">
-                  <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/>
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                fill="currentColor"
+              />
             </svg>
           </button>
         </div>
       </div>
 
-        <!-- Burger menu pour mobile -->
+      <!-- Burger menu pour mobile -->
       <div class="burger" @click="toggleMenu">
         <span></span>
         <span></span>
@@ -40,26 +49,61 @@
           <li><RouterLink to="/chat" v-if="isLoggedIn && ! isAdminOrModerator">Messagerie</RouterLink></li>
           <li><RouterLink to="/admin/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
           <li>
-            <RouterLink to="/post-ad" v-if="isLoggedIn && !isAdminOrModerator && route.name !== 'PostAndAdd'" class="btn-poster">+ Déposer une annonce</RouterLink>
+            <RouterLink to="/favorites" v-if="isLoggedIn && !isAdminOrModerator"
+              >Favoris</RouterLink
+            >
+          </li>
+          <li>
+            <RouterLink to="/chat" v-if="isLoggedIn && !isAdminOrModerator"
+              >Messagerie</RouterLink
+            >
+          </li>
+          <li>
+            <RouterLink
+              to="/admin/dashboard"
+              v-if="isLoggedIn && isAdminOrModerator"
+              >Dashboard</RouterLink
+            >
+          </li>
+          <li>
+            <RouterLink
+              to="/post-ad"
+              v-if="
+                isLoggedIn && !isAdminOrModerator && route.name !== 'PostAndAdd'
+              "
+              class="btn-poster"
+              >+ Déposer une annonce</RouterLink
+            >
           </li>
         </div>
 
         <div class="user-access">
-          <li><RouterLink  to="/profile" v-if="isLoggedIn && !isAdminOrModerator" >Mon compte</RouterLink></li>
-          <li ><span v-if="!isLoggedIn" @click="$emit('open-Register')" style="color: black;font-size: 15px; cursor: pointer;">Se connecter/S'inscrire</span></li>
-          <li> <RouterLink v-if="isLoggedIn" to="/" @click="logout" class="btn-deconnexion">Déconnexion</RouterLink> </li>
+          <li>
+            <RouterLink to="/profile" v-if="isLoggedIn && !isAdminOrModerator"
+              >Mon compte</RouterLink
+            >
+          </li>
+          <li>
+            <span
+              v-if="!isLoggedIn"
+              @click="$emit('open-Register')"
+              style="color: black; font-size: 15px; cursor: pointer"
+              >Se connecter/S'inscrire</span
+            >
+          </li>
+          <li>
+            <RouterLink
+              v-if="isLoggedIn"
+              to="/"
+              @click="logout"
+              class="btn-deconnexion"
+              >Déconnexion</RouterLink
+            >
+          </li>
         </div>
-
-
       </ul>
-
-
-
-
     </div>
   </nav>
-
-
 </template>
 
 <script setup>
@@ -93,21 +137,22 @@ const goToSearch = () => {
 onMounted(() => {
   const token = localStorage.getItem("token");
   isLoggedIn.value = !!token;
-  isAdminOrModerator.value = token && (JSON.parse(atob(token.split('.')[1])).role === 'admin' || JSON.parse(atob(token.split('.')[1])).role === 'moderator');
+  isAdminOrModerator.value =
+    token &&
+    (JSON.parse(atob(token.split(".")[1])).role === "admin" ||
+      JSON.parse(atob(token.split(".")[1])).role === "moderator");
 });
 
 function logout() {
   localStorage.clear();
   isLoggedIn.value = false;
   isAdminOrModerator.value = false;
-  setTimeout(() => window.location.reload(), 500)
+  setTimeout(() => window.location.reload(), 500);
 }
 </script>
 
 <style scoped>
-
-li{
-
+li {
   font-weight: 500;
   font-size: 15px;
   font-family: arial;
@@ -128,7 +173,6 @@ li{
 .navbar-container {
   display: flex;
   flex-direction: column;
-
 }
 
 .logo a {
@@ -162,14 +206,13 @@ li{
   cursor: pointer;
 }
 
-
 .nav-links {
   list-style: none;
   display: flex;
   gap: 20px;
   margin: 0;
   justify-content: space-between;
-  align-items:center;
+  align-items: center;
   padding: 20px 20px 10px 20px;
   width: 98%;
   background-color: white;
@@ -187,14 +230,14 @@ li{
   color: #e69100;
 }
 
-.menu{
+.menu {
   display: flex;
   flex-direction: row;
   width: 100%;
   gap: 20px;
 }
 
-.user-access{
+.user-access {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -236,11 +279,11 @@ li{
   gap: 5px;
 }
 
-.nav-header{
+.nav-header {
   display: flex;
   flex-direction: row;
   gap: 80px;
-  background-color:#0d1b2a;
+  background-color: #0d1b2a;
   padding: 50px 30px 50px 30px;
 }
 
@@ -250,9 +293,7 @@ li{
   background: black;
 }
 
-
 @media (max-width: 768px) {
-
   .nav-links {
     display: none;
     flex-direction: column;
@@ -260,15 +301,14 @@ li{
     padding: 15px;
     width: 25%;
     align-content: space-between;
-
   }
 
-  .menu{
+  .menu {
     flex-direction: column;
     gap: 10px;
   }
 
-  .user-access{
+  .user-access {
     flex-direction: column;
     gap: 10px;
   }
@@ -281,7 +321,5 @@ li{
     display: flex;
     background-color: white;
   }
-
-
 }
 </style>
