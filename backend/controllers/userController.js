@@ -10,9 +10,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Ajustez ce chemin si nécessaire (exemple : trois niveaux au-dessus)
-const uploadDir = path.resolve(__dirname, '../../../frontend/public/images/user'); 
+const uploadDir = path.resolve(
+  __dirname,
+  "../../../frontend/public/images/user"
+);
 
-import Notifications from "../models/Notifications.js"
+import Notifications from "../models/Notifications.js";
 
 // Récupérer les infos de l'utilisateur connecté
 export const getMe = async (req, res) => {
@@ -60,7 +63,6 @@ export const updateMe = async (req, res) => {
     const userId = req.user.id;
 
     const { name, firstname, phone, address } = req.body;
-    
 
     const updateFields = {
       name,
@@ -69,12 +71,19 @@ export const updateMe = async (req, res) => {
       adresse: address, // Mappage pour le schéma
     };
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true, runValidators: true }).select('-password');
-        if (!updatedUser) {
-            return res.status(404).json({ message: "Utilisateur non trouvé." });
-        }
-        const message = (" Vos informations ont été mises à jour avec succès ")
-    const newNotification = new Notifications({ message : message, target : updatedUser._id , from : "moderator"});
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+    const message = " Vos informations ont été mises à jour avec succès ";
+    const newNotification = new Notifications({
+      message: message,
+      target: updatedUser._id,
+      from: "moderator",
+    });
     await newNotification.save();
 
     res.status(200).json({
@@ -136,8 +145,11 @@ export const addMiseEnVente = async (userId, produit) => {
   if (!user) throw new Error("Utilisateur non trouvé");
   user.misEnVente.push(produit._id);
   await user.save();
-  const newNotification = new Notifications({ message : `Votre produit "${produit.titre}" a été mis en ligne avec succès ! 🛒  Il est désormais visible par les autres utilisateurs.`, target : user._id });
-    await newNotification.save();
+  const newNotification = new Notifications({
+    message: `Votre produit "${produit.titre}" a été mis en ligne avec succès ! 🛒  Il est désormais visible par les autres utilisateurs.`,
+    target: user._id,
+  });
+  await newNotification.save();
   return user;
 };
 
