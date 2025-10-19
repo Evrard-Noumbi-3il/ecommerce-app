@@ -1,10 +1,10 @@
-
+// controllers/UserController.js
+import Produits from "../models/Produits.js";
 import User from "../models/Users.js";
 import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
-import Produits from "../models/Produits.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,13 +12,15 @@ const __dirname = path.dirname(__filename);
 // Ajustez ce chemin si nécessaire (exemple : trois niveaux au-dessus)
 const uploadDir = path.resolve(__dirname, '../../../frontend/public/images/user');
 
+import Notifications from "../models/Notifications.js"
+
 // Récupérer les infos de l'utilisateur connecté
 export const getMe = async (req, res) => {
   try {
 
     const { id } = req.params;
 
-    const user = await User.findById(id).select("-password");
+    const user = await User.findById(id).select("-password").populate("misEnVente");
     if (!user) {
       return res.status(404).json({ message: "Erreur serveur" });
     }
@@ -29,6 +31,8 @@ export const getMe = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+//methode pour recuperer les annonces d'un utilisateur connecte
+export const getAllAnnoncesByUser = async (req, res) => { }
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
@@ -64,6 +68,26 @@ export const updateMe = async (req, res) => {
     };
 
     const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true, runValidators: true }).select('-password');
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+    const message = (" Vos informations ont été mises à jour avec succès ")
+    const newNotification = new Notifications({ message: message, target: updatedUser._id, from: "moderator" });
+    await newNotification.save();
+
+    res.status(200).json({
+      message: "Profil mis à jour avec succès.",
+      user: updatedUser
+    });
+
+    const updateFields = {
+      name,
+      firstname,
+      phonenumber: phone, // Mappage pour le schéma
+      adresse: address,   // Mappage pour le schéma
+    };
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true, runValidators: true }).select('-password');
 
     if (!updatedUser) {
       return res.status(404).json({ message: "Utilisateur non trouvé." });
@@ -81,7 +105,6 @@ export const updateMe = async (req, res) => {
     });
   }
 };
-
 export const updateProfilePhoto = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -120,35 +143,37 @@ export const updateProfilePhoto = async (req, res) => {
   }
 };
 
-
-
-export const addMiseEnVente = async (id, id_produit) => {
-  try {
-    const user = await User.findById(id);
-    user.misEnVente.push(id_produit);
-    await user.save();
-  } catch (err) {
-    res.status(500).json({ message: "Erreur serveur" });
-  }
+export const addMiseEnVente = async (userId, produit) => {
+  const user = await User.findById(userId);
+  if (!user) throw new Error("Utilisateur non trouvé");
+  user.misEnVente.push(produit._id);
+  await user.save();
+  const newNotification = new Notifications({ message: `Votre produit "${produit.titre}" a été mis en ligne avec succès ! 🛒  Il est désormais visible par les autres utilisateurs.`, target: user._id });
+  await newNotification.save();
+  return user;
 }
 
 export const getMyProducts = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // Chercher l'utilisateur et récupérer ses produits
-    const user = await User.findById(userId).populate("misEnVente");
-    if (!user) {
-      return res.status(404).json({ message: "Utilisateur non trouvé." });
-    }
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "Utilisateur non trouvé." });
 
-    // Retourner les produits
-    res.status(200).json(user.misEnVente);
+    console.log("IDs des produits mis en vente de l'utilisateur :", user.misEnVente);
+
+    const produitsMisEnVente = await Produits.find({ _id: { $in: user.misEnVente } });
+
+    console.log("Produits récupérés :", produitsMisEnVente); // <-- ici on voit les produits complets
+
+    res.status(200).json(produitsMisEnVente);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Erreur serveur", details: error.message });
   }
 };
+
+
 
 export const toggleBan = async (req) => {
   const { id } = req.params
@@ -158,6 +183,39 @@ export const toggleBan = async (req) => {
 
   await user.save()
 }
+
+export const getFavoris = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "Favoris de cet utilisateur non trouvé" });
+    }
+
+    const favoris = user.favoris;
+
+    if (favoris.length == 0) {
+      return res.status(200).json({ message: " Aucun produits en favoris pour cet utilisateur " });
+    }
+
+    const produits = await Produits.find({ _id: { $in: favoris } })
+
+    console.log(produits)
+    return res.status(200).json({
+      message: "Produits récupérés avec succèss",
+      produits: produits
+    });
+  } catch (err) {
+    console.log(err);
+    console.error("Erreur lors de la récupération des produits :", err);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+
+
+}
+
 
 export const deleteBanUser = async (req, res) => {
   try {

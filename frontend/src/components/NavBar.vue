@@ -36,7 +36,7 @@
         <div class="menu">
           <li><RouterLink to="/" >Accueil</RouterLink></li>
           <li><RouterLink to="/search" >Catégories</RouterLink></li>
-          <li><RouterLink to="/favorites" v-if="isLoggedIn && ! isAdminOrModerator">Favoris</RouterLink></li>
+          <li><RouterLink to="/favoris" v-if="isLoggedIn && ! isAdminOrModerator">Favoris</RouterLink></li>
           <li><RouterLink to="/chat" v-if="isLoggedIn && ! isAdminOrModerator">Messagerie</RouterLink></li>
           <li><RouterLink to="/admin/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
           <li>

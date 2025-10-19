@@ -11,12 +11,10 @@ import Dashboard from '../views/DashboardManagement.vue';
 import ReportedProducts from '../views/ReportedProducts.vue';
 import ProductView from "@/views/ProductView.vue";
 import Products from '../views/ProductManagement.vue';
-import Orders from '@/views/OrderManagement.vue';
 import Ads from '@/views/AdManagement.vue';
 import Notifications from '@/views/NotificationManagement.vue';
 import Themes from '@/views/ThemeManagement.vue';
-import FavorisView from '@/views/FavorisView.vue';
-import ChatView from '@/views/ChatView.vue';
+import FavorisView from '@/views/FavorisView.vue'
 
 const routes = [
   { path: "/", name: "HomePage", component: Home },
@@ -81,9 +79,9 @@ const routes = [
     meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
-    path: "/Favoris",
+    path: "/favoris",
     component: FavorisView,
-    name: "Favoris"
+    name: "favoris"
   }
 ];
 
@@ -103,6 +101,9 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
+
+
 
 
 export default router;

@@ -31,11 +31,11 @@ const userSchema = new mongoose.Schema(
     },
     favoris: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Produits"
+      ref: "Produit"
     }],
     misEnVente: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Produits"
+      ref: "Produit"
     }],
     avis: [{
       type: mongoose.Schema.Types.ObjectId,
