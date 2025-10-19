@@ -15,6 +15,7 @@ import Ads from '@/views/AdManagement.vue';
 import Notifications from '@/views/NotificationManagement.vue';
 import Themes from '@/views/ThemeManagement.vue';
 import FavorisView from '@/views/FavorisView.vue'
+import ChatView from '@/views/ChatView.vue'
 
 const routes = [
   { path: "/", name: "HomePage", component: Home },
