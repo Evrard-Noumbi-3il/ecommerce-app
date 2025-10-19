@@ -15,16 +15,15 @@
           <td>{{ product.titre }}</td>
           <td>{{ product.prix.toFixed(2) }} €</td>
           <td>
-            <span :class="product.actif ? 'status-active' : 'status-inactive'">
-              {{ product.actif ? 'Actif' : 'Inactif' }}
-            </span>
+            <select v-model="product.status" @change="updateStatus(product)">
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="rejected">Rejected</option>
+            </select>
           </td>
           <td class="actions">
             <button @click="viewProduct(product.id)" title="Voir détails">🔍</button>
-            <button @click="toggleProduct(product.id)" title="Activer/Désactiver">
-              {{ product.actif ? '🔴' : '🟢' }}
-            </button>
-            <button @click="deleteProduct(product.id)" title="Supprimer">🗑️</button>
+            <button @click="deleteProduct(product._id)" title="Supprimer">🗑️</button>
           </td>
         </tr>
       </tbody>
@@ -37,6 +36,7 @@ import { ref, onMounted } from "vue";
 import api from "../auth/axios.js";
 
 const products = ref([]);
+const status = ref('');
 
 // 🔄 Récupération des produits
 const fetchData = async () => {
@@ -51,25 +51,22 @@ const fetchData = async () => {
 const viewProduct = (id) => {
   const product = products.value.find(p => p.id === id);
   if (product) {
-    alert(`Produit : ${product.titre}\nPrix : ${product.prix} €`);
+    alert(`Produit : ${product.titre}\nDescription : ${product.description}\nPrix : ${product.prix} €`);
     // ou afficher dans une section dédiée
   }
 };
 
-const toggleProduct = async (id) => {
-  const product = products.value.find(p => p.id === id);
-  if (!product) return;
-
-  const nouveauStatut = !product.actif;
-
+const updateStatus = async (product) => {
   try {
-    const response = await api.patch(`/admin/products/${id}/toggle`, { actif: nouveauStatut });
-    if (response.status !== 200) throw new Error('Erreur lors du changement de statut');
-    product.actif = nouveauStatut; // mise à jour locale
+    const response = await api.put(`/admin/products/${product._id}`, {
+      status: product.status
+    })
+    console.log('Statut mis à jour :', response.data)
   } catch (error) {
-    console.error('Erreur toggle:', error);
+    console.error('Erreur lors de la mise à jour du statut :', error)
   }
-};
+}
+
 
 // 🗑️ Supprimer un produit
 const deleteProduct = async (id) => {
@@ -80,7 +77,7 @@ const deleteProduct = async (id) => {
     const response = await api.delete(`/admin/products/${id}`);
     if (response.status !== 200) throw new Error("Échec de la suppression");
     products.value = products.value.filter(p => p.id !== id);
-    console.log("Produit supprimé avec succès");
+    window.location.reload();
   } catch (error) {
     console.error("Erreur lors de la suppression du produit:", error);
   }
