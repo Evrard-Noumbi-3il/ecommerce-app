@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Ajustez ce chemin si nécessaire (exemple : trois niveaux au-dessus)
-const uploadDir = path.resolve(__dirname, '../../../frontend/public/images/user'); 
+const uploadDir = path.resolve(__dirname, '../../../frontend/public/images/user');
 
 // Récupérer les infos de l'utilisateur connecté
 export const getMe = async (req, res) => {
@@ -31,102 +31,102 @@ export const getMe = async (req, res) => {
 };
 
 if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+  fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname);
-        const uniqueSuffix = `user-${req.user.id}-${Date.now()}`;
-        cb(null, uniqueSuffix + ext);
-    }
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const uniqueSuffix = `user-${req.user.id}-${Date.now()}`;
+    cb(null, uniqueSuffix + ext);
+  }
 });
 
-export const upload = multer({ 
-    storage: storage,
-    limits: { fileSize: 2 * 1024 * 1024 }
+export const upload = multer({
+  storage: storage,
+  limits: { fileSize: 2 * 1024 * 1024 }
 }).single('photo');
 
 export const updateMe = async (req, res) => {
-    try {
-        const userId = req.user.id; 
-        
-        const { name, firstname, phone, address } = req.body;
-        
-        const updateFields = {
-            name,
-            firstname,
-            phonenumber: phone, // Mappage pour le schéma
-            adresse: address,   // Mappage pour le schéma
-        };
-        
-        const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true, runValidators: true }).select('-password');
-        
-        if (!updatedUser) {
-            return res.status(404).json({ message: "Utilisateur non trouvé." });
-        }
+  try {
+    const userId = req.user.id;
 
-        res.status(200).json({ 
-            message: "Profil mis à jour avec succès.",
-            user: updatedUser
-        });
+    const { name, firstname, phone, address } = req.body;
 
-    } catch (error) {
-        res.status(400).json({ 
-            message: "Échec de la mise à jour du profil.", 
-            details: error.message 
-        });
+    const updateFields = {
+      name,
+      firstname,
+      phonenumber: phone, // Mappage pour le schéma
+      adresse: address,   // Mappage pour le schéma
+    };
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true, runValidators: true }).select('-password');
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
     }
+
+    res.status(200).json({
+      message: "Profil mis à jour avec succès.",
+      user: updatedUser
+    });
+
+  } catch (error) {
+    res.status(400).json({
+      message: "Échec de la mise à jour du profil.",
+      details: error.message
+    });
+  }
 };
 
 export const updateProfilePhoto = async (req, res) => {
-    try {
-        const userId = req.user.id; 
-        const file = req.file;
-        
-        if (!file) {
-            return res.status(400).json({ message: "Aucun fichier d'image n'a été uploadé." });
-        }
+  try {
+    const userId = req.user.id;
+    const file = req.file;
 
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "Utilisateur non trouvé." });
-        }
-
-        const defaultPath = '/images/default-profile.png';
-        if (user.photo && user.photo !== defaultPath) {
-            const oldFilename = path.basename(user.photo);
-            const oldFilePath = path.join(uploadDir, oldFilename);
-
-            if (fs.existsSync(oldFilePath)) {
-                fs.unlinkSync(oldFilePath);
-            }
-        }
-        
-        const newPhotoUrl = `/images/user/${file.filename}`;
-        user.photo = newPhotoUrl;
-        await user.save();
-
-        res.status(200).json({
-            message: "Photo de profil mise à jour avec succès.",
-            photoUrl: newPhotoUrl
-        });
-
-    } catch (error) {
-        res.status(500).json({ message: "Échec de l'upload de la photo.", details: error.message });
+    if (!file) {
+      return res.status(400).json({ message: "Aucun fichier d'image n'a été uploadé." });
     }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    const defaultPath = '/images/default-profile.png';
+    if (user.photo && user.photo !== defaultPath) {
+      const oldFilename = path.basename(user.photo);
+      const oldFilePath = path.join(uploadDir, oldFilename);
+
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
+      }
+    }
+
+    const newPhotoUrl = `/images/user/${file.filename}`;
+    user.photo = newPhotoUrl;
+    await user.save();
+
+    res.status(200).json({
+      message: "Photo de profil mise à jour avec succès.",
+      photoUrl: newPhotoUrl
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Échec de l'upload de la photo.", details: error.message });
+  }
 };
 
 
 
-export const addMiseEnVente = async (req, res) => {
+export const addMiseEnVente = async (id, id_produit) => {
   try {
-    const { id_produit, id } = req.body;
     const user = await User.findById(id);
     user.misEnVente.push(id_produit);
+    await user.save();
   } catch (err) {
     res.status(500).json({ message: "Erreur serveur" });
   }
@@ -155,7 +155,7 @@ export const toggleBan = async (req) => {
   const user = await User.findById(id);
   if (!user) throw new Error("Utilisateur non trouvé");
   user.isBan = !user.isBan
-  
+
   await user.save()
 }
 
@@ -181,7 +181,7 @@ export const togglePromote = async (req) => {
   const { id } = req.params
   const user = await User.findById(id);
   if (!user) throw new Error("Utilisateur non trouvé");
-  user.role = user.role == 'admin' ? 'moderator': 'admin'
-  
+  user.role = user.role == 'admin' ? 'moderator' : 'admin'
+
   await user.save()
 }

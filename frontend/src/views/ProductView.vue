@@ -13,7 +13,11 @@
     />
   </div>
 
-  <ContactModal  v-if="showContact"  @close-Contact="showContact = false"/>
+  <ContactModal
+  :userSellerId="userSeller._id"
+  v-if="showContact"
+  @close-Contact="showContact = false"
+  />
 </template>
 
 <script setup>

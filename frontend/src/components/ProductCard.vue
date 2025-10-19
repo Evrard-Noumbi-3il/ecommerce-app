@@ -70,7 +70,7 @@
       <div class="comments-seller">
         <div class="content-comments" >
           <h2>Avis</h2>
-          <div v-if ="avis !== null && avis.length > 0">
+          <div v-if ="avis && avis.length > 0">
             <div
               class="user-comments"
               v-for ="avisItem in avis"
@@ -118,7 +118,7 @@ defineProps({
   },
   avis:{
     type : Array,
-    required : true,
+    // required : true,
   }
 
 })
