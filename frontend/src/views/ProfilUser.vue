@@ -142,17 +142,30 @@
           </div>
         </section>
 
-        <section v-if="currentPage === 'annonces'">
-          <h2>Mes Annonces</h2>
-          <div v-if="products.length === 0">Aucun produit en vente.</div>
-          <div v-for="product in products" :key="product._id" class="product-card">
-            <img :src="product.images && product.images.length ? product.images[0] : 'https://via.placeholder.com/150'" alt="Produit" class="product-image"/>
-            <p class="product-name">{{ product.titre || 'Sans titre' }}</p>
-            <p class="product-desc">{{ product.description || 'Pas de description' }}</p>
-            <p class="product-price">{{ product.prix != null ? product.prix + ' €' : 'Prix non défini' }}</p>
-          </div>
+       <section v-if="currentPage === 'annonces'" class="annonces-section">
+  <h2>🛍️ Mes Annonces</h2>
 
-        </section>
+  <div v-if="!products || products.length === 0" class="no-products">
+    Aucun produit en vente pour le moment.
+  </div>
+
+  <div v-else class="product-grid">
+    <div v-for="product in products" :key="product._id" class="product-card">
+      <img
+        :src="product.images && product.images.length ? product.images[0] : 'https://via.placeholder.com/300x200?text=Pas+d\'image'"
+        alt="Produit"
+        class="product-image"
+      />
+      <div class="product-info">
+        <h3>{{ product.titre || 'Sans titre' }}</h3>
+        <p class="description">{{ product.description || 'Pas de description disponible.' }}</p>
+        <p class="price">{{ product.prix != null ? product.prix + ' €' : 'Prix non défini' }}</p>
+        <button class="btn-view">Voir le produit</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 
         <section v-if="currentPage === 'notifications'">
   <h2 class="page-title-v4">
@@ -829,7 +842,7 @@ async getMyProducts() {
     text-align: center;
   }
 }
-/* --- SECTION PRODUITS --- */
+
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -889,7 +902,7 @@ async getMyProducts() {
   text-align: right;
 }
 
-/* Responsive mobile */
+
 @media (max-width: 768px) {
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -999,7 +1012,7 @@ async getMyProducts() {
   background: #065f46;
 }
 
-/* Message lorsqu'il n'y a pas de notifications */
+
 .no-notifications {
   text-align: center;
   color: #6b7280;
@@ -1008,6 +1021,99 @@ async getMyProducts() {
   background: white;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.annonces-section {
+  background-color: #f8f9fa;
+  padding: 70px 60px 40px 60px;
+  min-height: 100vh;
+  font-family: 'Poppins', Arial, sans-serif;
+  text-align: left;
+}
+
+.annonces-section h2 {
+  font-size: 2.5em;
+  color: #222;
+  margin-bottom: 60px;
+  margin-left: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.no-products {
+  font-size: 1.1em;
+  color: #666;
+  margin-left: 10px;
+}
+
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.product-card {
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  width: 270px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.product-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 15px;
+  text-align: left;
+}
+
+.product-info h3 {
+  font-size: 1.1em;
+  color: #222;
+  margin-bottom: 6px;
+}
+
+.product-info .description {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 10px;
+  height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-info .price {
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 12px;
+  font-size: 1em;
+}
+
+.btn-view {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-view:hover {
+  background-color: #0056b3;
 }
 
 
