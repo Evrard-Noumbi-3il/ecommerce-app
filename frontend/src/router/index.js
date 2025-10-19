@@ -60,21 +60,9 @@ const routes = [
     meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
-    path: "/admin/reported-products",
-    name: "ReportedProducts",
-    component: ReportedProducts,
-    meta: { layout: AdminLayout, requiresAdmin: true },
-  },
-  {
     path: "/admin/products",
     name: "Products",
     component: Products,
-    meta: { layout: AdminLayout, requiresAdmin: true },
-  },
-  {
-    path: "/admin/orders",
-    name: "Orders",
-    component: Orders,
     meta: { layout: AdminLayout, requiresAdmin: true },
   },
   {
@@ -99,6 +87,7 @@ const routes = [
     path: "/favoris",
     component: FavorisView,
     name: "favoris",
+    meta: { requiresAuth: true },
   },
 ];
 
