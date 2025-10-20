@@ -1,6 +1,6 @@
 <template>
   <div class="containerChatMessages">
-    <div v-if="selectedReceiver">
+    <div v-if="selectedReceiver" class="chatMessages">
       <div class="headerChatMessages" style="margin-bottom: 20px;">
         <h2 v-if="selectedReceiver.product">Chat relatif au produit {{ selectedReceiver.product.titre }}</h2>
       </div>
@@ -30,7 +30,7 @@
               {{ message.prix }} €
             </div>
             <div class="buttonsOffer" v-if="message.subject === 'Offre d\'achat'">
-              <button class="buttonRefuse" >
+              <button class="buttonRefuse" @click="handleRefuseOffer">
                 Refuser l'offre
               </button>
               <button class="buttonAccept" @click="handleAcceptOffer(message.prix)">
@@ -98,6 +98,16 @@ const handleAcceptOffer = async (prixOffre) => {
     console.error("Erreur lors de l'acceptation de l'offre :", error);
   }
 }
+const handleRefuseOffer = async () => {
+  try {
+    subject.value = 'Refus de l\'offre';
+    message.value = 'Votre offre a été refusée.';
+    sendMessage();
+    emit('updateReceiver');
+  } catch (error) {
+    console.error("Erreur lors du refus de l'offre :", error);
+  }
+}
 const sendMessage = async () => {
   try {
     const token = localStorage.getItem('token');
@@ -127,9 +137,10 @@ const sendMessage = async () => {
     padding: 50px 70px 20px 50px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid #ccc;
-    background-color: whitesmoke;
+    background-color: rgba(54, 46, 46, 0.107);
+    margin: 0;
 
-    max-height: 630px;
+    height: 645px;
     overflow-y: auto;
     overflow-x: hidden;
 
@@ -199,5 +210,11 @@ const sendMessage = async () => {
     display: flex;
     justify-content: space-around;
     margin-top: 10px;
+  }
+  .chatMessages{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
   }
 </style>

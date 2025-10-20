@@ -11,7 +11,7 @@
         :selectedReceiver="selectedReceiver"
       />
       <ChatMessages
-        :selectedReceiver="selectedReceiver"
+        v-model:selectedReceiver="selectedReceiver"
         @open-payment="handlePaiement($event)"
         @updateReceiver="updateReceiver"
       />
@@ -110,7 +110,7 @@ const updateReceiver = async () => {
   display: grid;
   width: 100%;
   max-width: 100%;
-  grid-template-rows: 15% 77% 8%;
+
 }
 
 </style>

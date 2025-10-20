@@ -38,8 +38,8 @@
         <h2 v-else>Pas de note</h2>
 
         <div class="actions">
-          <button @click="$emit('open-evaluation')">Évaluer</button>
-          <button @click="$emit('open-contact')">Contacter</button>
+          <button @click="$emit('open-evaluation')" v-if="!isTheSeller()">Évaluer</button>
+          <button @click="$emit('open-contact')" v-if="!isTheSeller()">Contacter</button>
         </div>
       </div>
     </div>
@@ -53,11 +53,11 @@
         <div class="product-buy-row">
           <div class="product-direct-buy-row">
             <h2 class="product-price">{{ product.prix }} €</h2>
-            <button class="direct-buy-button" @click="$emit('open-paiement')">
+            <button class="direct-buy-button" @click="$emit('open-paiement')" v-if="!isTheSeller()">
               Payer
             </button>
           </div>
-          <button class="offer-button" @click="$emit('open-offer')">faire une offre</button>
+          <button class="offer-button" @click="$emit('open-offer')" v-if="!isTheSeller()">faire une offre</button>
         </div>
         <div class="product-delivery-publish-info">
           <p>
@@ -158,6 +158,17 @@ const avisWithFormattedDate = computed(() => {
     createdAtFormatted: new Date(a.createdAt).toLocaleDateString("fr-FR"),
   }));
 });
+
+const isTheSeller = () => {
+  const token = localStorage.getItem("token");
+  const idUser = JSON.parse(atob(token.split(".")[1])).id;
+  if (props.userSeller && props.userSeller._id) {
+    return idUser === props.userSeller._id;
+  }
+
+  return false;
+};
+
 </script>
 
 <style scoped>

@@ -35,7 +35,12 @@
 
       <div class="resend-section">
         <p class="resend-text">Vous n'avez pas reçu le code ?</p>
+        <div v-if="countdown > 0">
+          Réessayez dans {{ countdown }} secondes
+        </div>
+
         <button
+          v-else
           @click="resendCode"
           class="resend-btn"
           :disabled="isResending || countdown > 0"
