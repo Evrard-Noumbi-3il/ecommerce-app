@@ -7,11 +7,11 @@ import multer from "multer";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(__filename);
+const __dirname = path.dirname(__filename);
 
 // Ajustez ce chemin si nécessaire (exemple : trois niveaux au-dessus)
 const uploadDir = path.resolve(
-  _dirname,
+  __dirname,
   "../../../frontend/public/images/user"
 );
 
@@ -49,7 +49,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    const uniqueSuffix = user-req.user.id-Date.now();
+    const uniqueSuffix = `user-${req.user.id}-${Date.now()}`;
     cb(null, uniqueSuffix + ext);
   },
 });
@@ -125,7 +125,7 @@ export const updateProfilePhoto = async (req, res) => {
       }
     }
 
-    const newPhotoUrl = "/images/user/${file.filename}";
+    const newPhotoUrl = `/images/user/${file.filename}`;
     user.photo = newPhotoUrl;
     await user.save();
 
@@ -149,7 +149,7 @@ export const addMiseEnVente = async (userId, produit) => {
   user.misEnVente.push(produit._id);
   await user.save();
   const newNotification = new Notifications({
-    message: " Votre produit ${produit.titre} a été mis en ligne avec succès ! 🛒  Il est désormais visible par les autres utilisateurs.",
+    message: `Votre produit "${produit.titre}" a été mis en ligne avec succès ! 🛒  Il est désormais visible par les autres utilisateurs.`,
     target: user._id,
   });
   await newNotification.save();

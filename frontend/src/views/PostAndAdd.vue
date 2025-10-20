@@ -158,17 +158,40 @@
     try {
       const token = localStorage.getItem("token");
       const id = JSON.parse(atob(token.split('.')[1])).id;
-      const response = await axios.post(`${process.env.VUE_APP_API_URL}/products/addProduct`, {
-        userId: id,
-        titre: product.value.titre,
-        description: product.value.description,
-        prix: product.value.prix,
-        id_categorie: product.value.id_categorie,
-        theme: product.value.theme,
-        location: product.value.location,
-        state: product.value.state,
-        sellerType: product.value.sellerType
+      // const response = await axios.post(`${process.env.VUE_APP_API_URL}/products/addProduct`, {
+      //   userId: id,
+      //   titre: product.value.titre,
+      //   description: product.value.description,
+      //   prix: product.value.prix,
+      //   id_categorie: product.value.id_categorie,
+      //   theme: product.value.theme,
+      //   location: product.value.location,
+      //   state: product.value.state,
+      //   sellerType: product.value.sellerType,
+      //   fileInput: fileInput.value
+      // });
+      const formData = new FormData();
+      formData.append("userId", id);
+      formData.append("titre", product.value.titre);
+      formData.append("description", product.value.description);
+      formData.append("prix", product.value.prix);
+      formData.append("id_categorie", product.value.id_categorie);
+      formData.append("theme", product.value.theme);
+      formData.append("location", product.value.location);
+      formData.append("state", product.value.state);
+      formData.append("sellerType", product.value.sellerType);
+
+      fileInput.value.forEach(file => {
+        formData.append("images", file);
       });
+
+      const response = await axios.post(`http://localhost:3000/api/products/addProduct`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
       if (response.status === 201) {
         console.log("ID du produit ajouté :", product.value._id);
         product.value._id = response.data.produit._id;
@@ -179,7 +202,7 @@
     } catch (err) {
       if (err.response) {
         console.error("Erreur réponse", err.response);
-        window.location.href = `https://http.cat/${err.response.status}`;
+        // window.location.href = `https://http.cat/${err.response.status}`;
       }
       alert(err.response?.data?.message || "Une erreur est survenue.");
   }
@@ -199,7 +222,6 @@
 
   .containerPostAndAdd {
     margin-bottom: 200px;
-    padding: 5% 0 0% 0;
     width: 100%;
     height: 100%;
     max-width: 100%;

@@ -13,9 +13,9 @@
                 </svg>
         </button>
       <div class="info">
-        <h3>{{ produit.nom }}</h3>
+        <h3>{{ produit.titre }}</h3>
         <p class="prix">{{ produit.prix }} €</p>
-        <p class="meta">{{ produit.ville }} • {{ formatDate(produit.date) }}</p>
+        <p class="meta">{{ produit.location }} • {{ formatDate(produit.date) }}</p>
       </div>
     </div>
   </div>

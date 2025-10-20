@@ -14,10 +14,17 @@ export function getUserFromToken() {
 
 export function isAuthenticated() {
   const user = getUserFromToken();
-  return !!user && user.exp > Date.now() / 1000;
+  if (!user) return false;
+  // Vérifie la date d’expiration
+  const isExpired = user.exp * 1000 < Date.now();
+  return !isExpired;
 }
 
 export function isAdmin() {
   const user = getUserFromToken();
   return user?.role === "admin";
+}
+
+export function logout() {
+  localStorage.removeItem("token");
 }

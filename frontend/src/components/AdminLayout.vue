@@ -4,9 +4,7 @@
       <h2 class="sidebar-title">🛠️ Admin Panel</h2>
       <nav class="nav-links">
         <router-link to="/admin/dashboard">📊 Dashboard</router-link>
-        <router-link to="/admin/reported-products">🚩 Produits signalés</router-link>
         <router-link to="/admin/products">🛒 Produits</router-link>
-        <router-link to="/admin/orders">📦 Commandes</router-link>
         <router-link to="/admin/ads">📢 Publicités</router-link>
         <router-link to="/admin/notifications">🔔 Notifications</router-link>
         <router-link to="/admin/themes">🎨 Thématiques</router-link>
@@ -19,7 +17,7 @@
       <div class="admin-actions">
         <h3>⚙️ Actions rapides</h3>
         <ul>
-          <li><button @click="approveAllFlagged">✅ Approuver tous les produits signalés</button></li>
+          <li><button @click="approveAllPending">✅Valider tous les produits en attente</button></li>
           <li><button @click="removeBanUsers">🧹 Supprimer les utilisateurs banis</button></li>
           <li><button @click="generateReport">📄 Générer un rapport</button></li>
         </ul>
@@ -39,6 +37,18 @@ const isAdmin = ref(false);
 // Simulations d'actions admin (à connecter à tes API plus tard)
 const approveAllFlagged = () => {
   console.log("✅ Tous les produits signalés approuvés.");
+};
+
+const approveAllPending = async () => {
+  const confirmApprove = window.confirm("Valider tous les produits en attente ?");
+  if (!confirmApprove) return;
+
+  try {
+    await api.post("/admin/products/validate-all");
+  } catch (error) {
+    console.error("Erreur lors de la validation des produits en attente :", error);
+  }
+
 };
 
 const removeBanUsers = async () => {
@@ -67,7 +77,7 @@ onMounted(() => {
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  margin-top: 80px;
+  
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f8fafc;
 }
