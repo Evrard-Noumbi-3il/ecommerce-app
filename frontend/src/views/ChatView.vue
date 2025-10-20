@@ -41,7 +41,7 @@ import ChatInput from '../components/ChatInput.vue';
 import PaiementModal from '@/components/PaiementModal.vue';
 
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, onUnmounted } from 'vue';
 
 
 const receivers = ref([]);
@@ -61,6 +61,8 @@ const product = ref({
   location: ""
 })
 
+let intervalId = null;
+const REFRESH_INTERVAL = 5000;
 
 const handlePaiement = (prixOffer) => {
   product.value = selectedReceiver.value.product;
@@ -69,6 +71,13 @@ const handlePaiement = (prixOffer) => {
 }
 onMounted(() => {
   getChatListReceiver();
+  intervalId = setInterval(() => {
+    updateReceiver();  // ta fonction
+  }, REFRESH_INTERVAL);
+});
+
+onUnmounted(() => {
+  clearInterval(intervalId);
 });
 
 const getChatListReceiver = async () => {
