@@ -447,16 +447,12 @@ export default {
       formData.append("photo", this.userFile);
 
       try {
-        const res = await api.patch(
-          "/user/me/photo",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: Bearer ${token},
-            },
-          }
-        );
+        const res = await api.patch("/user/me/photo", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (res.data.photoUrl) {
           this.user.photo = res.data.photoUrl;
           this.user.profileImage = res.data.photoUrl;
@@ -475,10 +471,10 @@ export default {
 
         // Appel API pour marquer la notification comme lue
         await api.patch(
-          /notifications/${notification._id}/read,
+          "/notifications/${notification._id}/read",
           {},
           {
-            headers: { Authorization: Bearer ${token} },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
 
@@ -495,12 +491,9 @@ export default {
         if (!token) throw new Error("Utilisateur non connecté");
 
         const userId = JSON.parse(atob(token.split(".")[1])).id;
-        const res = await api.get(
-          /avis/user/${userId},
-          {
-            headers: { Authorization: Bearer ${token} },
-          }
-        );
+        const res = await api.get("/avis/user/${userId}", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         this.avis = res.data;
         //console.log("Avis récupérés :", this.avis);
@@ -515,12 +508,9 @@ export default {
 
         const userId = JSON.parse(atob(token.split(".")[1])).id;
 
-        const res = await api.get(
-          /user/users/${userId}/products,
-          {
-            headers: { Authorization: Bearer ${token} },
-          }
-        );
+        const res = await api.get("/user/users/${userId}/products", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         this.products = res.data; // ← Tableau de produits complet
         console.log("Produits récupérés :", this.products);
@@ -547,7 +537,7 @@ export default {
         await api.put("/user/me", payload, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: Bearer ${token},
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -568,12 +558,9 @@ export default {
         const userId = JSON.parse(atob(token.split(".")[1])).id;
 
         // Endpoint basé sur votre structure backend (req.params.userId)
-        const res = await api.get(
-          /notifications/${userId},
-          {
-            headers: { Authorization: Bearer ${token} },
-          }
-        );
+        const res = await api.get("/notifications/${userId}", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         this.notifications = res.data;
       } catch (err) {
@@ -608,9 +595,9 @@ export default {
       const diff = Math.floor((maintenant - date) / 1000);
 
       if (diff < 60) return "Il y a quelques secondes";
-      if (diff < 3600) return Il y a ${Math.floor(diff / 60)} min;
-      if (diff < 86400) return Il y a ${Math.floor(diff / 3600)} h;
-      if (diff < 2592000) return Il y a ${Math.floor(diff / 86400)} j;
+      if (diff < 3600) return "Il y a ${Math.floor(diff / 60)} min";
+      if (diff < 86400) return "Il y a ${Math.floor(diff / 3600)} h";
+      if (diff < 2592000) return "Il y a ${Math.floor(diff / 86400)} j";
 
       return date.toLocaleDateString("fr-FR", {
         day: "2-digit",
@@ -625,9 +612,9 @@ export default {
         if (!token) return;
 
         const id = JSON.parse(atob(token.split(".")[1])).id;
-        const endpoint = /user/me/${id};
+        const endpoint = "/user/me/${id}";
         const res = await api.get(endpoint, {
-          headers: { Authorization: Bearer ${token} },
+          headers: { Authorization: `Bearer ${token}` },
         });
         const data = res.data;
 
