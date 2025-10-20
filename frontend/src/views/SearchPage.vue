@@ -529,7 +529,6 @@ watch(() => filters.value, () => {
 
 <style scoped>
 .search-page {
-  margin-top: 50px;
   min-height: 100vh;
   background: #f8f9fa;
 }
@@ -537,7 +536,7 @@ watch(() => filters.value, () => {
 /* Barre de recherche principale */
 .top-search-bar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 100px 0 60px;
+  padding: 50px 0 60px;
   color: white;
 
 }

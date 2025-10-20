@@ -3,7 +3,7 @@
     <div class="card-register">
       <h3>INSCRIVEZ VOUS ICI</h3>
 
-      <!-- Message d'inscription -->
+      
       <div v-if="message.text" :class="['register-message', message.type]">
         {{ message.text }}
       </div>
@@ -113,12 +113,14 @@ export default {
             confirmpassword: this.confirmpassword
           }
         );
-        this.message = { text: "Inscription réussie ✅", type: "success" };
+        
+        localStorage.setItem("verifyEmail", this.email);
+
+        this.message = { text: "Inscription réussie ✅ Vérifiez votre email/SMS", type: "success" };
         localStorage.setItem("token", res.data.token);
-        setTimeout(() => {
-          this.$router.push("/");
-          window.location.reload();
-        }, 1200);
+        this.$emit("open-verify");
+        this.$emit("close-Register");
+
       } catch (err) {
         this.message = { text: err.response?.data?.message || "Erreur d'inscription ❌", type: "error" };
       }
@@ -144,8 +146,6 @@ export default {
     background: rgba(214, 173, 173, 0.5);
   }
 
-
-  /* Style de la carte */
   .card-register {
     border-radius: 15px;
     padding: 20px 50px 50px 50px;

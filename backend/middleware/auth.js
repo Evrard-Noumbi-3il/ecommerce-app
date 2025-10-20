@@ -21,10 +21,10 @@ export function isAdmin(req, res, next) {
 }
 
 export function isModeratorOrAdmin(req, res, next) {
-  if (!["admin", "moderator"].includes(req.user?.role)) {
+  if (req.user?.role !== "admin" && req.user?.role !== "moderator") {
     return res.status(403).json({ message: "Accès réservé aux modérateurs ou administrateurs" });
   }
-  return res.status(403).json({ message: "Accès réservé aux modérateurs/admins" });
+  next();
 };
 // ce que j'ai ajoute 
 

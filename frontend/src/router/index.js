@@ -14,6 +14,8 @@ import Ads from '@/views/AdManagement.vue';
 import Notifications from '@/views/NotificationManagement.vue';
 import Themes from '@/views/ThemeManagement.vue';
 import FavorisView from '@/views/FavorisView.vue'
+import VerifyAccount from "@/components/VerifyAccount.vue";
+
 //import notificationsRoutes from "./routes/notifications.js";
 const routes = [
   { path: "/", name: "HomePage", component: Home },
@@ -67,7 +69,13 @@ const routes = [
   {
     path: "/favoris",
     component: FavorisView,
-    name: "favoris"
+    name: "favoris",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/verify-account",
+    name: "VerifyAccount",
+    component: VerifyAccount,
   }
 ];
 

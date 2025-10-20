@@ -8,8 +8,9 @@
     </component>
 
 
-    <RegisterModal v-if="showRegister" @close-Register="showRegister = false" @open-login="showlogin = true"/>
+    <RegisterModal v-if="showRegister" @close-Register="showRegister = false" @open-verify="showVerify = true" @open-login="showlogin = true"/>
     <LoginModal v-if="showlogin" @close-Login="showlogin = false" @open-Register="showRegister = true" @close-Register="showRegister = false"/>
+    <VerifyAccount v-if="showVerify" @close-Verify="showVerify = false" @open-verify="showVerify = true" @close-Register="showRegister = false"/>
   </div>
 
   <footer style="padding: 100px; background-color: black; position: sticky;bottom: auto; ">
@@ -25,18 +26,17 @@
   import NavBar from "./components/NavBar.vue";
   import RegisterModal from "./components/RegisterModal.vue";
   import LoginModal from "./components/LoginModal.vue";
+  import VerifyAccount from "./components/VerifyAccount.vue";
 
-
-  // Etat réactif pour la modale
   const showRegister = ref(false);
   const showlogin = ref(false);
+  const showVerify = ref(false);
 
-  // Gestion de l'affichage du NavBar selon la route
   const route = useRoute();
   const excludedRoutes = ["/login", "/register"];
   const showNavBar = computed(() => !excludedRoutes.includes(route.path));
   const layout = computed(() => {
-  return route.meta.layout || "div"; // si pas de layout, on met un simple div
+  return route.meta.layout || "div"; 
 });
 </script>
 <style>
