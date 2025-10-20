@@ -2,24 +2,33 @@
   <div class="favoris">
     <h1>Mes Favoris ❤️</h1>
 
+     <!-- Si aucun favori -->
+    <div v-if="!produits.length && !favorisThematiques.length && !favorisCategories.length" class="empty">
+      <img src="public/images/thematique/loisir.jpg" alt="Aucun favori" class="empty-img" />
+      <p>
+        Vous n'avez pas encore ajouté de favoris.<br />
+        <span class="hint">Explorez les catégories et ajoutez ceux que vous aimez ❤️</span>
+      </p>
+    </div>
+
 
     <!-- Favoris Produits -->
-    <section v-if="favorisProduits.length">
-      <h2>Produits favoris</h2>
-      <NouveautesProduits :produits="favorisProduits" />
+    <section v-if="produits.length" class="favoris-section">
+      <h2>🛍️ Produits favoris</h2>
+      <div class="favoris-grid">
+        <div v-for="item in produits" :key="item._id" class="favori-card">
+          <div class="image-container">
+            <img :src="item.images[0] || '/placeholder.jpg'" :alt="item.titre" class = "card-image" />
+            <button class="remove-btn" @click="deleteFavoris">❌</button>
+          </div>
+          <div class="favori-info">
+            <h3>{{ item.titre }} </h3>
+            <p class="price">{{ item.prix }} Euros</p>
+          </div>
+        </div>
+      </div>
     </section>
-
-    <!-- Favoris Thématiques -->
-    <section v-if="favorisThematiques.length">
-      <h2>Thématiques favorites</h2>
-      <TendancesThematique :thematiques="favorisThematiques" />
-    </section>
-
-    <!-- Favoris Catégories -->
-    <section v-if="favorisCategories.length">
-      <h2>Catégories favorites</h2>
-      <CategoriesList :categories="favorisCategories" />
-    </section>
+ 
 
     <!-- Message si aucun favori -->
     <div v-if="!produits.length && !favorisThematiques.length && !favorisCategories.length">
@@ -30,12 +39,6 @@
 
 
     <div v-else>
-    <h2>Mes Favoris</h2>
-    <ul>
-      <li v-for="item in produits" :key="item._id">
-        {{ item.titre }} — {{ item.prix }} FCFA
-      </li>
-    </ul>
   </div>
   </div>
 </template>
@@ -46,15 +49,11 @@ import axios from "axios";
 import {useFavoritesStore} from "@/stores/favoris"; 
 
 
-import TendancesThematique from "../components/TendancesThematique.vue";
-import CategoriesList from "../components/CategoriesList.vue";
 
-const favorisStore = useFavoritesStore; 
-const favorisProduits = ref([]);
+
 const favorisThematiques = ref([]);
 const favorisCategories = ref([]);
 const produits = ref([]);
-
 
 
 
@@ -83,6 +82,28 @@ onMounted(async () => {
   }
 });
 
+//  Méthode de suppression 
+
+const deleteFavoris = async (produit_Id) => {
+
+  try {
+  const token = localStorage.getItem("token");
+  const user_Id = JSON.parse(atob(token.split(".")[1])).id; 
+
+   await axios.delete(`${process.env.VUE_APP_API_URL}/favoris/deleteFavoris/${user_Id}/${produit_Id}`
+  
+  );
+
+    produits.value = produits.value.filter((p) => p._id !== produit_Id);
+
+    alert("Favori supprimé avec succès ✅");
+    
+  } catch (error) {
+    console.error("Erreur lors de la suppression :", error);
+    alert("Erreur lors de la suppression du favori ❌");
+  }
+};
+
 </script>
 
 <style scoped>
@@ -107,11 +128,51 @@ h1{
   color: white;
 }
 h1 {
-  margin-bottom: 20px;
-  color: #1a1a1a;
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #5b21b6;
 }
 h2 {
   margin: 20px 0 10px;
   color: #222;
 }
+
+.card-image {
+  width: 75%;
+  height: 75%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.favoris-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+.favori-card {
+  background: white;
+  color: black;
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+.remove-btn {
+  margin-top: 10px;
+  background: #ff4d4d;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.empty-img {
+  width: 200px;
+  margin: 20px auto;
+  display: block;
+}
+
 </style>
