@@ -2,6 +2,10 @@
   <div class="container" @click.self="$emit('close-paiement')">
     <div class="modal-content">
       <h2>Paiement</h2>
+      <div v-if="message.text" :class="['paiement-message', message.type]">
+        {{ message.text }}
+      </div>
+
       <div class="checkout-form">
         <div class="customer-info">
           <h2>Informations client</h2>
@@ -54,6 +58,11 @@ const isPaymentProcessing = ref(false);
 const paymentError = ref("");
 const errors = ref({
   email: "",
+});
+
+const message = ref({
+  text: "",
+  type: "",
 });
 
 const props = defineProps({
@@ -157,25 +166,43 @@ const handleSubmit = async () => {
     }
 
     if (paymentIntent && paymentIntent.status === "succeeded") {
-      alert("✅ Paiement réussi !");
+      message.value = {
+        text: "✅ Paiement réussi ! Merci pour votre achat.",
+        type: "success",
+      };
       setTimeout(() => {
+        message.value = { text: "", type: "" };
         window.location.reload();
-      }, 1000);
+      }, 1200);
     } else if (paymentIntent && paymentIntent.status === "processing") {
-      alert("⏳ Paiement en cours de traitement...");
+      message.value = {
+        text: "⏳ Votre paiement est en cours de traitement.",
+        type: "success",
+      };
+      setTimeout(() => {
+        message.value = { text: "", type: "" };
+      }, 1200);
     } else if (
       paymentIntent &&
       paymentIntent.status === "requires_payment_method"
     ) {
-      alert("❌ Le paiement a échoué. Veuillez réessayer.");
+      message.value = {
+        text: "❌ Le paiement a échoué. Veuillez réessayer avec une autre méthode.",
+        type: "error",
+      };
       setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+        message.value = { text: "", type: "" };
+      }, 1200);
+      isPaymentProcessing.value = false;
     } else {
-      alert(`⚠️ Statut inattendu : ${paymentIntent?.status}`);
+      message.value = {
+        text: `⚠️ Statut de paiement inattendu : ${paymentIntent?.status}`,
+        type: "error",
+      };
+      isPaymentProcessing.value = false;
       setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+        message.value = { text: "", type: "" };
+      }, 1200);
     }
   } catch (error) {
     console.error("Erreur de paiement:", error);
@@ -307,5 +334,25 @@ const handleSubmit = async () => {
   to {
     transform: rotate(360deg);
   }
+}
+
+.paiement-message {
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 7px;
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.paiement-message.success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+.paiement-message.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
 }
 </style>
