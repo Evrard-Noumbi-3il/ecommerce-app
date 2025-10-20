@@ -8,9 +8,9 @@
       :userSeller="userSeller"
       :category="category"
       :avis="avis"
-      @open-contact="showContact = true"
-      @open-evaluation="showEvaluation = true"
-      @open-paiement="showPaiement = true"
+      @open-contact="showContactModal"
+      @open-evaluation="showEvaluationModal"
+      @open-paiement="showPaiementModal"
     />
   </div>
 
