@@ -32,7 +32,8 @@
   />
   <OfferModal
     v-if="showOffer"
-    :product="product"
+    :userSellerId="userSeller._id"
+    :productId="product._id"
     @close-offer="showOffer = false"
   />
 </template>
