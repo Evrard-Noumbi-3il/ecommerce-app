@@ -1,20 +1,29 @@
 <template>
   <div class="containerChatInput">
+    <EmojiModal
+      class="emojiModal"
+      v-model:selectedEmoji="selectedEmoji"
+      v-if="showEmojiModal"
+      @addEmoji="message += selectedEmoji; showEmojiModal = false"
+    />
+    <button class="emojiButton" @click="showEmojiModal = !showEmojiModal">😊</button>
     <input
       type="text"
       v-model="message"
       placeholder="Type your message..."
     />
-    <button @click="handleClick">></button>
+    <button @click="handleClick">➤</button>
   </div>
 </template>
 
 <script setup>
 import axios from 'axios';
 import { ref } from 'vue';
+import EmojiModal from './EmojiModal.vue';
 
 const message = ref('');
 const subject = ref('');
+const showEmojiModal = ref(false);
 
 const props = defineProps({
   selectedReceiver: {
@@ -60,17 +69,28 @@ const sendMessage = async () => {
   }
   input{
     flex: 1;
-    padding: 5px;
+    height: 40px;
     border:none;
     margin-left: 100px;
     margin-right: 100px;
+    align-self: center;
   }
   button{
     align-self: center;
     position: relative;
-    right: 120px;
+    right: 130px;
     cursor: pointer;
     background-color: white;
     border: none;
+  }
+  .emojiButton{
+    position: relative;
+    left: 20px;
+  }
+  .emojiModal{
+    background-color: white;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 </style>

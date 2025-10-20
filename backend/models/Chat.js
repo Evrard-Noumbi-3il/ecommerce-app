@@ -16,7 +16,13 @@ const chatSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Messages",
       }
-    ]
+    ],
+
+    produit: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Produit",
+    },
+
   },
   { timestamps: true }
 );

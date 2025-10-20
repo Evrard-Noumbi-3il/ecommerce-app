@@ -23,6 +23,10 @@ const messageSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    prix: {
+      type: Number,
+      default: 0,
+    },
     read: {
       type: Boolean,
       default: false,

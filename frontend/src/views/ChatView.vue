@@ -1,23 +1,33 @@
 <template>
 
-
-  <div class="containerChat">
-    <ChatSideBar
-      :receivers="receivers"
-      v-model:selectedReceiver="selectedReceiver"
-    />
-    <div class="chatWindow">
+  <div class="containerChatView">
+    <div class="containerChat">
+      <ChatSideBar
+        :receivers="receivers"
+        v-model:selectedReceiver="selectedReceiver"
+      />
+      <div class="chatWindow">
       <ChatHeader
         :selectedReceiver="selectedReceiver"
       />
       <ChatMessages
         :selectedReceiver="selectedReceiver"
+        @open-payment="handlePaiement($event)"
+        @updateReceiver="updateReceiver"
       />
       <ChatInput
         v-if="selectedReceiver"
         @updateReceiver="updateReceiver"
+        @showEmojiModal="showEmojiModal = !showEmojiModal"
         :selectedReceiver="selectedReceiver"
       />
+      <PaiementModal
+        :product="product"
+        v-if="showPaiementModal"
+        @close-paiement="showPaiementModal = false"
+      />
+
+      </div>
     </div>
   </div>
 </template>
@@ -28,6 +38,7 @@ import ChatSideBar from '../components/ChatSideBar.vue';
 import ChatHeader from '../components/ChatHeader.vue';
 import ChatMessages from '../components/ChatMessages.vue';
 import ChatInput from '../components/ChatInput.vue';
+import PaiementModal from '@/components/PaiementModal.vue';
 
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
@@ -35,7 +46,27 @@ import { onMounted, ref } from 'vue';
 
 const receivers = ref([]);
 const selectedReceiver = ref(null);
+const showEmojiModal = ref(false);
+const showPaiementModal = ref(false);
+const prix = ref(0);
+const product = ref({
+  titre: "",
+  theme: "",
+  id_categorie: "",
+  description: "",
+  image: "",
+  state: "",
+  prix: null,
+  sellerType: "",
+  location: ""
+})
 
+
+const handlePaiement = (prixOffer) => {
+  product.value = selectedReceiver.value.product;
+  product.value.prix = prixOffer;
+  showPaiementModal.value = true;
+}
 onMounted(() => {
   getChatListReceiver();
 });
@@ -73,6 +104,7 @@ const updateReceiver = async () => {
   display: grid;
   grid-template-columns: 20% 80%;
   margin-bottom: 20px;
+
 }
 .chatWindow{
   display: grid;
