@@ -7,13 +7,18 @@
       <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/>
     </svg>
 
-    <input class="searchChat" type="text" placeholder="Search..." />
+    <input
+      class="searchChat"
+      type="text"
+      placeholder="Search..."
+      v-model="keyWord"
+    />
 
     <div class="chatList">
       <div v-if="receivers.length === 0" style="text-align: center; color: #777; margin-top: 20px;">
         Aucune discussion disponible.
       </div>
-      <div class="chatListElement" v-for="receiver in receivers" :key="receiver.id" @click="emit('update:selectedReceiver', receiver); markAsRead(receiver._id, receiver.chat._id)" :style="{ backgroundColor: selectedReceiver && selectedReceiver.id === receiver.id ? '#e6f7ff' : 'white' }">
+      <div class="chatListElement" v-for="receiver in filterReceivers(keyWord)" :key="receiver.id" @click="emit('update:selectedReceiver', receiver); markAsRead(receiver._id, receiver.chat._id), getProduct" :style="{ backgroundColor: selectedReceiver && selectedReceiver.id === receiver.id ? '#e6f7ff' : 'white' }">
         <div class="nameReceiver">
           <img :src="receiver.photo" class="profilImage">
           <strong>{{ receiver.name }}</strong>
@@ -34,7 +39,7 @@
 </template>
 <script setup>
 import axios from 'axios';
-import { ref,onMounted } from 'vue';
+import { ref,onMounted} from 'vue';
 
 
 const props = defineProps({
@@ -48,9 +53,21 @@ const props = defineProps({
   }
 });
 
-
+const keyWord = ref('');
 const isInactive = ref(false);
 
+
+onMounted(() => {
+
+});
+
+const filterReceivers = (keyWord) => {
+  return props.receivers.filter(receiver => {
+    const name = receiver.name || '';
+    const keyword = keyWord || '';
+    return name.toLowerCase().includes(keyword.toLowerCase());
+  });
+}
 
 const emit = defineEmits(['update: selectedReceiver']);
 
@@ -68,7 +85,7 @@ const markAsRead = async (receiverId, chatId) => {
 </script>
 <style scoped>
   .containerChatBar{
-    height: 800px;
+    height: 850px;
     margin-top: 20px;
     display: flex;
     flex-direction: column;

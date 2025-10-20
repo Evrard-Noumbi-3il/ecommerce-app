@@ -57,7 +57,7 @@
               Payer
             </button>
           </div>
-          <button class="offer-button">faire une offre</button>
+          <button class="offer-button" @click="$emit('open-offer')">faire une offre</button>
         </div>
         <div class="product-delivery-publish-info">
           <p>

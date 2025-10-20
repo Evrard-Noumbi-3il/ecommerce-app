@@ -1,31 +1,26 @@
 <template>
 
-  <div class= "container" @click.self="$emit('close-Contact')">
+  <div class= "container" @click.self="$emit('close-offer')">
     <div class="cardContainer">
-      <h2>Contact</h2>
+      <h2>Faire une offre</h2>
 
-      <select
-        class="input-contact"
-        v-model="subject"
-      >
-        placeholder="Sujet de votre message"
-      >
-        <option value="" disabled selected>Sujet de votre message</option>
-        <option value="Demande d'information">Demande d'information</option>
-        <option value="Intéressé mais souhaite négocier">Intéressé mais souhaite négocier</option>
-        <option value="feedback">Retour d'expérience</option>
-        <option value="Autre">Autre</option>
-      </select>
+      <div style="display: flex;">
+        <input
+          type="number"
+          v-model="prix"
+          placeholder="0.00"
+          class="input-offer"
+          required
+        />
+        <span
+          style="border: 1px solid rgba(0,0,0,0.1); padding: 10px; border-radius: 0 16px 16px 0; display: flex; align-items: center;"
+        >
+          €
+        </span>
+      </div>
 
-      <textarea
-        v-model="message"
-        class="textarea-contact input-contact"
-        placeholder="Votre message ici..."
-        rows="10"
-      ></textarea>
-
-      <button class="buton-contact"
-        @click="sendMessage(); $emit('close-Contact')">
+      <button class="buton-offer"
+        @click="sendMessage(); $emit('close-offer')">
         Envoyer
       </button>
     </div>
@@ -38,8 +33,8 @@ import { onMounted, ref } from 'vue';
 import axios from 'axios';
 
 
-const subject = ref('');
-const message = ref('');
+const subject = ref('Offre d\'achat');
+const prix = ref('');
 
 const props = defineProps({
   userSellerId: {
@@ -61,7 +56,8 @@ const sendMessage = async () => {
       senderId: id,
       receiverId: props.userSellerId,
       subject: subject.value,
-      content: message.value,
+      content: "je suis intéressé par votre produit, je vous fait une offre de :",
+      prix: prix.value,
       product: props.productId
     });
     console.log("Message envoyé avec succès :", response.data);
@@ -96,22 +92,9 @@ const sendMessage = async () => {
     width: 25%;
     /* height: 600px; */
   }
-  .input-contact{
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    width: 100%;
-    font-size: 14px;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
-    justify-self: center;
-    margin-top: 20px;
-  }
-  .textarea-contact{
-    resize: none;
-    width: 92%;
-  }
 
-  .buton-contact{
+
+  .buton-offer{
     justify-self: center;
     justify-content: center;
     padding: 8px 20px;
@@ -124,6 +107,17 @@ const sendMessage = async () => {
     font-size: 16px;
     border: none;
     margin-top: 20px;
+  }
+
+  .input-offer {
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 16px 0 0 16px;
+    border-right: none;
+    padding: 20px;
+    width: 100%;
+    font-size: 14px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+
   }
 
 </style>

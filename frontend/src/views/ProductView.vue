@@ -9,6 +9,7 @@
       :category="category"
       :avis="avis"
       @open-contact="showContact = true"
+      @open-offer="showOffer = true"
       @open-evaluation="showEvaluation = true"
       @open-paiement="showPaiement = true"
     />
@@ -26,8 +27,15 @@
   />
   <ContactModal
     :userSellerId="userSeller._id"
+    :productId="product._id"
     v-if="showContact"
     @close-Contact="showContact = false"
+  />
+  <OfferModal
+    :userSellerId="userSeller._id"
+    :productId="product._id"
+    v-if="showOffer"
+    @close-offer="showOffer = false"
   />
 </template>
 
@@ -39,6 +47,7 @@ import ProductCard from "../components/ProductCard.vue";
 import ContactModal from "../components/ContactModal.vue";
 import EvaluationModal from "@/components/EvaluationModal.vue";
 import PaiementModal from "@/components/PaiementModal.vue";
+import OfferModal from "@/components/OfferModal.vue";
 
 const route = useRoute();
 const productId = route.params.id;
@@ -49,6 +58,7 @@ const category = ref(null);
 const avis = ref([]);
 
 const showContact = ref(false);
+const showOffer = ref(false);
 const showEvaluation = ref(false);
 const showPaiement = ref(false);
 

@@ -4,7 +4,7 @@ import User from '../models/Users.js';
 
 export const sendMessage = async (req, res) => {
   try {
-    const { senderId, receiverId, subject, content } = req.body;
+    const { senderId, receiverId, subject, content, product, prix } = req.body;
 
     let chat = await Chat.findOne({
       $or: [
@@ -18,6 +18,7 @@ export const sendMessage = async (req, res) => {
         client: senderId,
         seller: receiverId,
         messages: [],
+        produit: product
       });
       await chat.save();
 
@@ -36,6 +37,7 @@ export const sendMessage = async (req, res) => {
       receiver: receiverId,
       subject: subject,
       content: content,
+      prix: prix,
     });
     await newMessage.save();
 
@@ -73,6 +75,7 @@ export const getChatListReceiver = async (req, res) => {
     for (let i = 0; i < receivers.length; i++) {
       receivers[i] = receivers[i].toObject();
       receivers[i].chat = await chats[i];
+      receivers[i].product = receivers[i].chat.produit ? receivers[i].chat.produit : null;
     }
 
     res.status(200).json(receivers);
@@ -90,7 +93,7 @@ export const getLastChatMessage = async (userId1, userId2) => {
       { client: userId1, seller: userId2 },
       { client: userId2, seller: userId1 }
     ]
-  }).populate('messages');
+  }).populate('messages produit');
 
   if (!chat || chat.messages.length === 0) {
     return null;
@@ -107,7 +110,7 @@ export const getChatBetweenUsers = async (userId1, userId2) => {
       { client: userId1, seller: userId2 },
       { client: userId2, seller: userId1 }
     ]
-  }).populate('messages');
+  }).populate('messages produit');
 
   return chat;
 }
