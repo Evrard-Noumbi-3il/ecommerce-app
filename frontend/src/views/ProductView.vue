@@ -8,9 +8,10 @@
       :userSeller="userSeller"
       :category="category"
       :avis="avis"
-      @open-contact="showContact = true"
-      @open-evaluation="showEvaluation = true"
-      @open-paiement="showPaiement = true"
+      @open-contact="showContactModal"
+      @open-evaluation="showEvaluationModal"
+      @open-paiement="showPaiementModal"
+      @open-offer="showOffer = true"
     />
   </div>
 
@@ -28,6 +29,12 @@
     :userSellerId="userSeller._id"
     v-if="showContact"
     @close-Contact="showContact = false"
+  />
+  <OfferModal
+    v-if="showOffer"
+    :userSellerId="userSeller._id"
+    :productId="product._id"
+    @close-offer="showOffer = false"
   />
 </template>
 

@@ -114,12 +114,6 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    // if (password !== confirmpassword) {
-    //   return res.status(400).json({
-    //     message: "Les mots de passe ne correspondent pas"
-    //   });
-    // }
-
     if (password.length < 6) {
       return res.status(400).json({
         message: "Le mot de passe doit contenir au moins 6 caractères"
@@ -144,8 +138,6 @@ export const registerUser = async (req, res) => {
       }
     }
 
-
-    // const hashedPassword = await bcrypt.hash(password, 10);
 
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
     console.log('✅ Code de vérification généré pour:', verificationCode);

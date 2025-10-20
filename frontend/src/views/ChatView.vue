@@ -11,7 +11,7 @@
         :selectedReceiver="selectedReceiver"
       />
       <ChatMessages
-        :selectedReceiver="selectedReceiver"
+        v-model:selectedReceiver="selectedReceiver"
         @open-payment="handlePaiement($event)"
         @updateReceiver="updateReceiver"
       />
@@ -41,8 +41,7 @@ import ChatInput from '../components/ChatInput.vue';
 import PaiementModal from '@/components/PaiementModal.vue';
 
 import api from "@/auth/axios";
-
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, onUnmounted } from 'vue';
 
 
 const receivers = ref([]);
@@ -62,6 +61,8 @@ const product = ref({
   location: ""
 })
 
+let intervalId = null;
+const REFRESH_INTERVAL = 5000;
 
 const handlePaiement = (prixOffer) => {
   product.value = selectedReceiver.value.product;
@@ -70,6 +71,13 @@ const handlePaiement = (prixOffer) => {
 }
 onMounted(() => {
   getChatListReceiver();
+  intervalId = setInterval(() => {
+    updateReceiver();  // ta fonction
+  }, REFRESH_INTERVAL);
+});
+
+onUnmounted(() => {
+  clearInterval(intervalId);
 });
 
 const getChatListReceiver = async () => {
@@ -111,7 +119,7 @@ const updateReceiver = async () => {
   display: grid;
   width: 100%;
   max-width: 100%;
-  grid-template-rows: 15% 77% 8%;
+
 }
 
 </style>

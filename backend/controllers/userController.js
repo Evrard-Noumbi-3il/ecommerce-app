@@ -16,6 +16,7 @@ const uploadDir = path.resolve(
 );
 
 import Notifications from "../models/Notifications.js";
+import Favoris from "../models/Favoris.js";
 
 // Récupérer les infos de l'utilisateur connecté
 export const getMe = async (req, res) => {
@@ -250,5 +251,37 @@ export const togglePromote = async (req) => {
   if (!user) throw new Error("Utilisateur non trouvé");
   user.role = user.role == "admin" ? "moderator" : "admin";
 
-  await user.save();
+  await user.save();
 };
+
+export const deleteFavoris = async(req,res) => {
+  try {
+    
+
+    const {user_Id, produit_Id} = req.params ; 
+
+    const user = await User.findById(user_Id);
+    
+    if(!user) {
+      return res.status(404).json({message: "Utilisateur  non trouvé"}); 
+    }
+
+    if(!user.favoris.includes(produit_Id)) {
+      return res.status(404).json({message:  "Ce produit n'est pas dans les favoris de l'utilisateur "}); 
+    }
+
+    user.favoris = user.favoris.filter((id) => id.toString() !== produit_Id ); 
+
+    await user.save(); 
+
+    res.json({
+      message: "Produit supprimé des favoris avec succès :)",
+      favoris: user.favoris,
+    }); 
+
+
+  }catch(error) {
+    console.error("Erreur lors de la suppression du favori : ", error);
+    res.status(500).json({message: "Erreur serveur :("});
+  }
+}

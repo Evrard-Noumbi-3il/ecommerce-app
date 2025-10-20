@@ -90,7 +90,7 @@ const markAsRead = async (receiverId, chatId) => {
     display: flex;
     flex-direction: column;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: rgb(8, 1, 36);
+    background: linear-gradient(135deg, #01021d 0%, #010778 100%);
     padding: 20px;
   }
 
