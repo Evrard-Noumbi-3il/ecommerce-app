@@ -177,6 +177,7 @@ export const getMyProducts = async (req, res) => {
 
     res.status(200).json(produitsMisEnVente);
   } catch (error) {
+    console.log(error);
     console.error(error);
     res.status(500).json({ message: "Erreur serveur", details: error.message });
   }
