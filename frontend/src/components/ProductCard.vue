@@ -160,11 +160,15 @@ const avisWithFormattedDate = computed(() => {
 });
 
 const isTheSeller = () => {
-  if (!props.userSeller?.misEnVente || props.userSeller.misEnVente.length === 0) {
-    return false;
+  const token = localStorage.getItem("token");
+  const idUser = JSON.parse(atob(token.split(".")[1])).id;
+  if (props.userSeller && props.userSeller._id) {
+    return idUser === props.userSeller._id;
   }
-  return props.userSeller.misEnVente.includes(props.product._id);
+
+  return false;
 };
+
 </script>
 
 <style scoped>
