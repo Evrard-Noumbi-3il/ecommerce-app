@@ -161,6 +161,8 @@ const avisWithFormattedDate = computed(() => {
 
 const isTheSeller = () => {
   const token = localStorage.getItem("token");
+  if (!token) return false;
+
   const idUser = JSON.parse(atob(token.split(".")[1])).id;
   if (props.userSeller && props.userSeller._id) {
     return idUser === props.userSeller._id;
