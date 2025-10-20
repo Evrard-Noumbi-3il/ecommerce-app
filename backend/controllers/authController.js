@@ -105,7 +105,7 @@ export const login = async (req, res) => {
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, firstname, phonenumber, email, password, confirmpassword } = req.body;
+    const { name, firstname, phonenumber, email, password } = req.body;
 
 
     if (!email || !password) {
@@ -145,7 +145,7 @@ export const registerUser = async (req, res) => {
     }
 
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
 
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
     console.log('✅ Code de vérification généré pour:', verificationCode);
@@ -155,7 +155,7 @@ export const registerUser = async (req, res) => {
       firstname,
       phonenumber: phonenumber || null,
       email: email.toLowerCase(),
-      password: hashedPassword,
+      password: password,
       verificationCode,
       isVerified: false,
       role: 'user',

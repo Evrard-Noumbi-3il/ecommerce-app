@@ -3,7 +3,7 @@
     <div class="card-register">
       <h3>INSCRIVEZ VOUS ICI</h3>
 
-      
+
       <div v-if="message.text" :class="['register-message', message.type]">
         {{ message.text }}
       </div>
@@ -108,7 +108,6 @@ export default {
           return;
         }
         const hashedPassword = await bcrypt.hash(this.password, 10);
-        const hashedConfirmPassword = await bcrypt.hash(this.confirmpassword, 10);
         const res = await axios.post(
           `${process.env.VUE_APP_API_URL}/auth/register`,
           {
@@ -117,10 +116,9 @@ export default {
             phonenumber: this.phonenumber,
             email: this.email,
             password: hashedPassword,
-            confirmpassword: hashedConfirmPassword,
           }
         );
-        
+
         localStorage.setItem("verifyEmail", this.email);
 
         this.message = { text: "Inscription réussie ✅ Vérifiez votre email/SMS", type: "success" };
