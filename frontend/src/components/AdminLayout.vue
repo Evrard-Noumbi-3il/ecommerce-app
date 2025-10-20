@@ -32,12 +32,8 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import api from "../auth/axios"
+import api from "../auth/axios.js"
 const isAdmin = ref(false);
-// Simulations d'actions admin (à connecter à tes API plus tard)
-const approveAllFlagged = () => {
-  console.log("✅ Tous les produits signalés approuvés.");
-};
 
 const approveAllPending = async () => {
   const confirmApprove = window.confirm("Valider tous les produits en attente ?");

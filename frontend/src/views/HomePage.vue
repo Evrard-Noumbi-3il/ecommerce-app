@@ -128,7 +128,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import api from "@/auth/axios";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
@@ -157,8 +157,8 @@ const toggleFavorite = async (idProduit) => {
   try {
     const token = localStorage.getItem("token");
     const id = JSON.parse(atob(token.split('.')[1])).id;
-    const response = await axios.post(
-      `${process.env.VUE_APP_API_URL}/favoris/addFavori`,
+    const response = await api.post(
+      `/favoris/addFavori`,
       { id_produit: idProduit, id: id }
     );
     console.log("Favori ajouté avec succès :", response.data);
@@ -173,11 +173,11 @@ const loadData = async () => {
     hasError.value = false;
 
     const [resPub, resTend, resCat, resNew, resThem] = await Promise.all([
-      axios.get("http://localhost:3000/api/home/publicites"),
-      axios.get("http://localhost:3000/api/home/tendances"),
-      axios.get("http://localhost:3000/api/home/categories"),
-      axios.get("http://localhost:3000/api/home/nouveautes"),
-      axios.get("http://localhost:3000/api/home/thematiques"),
+      api.get("/home/publicites"),
+      api.get("/home/tendances"),
+      api.get("/home/categories"),
+      api.get("/home/nouveautes"),
+      api.get("/home/thematiques"),
     ]);
 
     publicites.value = resPub.data;

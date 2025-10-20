@@ -208,7 +208,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "@/auth/axios";
+
 
 export default {
   name: "ProfileUser",
@@ -258,7 +259,7 @@ export default {
       formData.append("photo", this.userFile);
 
       try {
-        const res = await axios.patch("http://localhost:3000/api/user/me/photo", formData, {
+        const res = await api.patch("/user/me/photo", formData, {
           headers: {  
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`  
@@ -281,7 +282,7 @@ export default {
       if (!token) throw new Error("Utilisateur non connecté");
 
       // Appel API pour marquer la notification comme lue
-      await axios.patch(`http://localhost:3000/api/notifications/${notification._id}/read`, {}, {
+      await api.patch(`/notifications/${notification._id}/read`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -301,7 +302,7 @@ async getMyProducts() {
 
     const userId = JSON.parse(atob(token.split(".")[1])).id;
 
-    const res = await axios.get(`http://localhost:3000/api/user/users/${userId}/products`, {
+    const res = await api.get(`/user/users/${userId}/products`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -327,7 +328,7 @@ async getMyProducts() {
           address: this.user.address,
         };
 
-        await axios.put("http://localhost:3000/api/user/me", payload, {
+        await api.put("/user/me", payload, {
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }
         });
 
@@ -346,7 +347,7 @@ async getMyProducts() {
             const userId = JSON.parse(atob(token.split(".")[1])).id;
 
             // Endpoint basé sur votre structure backend (req.params.userId)
-            const res = await axios.get(`http://localhost:3000/api/notifications/${userId}`, {
+            const res = await axios.get(`/notifications/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -390,8 +391,8 @@ async getMyProducts() {
         if (!token) return;
 
         const id = JSON.parse(atob(token.split(".")[1])).id;
-        const endpoint = `http://localhost:3000/api/user/me/${id}`;
-        const res = await axios.get(endpoint, {
+        const endpoint = `/user/me/${id}`;
+        const res = await api.get(endpoint, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = res.data;

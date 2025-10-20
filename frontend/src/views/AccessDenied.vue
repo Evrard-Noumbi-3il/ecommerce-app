@@ -50,7 +50,7 @@ const requiredRole = computed(() => props.requiredRole || route.query.role || nu
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
 }
 

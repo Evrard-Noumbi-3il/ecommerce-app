@@ -35,7 +35,7 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
+import api from '../auth/axios'
 const hovered = ref(0);
 const note = ref(0);
 const comments = ref('');
@@ -53,7 +53,7 @@ const submitEvaluation = async (idReceive) =>{
         const token = localStorage.getItem('token');
         const userSendId = JSON.parse(atob(token.split('.')[1])).id;
 
-        const response = await axios.post(`${process.env.VUE_APP_API_URL}/avis/create`, {
+        const response = await api.post(`/avis/create`, {
             userSend: userSendId,
             userReceive:  idReceive,
             note: note.value,

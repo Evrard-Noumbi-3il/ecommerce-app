@@ -85,7 +85,7 @@
 
 <script>
 import { ref } from "vue";
-import axios from "axios";
+import api from "@/auth/axios";
 import { useRouter } from "vue-router";
 
 const showPassword = ref(false);
@@ -120,8 +120,8 @@ export default {
 
       try {
         this.isLoading = true;
-        const res = await axios.post(
-          `${process.env.VUE_APP_API_URL}/auth/login`,
+        const res = await api.post(
+          `/auth/login`,
           { 
             email: this.email, 
             password: this.password 
@@ -141,7 +141,7 @@ export default {
         const errorData = err.response?.data;
         const statusCode = err.response?.status;
 
-        console.log('🔍 DEBUG Login Error:');
+        console.log('DEBUG Login Error:');
         console.log('Status:', statusCode);
         console.log('Data:', errorData);
         console.log('requiresVerification:', errorData?.requiresVerification);
@@ -175,8 +175,8 @@ export default {
         this.isResendingCode = true;
         this.message = { text: "", type: "" };
 
-        const res = await axios.post(
-          `${process.env.VUE_APP_API_URL}/auth/resend-code`,
+        const res = await api.post(
+          `/auth/resend-code`,
           { email: this.email }
         );
 

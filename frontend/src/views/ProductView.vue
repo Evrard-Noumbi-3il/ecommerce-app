@@ -33,7 +33,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import api from "@/auth/axios";
 import { useRoute } from "vue-router";
 import ProductCard from "../components/ProductCard.vue";
 import ContactModal from "../components/ContactModal.vue";
@@ -64,8 +64,8 @@ const error = ref(null);
 
 const fetchProduct = async (id) => {
   try {
-    const response = await axios.get(
-      `http://localhost:3000/api/products/${id}`
+    const response = await api.get(
+      `/products/${id}`
     );
     console.log("Réponse product :", response.data);
     product.value = response.data;
@@ -78,15 +78,15 @@ const fetchProduct = async (id) => {
 
 const fetchUserProductSeller = async (id) => {
   try {
-    const response = await axios.get(
-      `http://localhost:3000/api/products/user/${id}`
+    const response = await api.get(
+      `/products/user/${id}`
     );
     console.log("Réponse userSeller :", response.data);
     userSeller.value = response.data;
     console.log("ID du vendeur :", userSeller.value._id);
 
-    const responseAvis = await axios.get(
-      `http://localhost:3000/api/avis/user/${userSeller.value._id}`
+    const responseAvis = await api.get(
+      `/avis/user/${userSeller.value._id}`
     );
     avis.value = responseAvis.data;
   } catch (error) {
@@ -96,8 +96,8 @@ const fetchUserProductSeller = async (id) => {
 
 const fetchProductCategory = async (id) => {
   try {
-    const response = await axios.get(
-      `http://localhost:3000/api/products/category/${id}`
+    const response = await api.get(
+      `/products/category/${id}`
     );
     console.log("Réponse cate :", response.data);
     category.value = response.data;

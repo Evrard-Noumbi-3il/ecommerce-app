@@ -40,7 +40,8 @@ import ChatMessages from '../components/ChatMessages.vue';
 import ChatInput from '../components/ChatInput.vue';
 import PaiementModal from '@/components/PaiementModal.vue';
 
-import axios from 'axios';
+import api from "@/auth/axios";
+
 import { onMounted, ref } from 'vue';
 
 
@@ -75,7 +76,7 @@ const getChatListReceiver = async () => {
   try {
     const token = localStorage.getItem('token');
     const userId = JSON.parse(atob(token.split('.')[1])).id;
-    const response = await axios.get(`${process.env.VUE_APP_API_URL}/chat/getChatListReceiver`,{
+    const response = await api.get(`/chat/getChatListReceiver`,{
       params: { userId: userId }
     });
     receivers.value = response.data;

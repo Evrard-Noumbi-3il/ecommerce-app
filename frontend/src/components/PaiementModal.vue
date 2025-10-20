@@ -47,7 +47,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import api from "../auth/axios.js";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripe = ref(null);
@@ -80,8 +80,8 @@ onMounted(async () => {
 
   // 2. Créer une session de paiement sur votre serveur
   try {
-    const response = await axios.post(
-      `${process.env.VUE_APP_API_URL}/paiement/create-checkout-session`,
+    const response = await api.post(
+      `/paiement/create-checkout-session`,
       {
         titre: props.product.titre,
         description: props.product.description,

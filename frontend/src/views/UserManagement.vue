@@ -55,7 +55,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import api from "@/auth/axios.js"; // adapte le chemin si nécessaire
+import api from "@/auth/axios.js"; 
 
 const search = ref("");
 const users = ref([]);

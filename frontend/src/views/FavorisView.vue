@@ -42,7 +42,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import api from "@/auth/axios";
 import {useFavoritesStore} from "@/stores/favoris"; 
 
 
@@ -70,7 +70,7 @@ onMounted(async () => {
     const id = JSON.parse(atob(token.split(".")[1])).id; 
 
     const responseProd = await
-      axios.get(`${process.env.VUE_APP_API_URL}/favoris/getFavoris/${id}`)
+      api.get(`/favoris/getFavoris/${id}`)
     ; 
 
     produits.value = responseProd.data.produits || []; 

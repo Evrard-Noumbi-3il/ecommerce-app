@@ -107,7 +107,7 @@
 </template>
 
 <script setup>
-import axios from "axios";
+import api from "../auth/axios.js";
 import { computed } from "vue";
 
 const props = defineProps({
@@ -136,8 +136,8 @@ const toggleFavorite = async (id) => {
   try {
     const token = localStorage.getItem("token");
     const idUser = JSON.parse(atob(token.split(".")[1])).id;
-    const response = await axios.post(
-      `${process.env.VUE_APP_API_URL}/favoris/addFavori`,
+    const response = await api.post(
+      `/favoris/addFavori`,
       { id_produit: id, id: idUser }
     );
     console.log(response.data.message);

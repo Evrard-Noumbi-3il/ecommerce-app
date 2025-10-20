@@ -82,7 +82,7 @@
 
 <script>
 import { ref } from "vue";
-import axios from "axios";
+import api from "@/auth/axios";
 import bcrypt from "bcryptjs";
 const showConfirmPassword = ref(false);
 
@@ -108,8 +108,8 @@ export default {
           return;
         }
         const hashedPassword = await bcrypt.hash(this.password, 10);
-        const res = await axios.post(
-          `${process.env.VUE_APP_API_URL}/auth/register`,
+        const res = await api.post(
+          `/auth/register`,
           {
             name: this.name,
             firstname: this.firstname,
