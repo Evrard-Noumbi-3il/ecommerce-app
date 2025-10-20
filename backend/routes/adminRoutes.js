@@ -13,7 +13,7 @@ import {  getAllPublicites,  createPublicite, getPubliciteById, updatePublicite,
 
 const router = express.Router();
 
-// 🔐 Admin only
+
 router.get("/users", authMiddleware, isAdmin, getAllUsers);
 router.get("/users/users", authMiddleware, isAdmin, getUsers);
 router.put("/users/:id", authMiddleware, isAdmin, togglePromote);
@@ -21,14 +21,13 @@ router.post("/users/:id", authMiddleware,isModeratorOrAdmin, toggleBan);
 router.delete("/users/banned", authMiddleware, isAdmin, deleteBanUser);
 router.get("/dashboard-stats", authMiddleware, isAdmin, getDashboardStats);
 
-// 🔐 Moderator or Admin
-router.get("/reported-products", authMiddleware, isModeratorOrAdmin, getReportedProducts);
+
 router.post("/products/validate-all", authMiddleware, isModeratorOrAdmin, validateAllPendingProducts);
 router.put("/products/:id", authMiddleware, isModeratorOrAdmin, toggleStateProduct);
 router.get("/products", authMiddleware, isModeratorOrAdmin, getProducts);
 router.delete("/products/:id", authMiddleware, isModeratorOrAdmin, deleteProduct);
 
-// 🔐 Authenticated users (e.g., admin/moderator)
+
 router.get("/categories", authMiddleware, getCategories);
 router.post("/categories", authMiddleware, isAdmin, addCategory);
 router.put("/categories/:id", authMiddleware, isAdmin, updateCategory);
@@ -48,13 +47,6 @@ router.post("/publicites", authMiddleware, isAdmin, uploadPub.single("image"), c
 router.get("/publicites/:id", authMiddleware, getPubliciteById);
 router.put("/publicites/:id", authMiddleware, isAdmin, uploadPub.single("image"), updatePublicite);
 router.delete("/publicites/:id", authMiddleware, isAdmin, deletePublicite);
-
-router.get('/stats/products-by-day',authMiddleware, isAdmin, getProductsByDay);
-router.get('/stats/products-by-status', authMiddleware, isAdmin, getProductsByStatus);
-router.get('/stats/products-by-state', authMiddleware, isAdmin, getProductsByState);
-router.get('/stats/products-by-seller-type', authMiddleware, isAdmin, getProductsBySellerType);
-router.get('/stats/top-categories', authMiddleware, isAdmin, getTopCategories);
-router.get('/stats/top-viewed-products', authMiddleware, isAdmin, getTopViewedProducts);
 
 
 export default router;

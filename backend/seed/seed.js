@@ -776,47 +776,47 @@ const produits = await Produit.insertMany([
 
    // Insérer publicités
 await Publicite.insertMany([
-  { 
-    titre: "Promo Été",
-    information: "Réductions jusqu'à -50% sur l'électroménager",
+  {
+    titre: "🔥 Promo Été",
+    information: "Profitez de l'été pour équiper votre maison ! Jusqu'à -50% sur une sélection d'appareils électroménagers : réfrigérateurs, lave-linge, aspirateurs et plus encore. Offres limitées, ne manquez pas cette vague de réductions !",
     image: "/images/publicites/pub1.jpg"
   },
-  { 
-    titre: "Nouveautés Auto",
-    information: "Découvrez les derniers modèles hybrides et électriques",
+  {
+    titre: "🚗 Nouveautés Auto",
+    information: "Explorez l’avenir de la mobilité ! Découvrez les derniers modèles hybrides et 100% électriques, alliant performance, design et économies d’énergie. Essais gratuits et offres de lancement disponibles chez nos partenaires.",
     image: "/images/publicites/pub2.jpg"
   },
-  { 
-    titre: "Offres Immo",
-    information: "Appartements et maisons à prix réduits partout en France",
+  {
+    titre: "🏡 Offres Immo",
+    information: "Envie de changer de vie ? Trouvez votre futur chez-vous parmi nos appartements et maisons à prix réduits partout en France. Opportunités exclusives, frais de notaire offerts sur certaines ventes !",
     image: "/images/publicites/pub3.jpg"
   },
-  { 
-    titre: "Tech Deals",
-    information: "Smartphones, PC et gadgets à prix cassés cette semaine",
+  {
+    titre: "💻 Tech Deals",
+    information: "Cette semaine seulement : smartphones dernière génération, PC ultra-performants et gadgets connectés à prix cassés ! Stock limité, livraison express et garantie incluse. Faites le plein de technologie !",
     image: "/images/publicites/pub4.jpg"
   },
-  { 
-    titre: "Mobilier Design",
-    information: "Meubles modernes en promo - livraison gratuite",
+  {
+    titre: "🛋️ Mobilier Design",
+    information: "Transformez votre intérieur avec notre sélection de meubles modernes et élégants. Promotions exceptionnelles et livraison gratuite partout en France. Canapés, tables, rangements : style et confort à petit prix !",
     image: "/images/publicites/pub5.jpg"
   },
-  { 
-    titre: "Mode & Accessoires",
-    information: "Nouvelles collections printemps-été",
+  {
+    titre: "👗 Mode & Accessoires",
+    information: "Soyez tendance avec nos nouvelles collections printemps-été ! Robes légères, sacs stylés, lunettes de soleil et bien plus. Offres exclusives en ligne et en boutique. L’élégance n’attend pas !",
     image: "/images/publicites/pub6.jpg"
   },
-  { 
-    titre: "Sport & Loisirs",
-    information: "Équipements sportifs à prix mini",
+  {
+    titre: "🏀 Sport & Loisirs",
+    information: "Bougez sans vous ruiner ! Équipements sportifs, accessoires de fitness, vélos et jeux de plein air à prix mini. Idéal pour se remettre en forme ou s’amuser en famille. Promotions valables jusqu’à épuisement des stocks.",
     image: "/images/publicites/pub7.jpg"
   },
-  { 
-    titre: "Voyages",
-    information: "Séjours et billets d’avion à prix réduit",
+  {
+    titre: "✈️ Voyages",
+    information: "Envie d’évasion ? Réservez vos séjours et billets d’avion à prix réduit vers les plus belles destinations. Plages paradisiaques, escapades urbaines ou nature sauvage : partez sans vous ruiner !",
     image: "/images/publicites/pub8.jpg"
   },
-  ]);
+]);
   console.log("✅ Publicités insérées");
 
     // Insérer utilisateurs
