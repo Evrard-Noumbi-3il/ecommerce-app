@@ -13,11 +13,15 @@ import Products from '../views/ProductManagement.vue';
 import Ads from '@/views/AdManagement.vue';
 import Notifications from '@/views/NotificationManagement.vue';
 import Themes from '@/views/ThemeManagement.vue';
-import FavorisView from '@/views/FavorisView.vue'
+import FavorisView from '@/views/FavorisView.vue';
 import VerifyAccount from "@/components/VerifyAccount.vue";
-
 import ChatView from "@/views/ChatView.vue";
-//import notificationsRoutes from "./routes/notifications.js";
+
+// 🆕 Pages d’erreur
+import NotFound from "@/views/NotFound.vue";
+import AccessDenied from "@/views/AccessDenied.vue";
+import ServerError from "@/views/ServerError.vue";
+
 const routes = [
   { path: "/", name: "HomePage", component: Home },
   { path: "/search", name: "search", component: SearchPage },
@@ -74,27 +78,31 @@ const routes = [
     name: "favoris",
     meta: { requiresAuth: true },
   },
-  {
-    path: "/verify-account",
-    name: "VerifyAccount",
-    component: VerifyAccount,
-  }
+  { path: "/verify-account", name: "VerifyAccount", component: VerifyAccount },
+
+  // 🆕 Pages d’erreurs
+  { path: "/access-denied", name: "AccessDenied", component: AccessDenied },
+  { path: "/server-error", name: "ServerError", component: ServerError },
+  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !isAuthenticated()) {
-    alert("vous devez être connecté pour accéder à cette page.");
-    next({ name: "HomePage" });
-  } else if (to.meta.requiresAdmin && !isAdmin()) {
-    alert("Accès refusé. Vous n'avez pas les droits administrateur.");
-    next({ name: "HomePage" });
-  } else {
+  try {
+    if (to.meta.requiresAuth && !isAuthenticated()) {
+      return next({ name: "AccessDenied" });
+    }
+    if (to.meta.requiresAdmin && !isAdmin()) {
+      return next({ name: "AccessDenied" });
+    }
     next();
+  } catch (error) {
+    console.error("Erreur routeur :", error);
+    next({ name: "ServerError" });
   }
 });
 

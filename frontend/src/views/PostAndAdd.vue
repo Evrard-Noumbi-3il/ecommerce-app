@@ -222,7 +222,6 @@
 
   .containerPostAndAdd {
     margin-bottom: 200px;
-    padding: 5% 0 0% 0;
     width: 100%;
     height: 100%;
     max-width: 100%;
