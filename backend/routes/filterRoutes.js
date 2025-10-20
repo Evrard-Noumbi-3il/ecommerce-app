@@ -8,8 +8,7 @@ const router = express.Router();
 
 router.get("/user/:id", getUserByIdProduct);
 router.get("/thematiques", getThematiques);
-router.post("/addProduct", upload.single("image"), addProduct);
-router.post("/addProduct", addProduct);
+router.post("/addProduct", upload.array("images", 10), addProduct);
 router.get("/categories", getCategories);
 router.get("/category/:id", getProductCategory)
 router.get("/:id", getProductById);

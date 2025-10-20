@@ -4,12 +4,36 @@ import { addMiseEnVente } from "./userController.js";
 
 export const addProduct = async (req, res) => {
   try {
-    const { userId, titre, description, prix, id_categorie, theme, location, state, sellerType } = req.body;
+    const {
+      userId,
+      titre,
+      description,
+      prix,
+      id_categorie,
+      theme,
+      location,
+      state,
+      sellerType,
+    } = req.body;
 
-    if (!titre || !description || !prix || !id_categorie || !theme || !location || !state || !sellerType) {
+    if (
+      !titre ||
+      !description ||
+      !prix ||
+      !id_categorie ||
+      !theme ||
+      !location ||
+      !state ||
+      !sellerType
+    ) {
       return res.status(400).json({
-        message: "Tous les champs sont requis ❌"
+        message: "Tous les champs sont requis ❌",
       });
+    }
+
+    let imagePaths = [];
+    if (req.files && req.files.length > 0) {
+      imagePaths = req.files.map(file => `/images/produits/${file.filename}`);
     }
 
     const newProduit = new Produit({
@@ -20,7 +44,8 @@ export const addProduct = async (req, res) => {
       theme,
       location,
       state,
-      sellerType
+      sellerType,
+      images: imagePaths,
     });
 
     await newProduit.save();
@@ -32,13 +57,12 @@ export const addProduct = async (req, res) => {
 
     return res.status(201).json({
       message: "Produit ajouté avec succès ✅",
-      produit: newProduit
+      produit: newProduit,
     });
-
   } catch (error) {
     return res.status(500).json({
       message: "Erreur serveur ❌",
-      error: error.message
+      error: error.message,
     });
   }
 };

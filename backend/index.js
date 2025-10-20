@@ -11,6 +11,8 @@ import favorisRoutes from "./routes/favorisRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import categorieRoutes from "./routes/categorieRoutes.js"
 import avisRoutes from "./routes/avisRoutes.js"
+import paiementRoutes from "./routes/paiementRoute.js";
+import chatRoutes from "./routes/chatRoutes.js";
 import notificationsRoutes from "./routes/notificationRoutes.js";
 dotenv.config();
 
@@ -50,20 +52,22 @@ app.get("/redirect", (req, res) => {
 });
 
 // Connexion MongoDB
-mongoose.connect(process.env.MONGODB_URI)
+mongoose
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB connecté"))
-  .catch(err => console.error("❌ Erreur MongoDB :", err));
-
+  .catch((err) => console.error("❌ Erreur MongoDB :", err));
 
 // Routes
-app.use('/api/auth', authRoutes)
-app.use("/api/home", homeRoutes)
-app.use("/api/products", filterRoutes)
-app.use("/api/admin", adminRoutes)
-app.use("/api/favoris", favorisRoutes)
-app.use("/api/user", userRoutes)
-app.use("/api/categories", categorieRoutes)
-app.use("/api/avis", avisRoutes)
+app.use("/api/auth", authRoutes);
+app.use("/api/home", homeRoutes);
+app.use("/api/products", filterRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/favoris", favorisRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/categories", categorieRoutes);
+app.use("/api/avis", avisRoutes);
+app.use("/api/paiement", paiementRoutes);
+app.use("/api/chat", chatRoutes);
 app.use("/api/notifications", notificationsRoutes);
 
 // custom 404

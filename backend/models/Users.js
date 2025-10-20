@@ -27,20 +27,26 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["user", "moderator", "admin"],
-      default: "user"
+      default: "user",
     },
-    favoris: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Produit"
-    }],
-    misEnVente: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Produit"
-    }],
-    avis: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Avis"
-    }],
+    favoris: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Produit",
+      },
+    ],
+    misEnVente: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Produit",
+      },
+    ],
+    avis: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Avis",
+      },
+    ],
     photo: {
       type: String,
       default: "/images/default-profile.png",
@@ -49,7 +55,7 @@ const userSchema = new mongoose.Schema(
       rue: String,
       ville: String,
       codePostal: String,
-      pays: String
+      pays: String,
     },
     isBan: {
       type: Boolean,
@@ -57,6 +63,12 @@ const userSchema = new mongoose.Schema(
     },
     isVerified: { type: Boolean, default: false },
     verificationCode: String,
+    chatList: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Chat",
+      },
+    ],
   },
   { timestamps: true }
 );
