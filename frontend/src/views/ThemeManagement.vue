@@ -64,7 +64,6 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
 import api from '../auth/axios.js'
 
 const API_BASE = "/admin/thematiques";

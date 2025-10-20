@@ -96,7 +96,7 @@
 <script setup>
 
   import { ref, onMounted } from "vue";
-  import axios from "axios";
+  import api from "@/auth/axios";
   import FirstForm from "@/components/PostAndAdd/First-form.vue";
   import SecondForm from "@/components/PostAndAdd/Second-form.vue";
   import ThirdFrom from "@/components/PostAndAdd/Third-from.vue";
@@ -138,13 +138,13 @@
 
   onMounted(() => {
     // Charger les catégories et thématiques depuis ton API
-    axios.get("http://localhost:3000/api/products/categories")
+    api.get("/products/categories")
       .then(res => {
         categories.value = res.data;
       })
       .catch(err => console.error(err));
 
-    axios.get("http://localhost:3000/api/products/thematiques")
+    api.get("/products/thematiques")
       .then(res => {
         thematiques.value = res.data;
       })
@@ -185,7 +185,7 @@
         formData.append("images", file);
       });
 
-      const response = await axios.post(`http://localhost:3000/api/products/addProduct`, formData, {
+      const response = await api.post(`/products/addProduct`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${token}`

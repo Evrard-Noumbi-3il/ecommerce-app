@@ -2,7 +2,7 @@
   <div class="overlay">
     <div class="modal">
       <h3>Session expirée</h3>
-      <p>Votre session a expiré. Veuillez vous reconnecter.</p>
+      <p>Votre session a expiré. Veuillez vous reconnecter</p>
       <button @click="$emit('close')">Se reconnecter</button>
     </div>
   </div>

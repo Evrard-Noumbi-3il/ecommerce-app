@@ -30,7 +30,7 @@
 </template>
 <script setup>
 import { onMounted, ref } from 'vue';
-import axios from 'axios';
+import api from '../auth/axios.js';
 
 
 const subject = ref('Offre d\'achat');
@@ -52,7 +52,7 @@ const sendMessage = async () => {
     const token = localStorage.getItem('token');
     const id = JSON.parse(atob(token.split('.')[1])).id;
     console.log("l'id du vendeur est", props.userSellerId);
-    const response = await axios.post(`${process.env.VUE_APP_API_URL}/chat/send`, {
+    const response = await api.post(`/chat/send`, {
       senderId: id,
       receiverId: props.userSellerId,
       subject: subject.value,

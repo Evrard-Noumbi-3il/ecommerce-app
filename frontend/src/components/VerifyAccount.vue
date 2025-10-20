@@ -55,7 +55,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import axios from 'axios'
+import api from "@/auth/axios"
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
@@ -125,8 +125,8 @@ const verifyCode = async () => {
     isLoading.value = true
     message.value = { text: '', type: '' }
 
-    const response = await axios.post(
-      `${process.env.VUE_APP_API_URL}/auth/verify`,
+    const response = await api.post(
+      `/auth/verify`,
       {
         email: userEmail.value,
         code: code.value
@@ -156,8 +156,8 @@ const resendCode = async () => {
     isResending.value = true
     message.value = { text: '', type: '' }
 
-    const response = await axios.post(
-      `${process.env.VUE_APP_API_URL}/auth/resend-code`,
+    const response = await api.post(
+      `/auth/resend-code`,
       { email: userEmail.value }
     )
 

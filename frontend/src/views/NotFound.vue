@@ -8,17 +8,6 @@
         Désolé, la page que vous recherchez n'existe pas ou a été supprimée.
       </p>
 
-      <div class="search-box">
-        <input 
-          type="text" 
-          placeholder="Rechercher..."
-          @keyup.enter="handleSearch"
-          v-model="searchQuery"
-          class="search-input"
-        />
-        <button @click="handleSearch" class="search-btn">Rechercher</button>
-      </div>
-
       <div class="error-actions">
         <router-link to="/" class="btn btn-primary">
           Accueil
@@ -36,20 +25,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const searchQuery = ref('')
-
-const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    router.push({
-      name: 'search',
-      query: { q: searchQuery.value }
-    })
-  }
-}
 
 const goBack = () => {
   router.back()
@@ -111,41 +89,6 @@ h2 {
   color: #666;
   margin: 0 0 30px 0;
   line-height: 1.6;
-}
-
-.search-box {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 30px;
-}
-
-.search-input {
-  flex: 1;
-  padding: 12px 15px;
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: border 0.3s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #667eea;
-}
-
-.search-btn {
-  padding: 12px 30px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-.search-btn:hover {
-  background: #5568d3;
 }
 
 .error-actions {
@@ -211,14 +154,6 @@ h2 {
 
   h2 {
     font-size: 24px;
-  }
-
-  .search-box {
-    flex-direction: column;
-  }
-
-  .search-input {
-    width: 100%;
   }
 
   .error-actions {

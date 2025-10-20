@@ -38,7 +38,7 @@
   </div>
 </template>
 <script setup>
-import axios from 'axios';
+import api from '../auth/axios.js';
 import { ref,onMounted} from 'vue';
 
 
@@ -73,7 +73,7 @@ const emit = defineEmits(['update: selectedReceiver']);
 
 const markAsRead = async (receiverId, chatId) => {
   try {
-    await axios.post(`${process.env.VUE_APP_API_URL}/chat/markAsRead`, {
+    await api.post(`/chat/markAsRead`, {
       receiverId: receiverId,
       chatId: chatId
     });

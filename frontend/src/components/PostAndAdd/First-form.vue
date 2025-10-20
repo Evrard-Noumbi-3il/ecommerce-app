@@ -61,7 +61,7 @@
 <script setup>
 
   import { ref, onMounted} from "vue";
-  import axios from "axios";
+  import api from "../../auth/axios.js";
   defineProps({
     titre: String,
     theme: String,
@@ -98,13 +98,13 @@
 
   onMounted(() => {
 
-    axios.get("http://localhost:3000/api/products/categories")
+    api.get("/products/categories")
       .then(res => {
         categories.value = res.data;
       })
       .catch(err => console.error(err));
 
-    axios.get("http://localhost:3000/api/products/thematiques")
+    api.get("/products/thematiques")
       .then(res => {
         thematiques.value = res.data;
       })

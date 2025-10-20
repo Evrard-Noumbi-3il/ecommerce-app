@@ -286,7 +286,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import axios from "axios";
+import api from "@/auth/axios";
 import {useFavoritesStore} from "@/stores/favoris"
 
 const favorisStore = useFavoritesStore();
@@ -323,7 +323,7 @@ const filters = ref({
 
 const fetchCategories = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api/products/categories')
+    const response = await api.get('/products/categories')
     categories.value = response.data
   } catch (error) {
 
@@ -333,7 +333,7 @@ const fetchCategories = async () => {
 
 const fetchThemes = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api/products/thematiques')
+    const response = await api.get('/products/thematiques')
     themes.value = response.data
   } catch (error) {
     console.error('Erreur lors du chargement des thématiques :', error)
@@ -381,7 +381,7 @@ const initFiltersFromQuery = (query) => {
 const fetchResults = async () => {
   try {
     isLoading.value = true;
-    const res = await axios.get("http://localhost:3000/api/products", {
+    const res = await api.get("/products", {
       params: { ...filters.value, q: searchTerm.value, page: currentPage.value, limit: 20 },
     });
     results.value = res.data.results;
@@ -475,8 +475,8 @@ const toggleFavorite = async (idProduit) => {
   try {
     const token = localStorage.getItem("token");
     const id = JSON.parse(atob(token.split('.')[1])).id;
-    const response = await axios.post(
-      `${process.env.VUE_APP_API_URL}/favoris/addFavori`,
+    const response = await api.post(
+      `/favoris/addFavori`,
       { id_produit: idProduit, id: id }
     );
     console.log("Favori ajouté avec succès :", response.data);

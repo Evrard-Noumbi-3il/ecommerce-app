@@ -69,10 +69,6 @@ const errorTitle = computed(() => {
   return errorConfig[errorCode.value]?.title || 'Erreur'
 })
 
-const finalErrorMessage = computed(() => {
-  return errorMessage.value || errorConfig[errorCode.value]?.defaultMessage || 'Une erreur est survenue.'
-})
-
 const goBack = () => {
   router.back()
 }
