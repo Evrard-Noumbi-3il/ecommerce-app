@@ -287,9 +287,7 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import api from "@/auth/axios";
-import {useFavoritesStore} from "@/stores/favoris"
 
-const favorisStore = useFavoritesStore();
 const route = useRoute();
 const router = useRouter();
 

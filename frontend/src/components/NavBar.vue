@@ -50,13 +50,6 @@
           <li><RouterLink to="/admin/dashboard" v-if="isLoggedIn && isAdminOrModerator">Dashboard</RouterLink></li>
           <li>
             <RouterLink
-              to="/admin/dashboard"
-              v-if="isLoggedIn && isAdminOrModerator"
-              >Dashboard</RouterLink
-            >
-          </li>
-          <li>
-            <RouterLink
               to="/post-ad"
               v-if="
                 isLoggedIn && !isAdminOrModerator && route.name !== 'PostAndAdd'

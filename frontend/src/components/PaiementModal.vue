@@ -50,6 +50,7 @@ import { ref, onMounted } from "vue";
 import api from "../auth/axios.js";
 import { loadStripe } from "@stripe/stripe-js";
 
+
 const stripe = ref(null);
 const elements = ref(null);
 const clientSecret = ref("");
@@ -75,7 +76,7 @@ const props = defineProps({
 onMounted(async () => {
   // 1. Charger Stripe.js
   stripe.value = await loadStripe(
-    "pk_test_51SJj8k2XxI6uv09mhTeZcAaJASiERreKW4cPjWC5fazmDKeRRvYOcuwsS4V77seK8U7PPhNZEXOcMJm8lxIv1G0U008df0uH5i"
+    process.env.STRIPE_SECRET_KEY
   );
 
   // 2. Créer une session de paiement sur votre serveur
