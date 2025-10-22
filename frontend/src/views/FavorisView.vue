@@ -46,7 +46,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import api from "@/auth/axios";
-import {useFavoritesStore} from "@/stores/favoris"; 
 
 
 

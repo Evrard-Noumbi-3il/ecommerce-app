@@ -137,7 +137,6 @@ import TendancesThematique from "../components/TendancesThematique.vue";
 import CategoriesList from "../components/CategoriesList.vue";
 import NouveautesProduits from "../components/NouveautesproduitsBar.vue";
 import DecouvrirSection from "../components/DecouvrirSection.vue";
-import {useFavoritesStore} from "@/stores/favoris"; 
 
 const goToPage = () => {
   router.push({ name: 'search' });
@@ -150,7 +149,6 @@ const thematiques = ref([]);
 
 const isLoading = ref(true);
 const hasError = ref(false);
-const favorisStore = useFavoritesStore();
 
 // Favoris
 const toggleFavorite = async (idProduit) => {

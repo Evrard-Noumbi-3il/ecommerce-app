@@ -26,7 +26,7 @@ const seedDatabase = async () => {
     await Produit.deleteMany();
     //await User.deleteMany();
 
-    console.log("🗑️ Collections vidées");
+    console.log(" Collections vidées");
 
     // Insérer thématiques
 const thematiques = await Thematique.insertMany([
@@ -777,42 +777,42 @@ const produits = await Produit.insertMany([
    // Insérer publicités
 await Publicite.insertMany([
   {
-    titre: "🔥 Promo Été",
+    titre: " Promo Été",
     information: "Profitez de l'été pour équiper votre maison ! Jusqu'à -50% sur une sélection d'appareils électroménagers : réfrigérateurs, lave-linge, aspirateurs et plus encore. Offres limitées, ne manquez pas cette vague de réductions !",
     image: "/images/publicites/pub1.jpg"
   },
   {
-    titre: "🚗 Nouveautés Auto",
+    titre: " Nouveautés Auto",
     information: "Explorez l’avenir de la mobilité ! Découvrez les derniers modèles hybrides et 100% électriques, alliant performance, design et économies d’énergie. Essais gratuits et offres de lancement disponibles chez nos partenaires.",
     image: "/images/publicites/pub2.jpg"
   },
   {
-    titre: "🏡 Offres Immo",
+    titre: " Offres Immo",
     information: "Envie de changer de vie ? Trouvez votre futur chez-vous parmi nos appartements et maisons à prix réduits partout en France. Opportunités exclusives, frais de notaire offerts sur certaines ventes !",
     image: "/images/publicites/pub3.jpg"
   },
   {
-    titre: "💻 Tech Deals",
+    titre: " Tech Deals",
     information: "Cette semaine seulement : smartphones dernière génération, PC ultra-performants et gadgets connectés à prix cassés ! Stock limité, livraison express et garantie incluse. Faites le plein de technologie !",
     image: "/images/publicites/pub4.jpg"
   },
   {
-    titre: "🛋️ Mobilier Design",
+    titre: " Mobilier Design",
     information: "Transformez votre intérieur avec notre sélection de meubles modernes et élégants. Promotions exceptionnelles et livraison gratuite partout en France. Canapés, tables, rangements : style et confort à petit prix !",
     image: "/images/publicites/pub5.jpg"
   },
   {
-    titre: "👗 Mode & Accessoires",
+    titre: " Mode & Accessoires",
     information: "Soyez tendance avec nos nouvelles collections printemps-été ! Robes légères, sacs stylés, lunettes de soleil et bien plus. Offres exclusives en ligne et en boutique. L’élégance n’attend pas !",
     image: "/images/publicites/pub6.jpg"
   },
   {
-    titre: "🏀 Sport & Loisirs",
+    titre: " Sport & Loisirs",
     information: "Bougez sans vous ruiner ! Équipements sportifs, accessoires de fitness, vélos et jeux de plein air à prix mini. Idéal pour se remettre en forme ou s’amuser en famille. Promotions valables jusqu’à épuisement des stocks.",
     image: "/images/publicites/pub7.jpg"
   },
   {
-    titre: "✈️ Voyages",
+    titre: " Voyages",
     information: "Envie d’évasion ? Réservez vos séjours et billets d’avion à prix réduit vers les plus belles destinations. Plages paradisiaques, escapades urbaines ou nature sauvage : partez sans vous ruiner !",
     image: "/images/publicites/pub8.jpg"
   },
@@ -820,54 +820,54 @@ await Publicite.insertMany([
   console.log("✅ Publicités insérées");
 
     // Insérer utilisateurs
-  //   const users = [
-  //   {
-  //     name: "Admin",
-  //     firstname: "Admin",
-  //     phonenumber: "0600000001",
-  //     email: "admin@admin.com",
-  //     password: await hashPassword("admin"), 
-  //     role: "admin",
-  //     adresse: {
-  //       rue: "10 Rue de Rivoli",
-  //       ville: "Paris",
-  //       codePostal: "75001",
-  //       pays: "France",
-  //     },
-  //   },
-  //   {
-  //     name: "Moderator",
-  //     firstname: "Moderator",
-  //     phonenumber: "0600000002",
-  //     email: "moderator@Moderator.com",
-  //     password: await hashPassword("moderator"),
-  //     role: "moderator",
-  //     adresse: {
-  //       rue: "15 Avenue Foch",
-  //       ville: "Lyon",
-  //       codePostal: "69000",
-  //       pays: "France",
-  //     },
-  //   },
-  //   {
-  //     name: "Martin",
-  //     firstname: "Lucas",
-  //     phonenumber: "0600000003",
-  //     email: "user@test.com",
-  //     password: await hashPassword("user123"),
-  //     role: "user",
-  //     adresse: {
-  //       rue: "20 Rue de la République",
-  //       ville: "Marseille",
-  //       codePostal: "13000",
-  //       pays: "France",
-  //     },
-  //   },
-  // ];
+     const users = [
+     {
+       name: "Admin",
+       firstname: "Admin",
+       phonenumber: "0600000001",
+       email: "admin@Kanope.com",
+       password: await hashPassword("admin123"), 
+       role: "admin",
+      adresse: {
+         rue: "10 Rue de Rivoli",
+         ville: "Paris",
+         codePostal: "75001",
+         pays: "France",
+       },
+     },
+     {
+       name: "Moderator",
+       firstname: "Moderator",
+       phonenumber: "0600000002",
+       email: "modo@kanope.com",
+       password: await hashPassword("modo123"),
+       role: "moderator",
+         adresse: {
+         rue: "15 Avenue Foch",
+         ville: "Lyon",
+         codePostal: "69000",
+         pays: "France",
+       },
+     },
+     {
+       name: "Martin",
+       firstname: "Lucas",
+       phonenumber: "0600000003",
+       email: "user@kanope.com",
+       password: await hashPassword("user123"),
+       role: "user",
+       adresse: {
+         rue: "20 Rue de la République",
+         ville: "Marseille",
+         codePostal: "13000",
+         pays: "France",
+       },
+     },
+  ];
 
-  //await User.insertMany(users);
+  await User.insertMany(users);
 
- // console.log("✅ Utilisateurs de test insérés avec succès !");
+  console.log("✅ Utilisateurs insérés avec succès !");
 
     console.log("🎉 Base de données initialisée avec succès !");
     process.exit();
