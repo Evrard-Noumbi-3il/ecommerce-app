@@ -7,12 +7,7 @@
       >
         <i class="fas fa-id-card" aria-hidden="true"></i> Mon Profil
       </button>
-      <button
-        :class="{ active: currentPage === 'messages' }"
-        @click="currentPage = 'messages'"
-      >
-        <i class="fas fa-comment-dots" aria-hidden="true"></i> Messages
-      </button>
+
       <button
         :class="{ active: currentPage === 'notifications' }"
         @click="currentPage = 'notifications'"
