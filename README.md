@@ -110,7 +110,7 @@ Créer un fichier `.env` dans le dossier `backend/` :
 PORT=3000
 NODE_ENV=development
 
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/kanope?retryWrites=true&w=majority
+MONGODB_URI=Enter_your_URI
 
 JWT_SECRET=votre_secret_jwt_tres_securise_ici_changez_moi
 
@@ -118,7 +118,7 @@ CORS_ORIGIN=http://localhost:8080
 FRONTEND_URL=http://localhost:8080
 
 
-# Pour Mailtrap (testing)
+# Pour Mailtrap 
 MAILTRAP_HOST=sandbox.smtp.mailtrap.io
 MAILTRAP_PORT=2525
 MAILTRAP_USER=votre_mailtrap_user
